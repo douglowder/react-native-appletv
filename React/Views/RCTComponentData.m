@@ -91,7 +91,7 @@ RCT_NOT_IMPLEMENTED(- (instancetype)init)
 
   UIView *view = [self.manager view];
   view.reactTag = tag;
-#ifndef TARGET_OS_TV
+#if !TARGET_OS_TV
   view.multipleTouchEnabled = YES;
 #endif
   view.userInteractionEnabled = YES; // required for touch handling

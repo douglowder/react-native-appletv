@@ -20,7 +20,7 @@
 #import "RCTLog.h"
 #import "RCTUtils.h"
 
-#ifndef TARGET_OS_TV
+#if !TARGET_OS_TV
 
 @implementation RCTConvert (ALAssetGroup)
 
@@ -81,7 +81,7 @@ RCT_ENUM_CONVERTER(ALAssetsGroupType, (@{
 
 RCT_EXPORT_MODULE()
 
-#ifndef TARGET_OS_TV
+#if !TARGET_OS_TV
 
 @synthesize bridge = _bridge;
 

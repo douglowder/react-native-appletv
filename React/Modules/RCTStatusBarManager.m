@@ -14,7 +14,7 @@
 #import "RCTUtils.h"
 
 
-#ifndef TARGET_OS_TV
+#if !TARGET_OS_TV
 
 @implementation RCTConvert (UIStatusBar)
 
@@ -55,7 +55,7 @@ RCT_EXPORT_MODULE()
 {
   _bridge = bridge;
 
-#ifndef TARGET_OS_TV
+#if !TARGET_OS_TV
   NSNotificationCenter *nc = [NSNotificationCenter defaultCenter];
   [nc addObserver:self selector:@selector(applicationDidChangeStatusBarFrame:) name:UIApplicationDidChangeStatusBarFrameNotification object:nil];
   [nc addObserver:self selector:@selector(applicationWillChangeStatusBarFrame:) name:UIApplicationWillChangeStatusBarFrameNotification object:nil];
@@ -75,7 +75,7 @@ RCT_EXPORT_MODULE()
 
 - (void)emitEvent:(NSString *)eventName forNotification:(NSNotification *)notification
 {
-#ifdef TARGET_OS_TV
+#if TARGET_OS_TV
   NSDictionary *event = @{};
 #else
   CGRect frame = [notification.userInfo[UIApplicationStatusBarFrameUserInfoKey] CGRectValue];
@@ -103,7 +103,7 @@ RCT_EXPORT_MODULE()
 
 RCT_EXPORT_METHOD(getHeight:(RCTResponseSenderBlock)callback)
 {
-#ifdef TARGET_OS_TV
+#if TARGET_OS_TV
   callback(@[@{
     @"height":@0
                }]);
@@ -117,7 +117,7 @@ RCT_EXPORT_METHOD(getHeight:(RCTResponseSenderBlock)callback)
 RCT_EXPORT_METHOD(setStyle:(NSInteger)statusBarStyle
                   animated:(BOOL)animated)
 {
-#ifndef TARGET_OS_TV
+#if !TARGET_OS_TV
   if (RCTViewControllerBasedStatusBarAppearance()) {
     RCTLogError(@"RCTStatusBarManager module requires that the \
                 UIViewControllerBasedStatusBarAppearance key in the Info.plist is set to NO");
@@ -131,7 +131,7 @@ RCT_EXPORT_METHOD(setStyle:(NSInteger)statusBarStyle
 RCT_EXPORT_METHOD(setHidden:(BOOL)hidden
                   withAnimation:(NSInteger)animation)
 {
-#ifndef TARGET_OS_TV
+#if !TARGET_OS_TV
   if (RCTViewControllerBasedStatusBarAppearance()) {
     RCTLogError(@"RCTStatusBarManager module requires that the \
                 UIViewControllerBasedStatusBarAppearance key in the Info.plist is set to NO");
@@ -144,7 +144,7 @@ RCT_EXPORT_METHOD(setHidden:(BOOL)hidden
 
 RCT_EXPORT_METHOD(setNetworkActivityIndicatorVisible:(BOOL)visible)
 {
-#ifndef TARGET_OS_TV
+#if !TARGET_OS_TV
   RCTSharedApplication().networkActivityIndicatorVisible = visible;
 #endif
 }

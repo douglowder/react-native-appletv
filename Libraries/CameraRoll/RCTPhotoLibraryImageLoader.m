@@ -9,7 +9,7 @@
 
 #import "RCTPhotoLibraryImageLoader.h"
 
-#ifndef TARGET_OS_TV
+#if !TARGET_OS_TV
 #import <Photos/Photos.h>
 #endif
 
@@ -27,7 +27,7 @@ RCT_EXPORT_MODULE()
 
 - (BOOL)canLoadImageURL:(NSURL *)requestURL
 {
-#ifdef TARGET_OS_TV
+#if TARGET_OS_TV
   return NO;
 #else
   return [requestURL.scheme caseInsensitiveCompare:@"ph"] == NSOrderedSame;
@@ -41,7 +41,7 @@ RCT_EXPORT_MODULE()
                                    progressHandler:(RCTImageLoaderProgressBlock)progressHandler
                                  completionHandler:(RCTImageLoaderCompletionBlock)completionHandler
 {
-#ifdef TARGET_OS_TV
+#if TARGET_OS_TV
   return nil;
 #else
   // Using PhotoKit for iOS 8+

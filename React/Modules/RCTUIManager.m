@@ -200,7 +200,7 @@ static UIViewAnimationOptions UIViewAnimationOptionsFromRCTAnimationType(RCTAnim
   NSDictionary *_componentDataByName;
 
   NSMutableSet<id<RCTComponent>> *_bridgeTransactionListeners;
-#ifndef TARGET_OS_TV
+#if !TARGET_OS_TV
   UIInterfaceOrientation _currentInterfaceOrientation;
 #endif
 }
@@ -224,7 +224,7 @@ RCT_EXPORT_MODULE()
 
 - (void)interfaceOrientationWillChange:(NSNotification *)notification
 {
-#ifndef TARGET_OS_TV
+#if !TARGET_OS_TV
   UIInterfaceOrientation nextOrientation =
     [notification.userInfo[UIApplicationStatusBarOrientationUserInfoKey] integerValue];
 
@@ -314,7 +314,7 @@ RCT_EXPORT_MODULE()
                                            selector:@selector(didReceiveNewContentSizeMultiplier)
                                                name:RCTAccessibilityManagerDidUpdateMultiplierNotification
                                              object:_bridge.accessibilityManager];
-#ifndef TARGET_OS_TV
+#if !TARGET_OS_TV
   [[NSNotificationCenter defaultCenter] addObserver:self
                                            selector:@selector(interfaceOrientationWillChange:)
                                                name:UIApplicationWillChangeStatusBarOrientationNotification
@@ -1429,7 +1429,7 @@ RCT_EXPORT_METHOD(clearJSResponder)
      allJSConstants[name] = constantsNamespace;
   }];
   
-#ifndef TARGET_OS_TV
+#if !TARGET_OS_TV
   _currentInterfaceOrientation = [RCTSharedApplication() statusBarOrientation];
 #endif
   [allJSConstants addEntriesFromDictionary:@{

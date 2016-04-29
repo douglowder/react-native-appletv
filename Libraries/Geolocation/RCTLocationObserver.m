@@ -19,7 +19,7 @@
 #import "RCTEventDispatcher.h"
 #import "RCTLog.h"
 
-#ifndef TARGET_OS_TV
+#if !TARGET_OS_TV
 
 typedef NS_ENUM(NSInteger, RCTPositionErrorCode) {
   RCTPositionErrorDenied = 1,

@@ -18,7 +18,7 @@
 
 RCT_EXPORT_MODULE()
 
-#ifndef TARGET_OS_TV
+#if !TARGET_OS_TV
 
 - (UIView *)view
 {

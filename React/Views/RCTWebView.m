@@ -19,7 +19,7 @@
 #import "RCTView.h"
 #import "UIView+React.h"
 
-#ifndef TARGET_OS_TV
+#if !TARGET_OS_TV
 
 NSString *const RCTJSNavigationScheme = @"react-js-navigation";
 

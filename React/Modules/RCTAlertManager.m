@@ -14,7 +14,7 @@
 #import "RCTLog.h"
 #import "RCTUtils.h"
 
-#ifndef TARGET_OS_TV
+#if !TARGET_OS_TV
 
 @implementation RCTConvert (UIAlertViewStyle)
 

@@ -14,7 +14,7 @@
 #import "RCTEventDispatcher.h"
 #import "UIView+React.h"
 
-#ifndef TARGET_OS_TV
+#if !TARGET_OS_TV
 
 @implementation RCTConvert(UIDatePicker)
 
@@ -33,7 +33,7 @@ RCT_ENUM_CONVERTER(UIDatePickerMode, (@{
 
 RCT_EXPORT_MODULE()
 
-#ifndef TARGET_OS_TV
+#if !TARGET_OS_TV
 
 - (UIView *)view
 {

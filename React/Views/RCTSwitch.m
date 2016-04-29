@@ -12,7 +12,7 @@
 #import "RCTEventDispatcher.h"
 #import "UIView+React.h"
 
-#ifndef TARGET_OS_TV
+#if !TARGET_OS_TV
 
 @implementation RCTSwitch
 

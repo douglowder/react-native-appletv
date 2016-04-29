@@ -11,7 +11,7 @@
 
 #import "RCTUtils.h"
 
-#ifndef TARGET_OS_TV
+#if !TARGET_OS_TV
 
 @implementation RCTRefreshControl {
   BOOL _initialRefreshingState;

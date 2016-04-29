@@ -30,7 +30,7 @@ NSString *const RCTRemoteNotificationsRegistered = @"RemoteNotificationsRegister
 
 @implementation RCTConvert (UILocalNotification)
 
-#ifndef TARGET_OS_TV
+#if !TARGET_OS_TV
 
 + (UILocalNotification *)UILocalNotification:(id)json
 {
@@ -52,7 +52,7 @@ NSString *const RCTRemoteNotificationsRegistered = @"RemoteNotificationsRegister
 
 RCT_EXPORT_MODULE()
 
-#ifndef TARGET_OS_TV
+#if !TARGET_OS_TV
 
 @synthesize bridge = _bridge;
 

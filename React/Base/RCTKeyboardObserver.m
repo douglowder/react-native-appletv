@@ -28,7 +28,7 @@ RCT_EXPORT_MODULE()
 #define ADD_KEYBOARD_HANDLER(NAME, SELECTOR) \
   [nc addObserver:self selector:@selector(SELECTOR:) name:NAME object:nil]
 
-#ifndef TARGET_OS_TV
+#if !TARGET_OS_TV
   ADD_KEYBOARD_HANDLER(UIKeyboardWillShowNotification, keyboardWillShow);
   ADD_KEYBOARD_HANDLER(UIKeyboardDidShowNotification, keyboardDidShow);
   ADD_KEYBOARD_HANDLER(UIKeyboardWillHideNotification, keyboardWillHide);
@@ -91,7 +91,7 @@ static NSString *RCTAnimationNameForCurve(UIViewAnimationCurve curve)
 
 static NSDictionary *RCTParseKeyboardNotification(NSNotification *notification)
 {
-#ifdef TARGET_OS_TV
+#if TARGET_OS_TV
   return @{};
 #else
   NSDictionary *userInfo = notification.userInfo;

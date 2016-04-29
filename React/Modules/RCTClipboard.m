@@ -17,7 +17,7 @@
 
 RCT_EXPORT_MODULE()
 
-#ifndef TARGET_OS_TV
+#if !TARGET_OS_TV
 - (dispatch_queue_t)methodQueue
 {
   return dispatch_get_main_queue();

@@ -140,7 +140,7 @@ RCT_NOT_IMPLEMENTED(- (instancetype)init)
 
 @property (nonatomic, copy) NSIndexSet *stickyHeaderIndices;
 @property (nonatomic, assign) BOOL centerContent;
-#ifndef TARGET_OS_TV
+#if !TARGET_OS_TV
 @property (nonatomic, strong) RCTRefreshControl *refreshControl;
 #endif
 
@@ -277,7 +277,7 @@ RCT_NOT_IMPLEMENTED(- (instancetype)init)
   CGFloat scrollTop = self.bounds.origin.y + self.contentInset.top;
   // If the RefreshControl is refreshing, remove it's height so sticky headers are
   // positioned properly when scrolling down while refreshing.
-#ifndef TARGET_OS_TV
+#if !TARGET_OS_TV
   if (self.refreshControl != nil && self.refreshControl.refreshing) {
     scrollTop -= self.refreshControl.frame.size.height;
   }
@@ -362,7 +362,7 @@ RCT_NOT_IMPLEMENTED(- (instancetype)init)
   return [super hitTest:point withEvent:event];
 }
 
-#ifndef TARGET_OS_TV
+#if !TARGET_OS_TV
 - (void)setRefreshControl:(RCTRefreshControl *)refreshControl
 {
   if (_refreshControl) {
@@ -423,7 +423,7 @@ RCT_NOT_IMPLEMENTED(- (instancetype)initWithCoder:(NSCoder *)aDecoder)
 
 - (void)insertReactSubview:(UIView *)view atIndex:(__unused NSInteger)atIndex
 {
-#ifndef TARGET_OS_TV
+#if !TARGET_OS_TV
   if ([view isKindOfClass:[RCTRefreshControl class]]) {
     _scrollView.refreshControl = (RCTRefreshControl*)view;
   } else {
@@ -431,14 +431,14 @@ RCT_NOT_IMPLEMENTED(- (instancetype)initWithCoder:(NSCoder *)aDecoder)
     RCTAssert(_contentView == nil, @"RCTScrollView may only contain a single subview");
     _contentView = view;
     [_scrollView addSubview:view];
-#ifndef TARGET_OS_TV
+#if !TARGET_OS_TV
   }
 #endif
 }
 
 - (void)removeReactSubview:(UIView *)subview
 {
-#ifndef TARGET_OS_TV
+#if !TARGET_OS_TV
   if ([subview isKindOfClass:[RCTRefreshControl class]]) {
     _scrollView.refreshControl = nil;
   } else {
@@ -446,14 +446,14 @@ RCT_NOT_IMPLEMENTED(- (instancetype)initWithCoder:(NSCoder *)aDecoder)
     RCTAssert(_contentView == subview, @"Attempted to remove non-existent subview");
     _contentView = nil;
     [subview removeFromSuperview];
-#ifndef TARGET_OS_TV
+#if !TARGET_OS_TV
   }
 #endif
 }
 
 - (NSArray<UIView *> *)reactSubviews
 {
-#ifndef TARGET_OS_TV
+#if !TARGET_OS_TV
   if (_contentView && _scrollView.refreshControl) {
     return @[_contentView, _scrollView.refreshControl];
   }
@@ -504,7 +504,7 @@ RCT_NOT_IMPLEMENTED(- (instancetype)initWithCoder:(NSCoder *)aDecoder)
   _scrollView.frame = self.bounds;
   _scrollView.contentOffset = originalOffset;
 
-#ifndef TARGET_OS_TV
+#if !TARGET_OS_TV
   // Adjust the refresh control frame if the scrollview layout changes.
   RCTRefreshControl *refreshControl = _scrollView.refreshControl;
   if (refreshControl && refreshControl.refreshing) {
@@ -888,7 +888,7 @@ RCT_SET_AND_PRESERVE_OFFSET(setKeyboardDismissMode, keyboardDismissMode, UIScrol
 RCT_SET_AND_PRESERVE_OFFSET(setMaximumZoomScale, maximumZoomScale, CGFloat)
 RCT_SET_AND_PRESERVE_OFFSET(setMinimumZoomScale, minimumZoomScale, CGFloat)
 RCT_SET_AND_PRESERVE_OFFSET(setScrollEnabled, isScrollEnabled, BOOL)
-#ifndef TARGET_OS_TV
+#if !TARGET_OS_TV
 RCT_SET_AND_PRESERVE_OFFSET(setPagingEnabled, isPagingEnabled, BOOL)
 RCT_SET_AND_PRESERVE_OFFSET(setScrollsToTop, scrollsToTop, BOOL)
 #endif
@@ -899,7 +899,7 @@ RCT_SET_AND_PRESERVE_OFFSET(setScrollIndicatorInsets, scrollIndicatorInsets, UIE
 
 - (void)setOnRefreshStart:(RCTDirectEventBlock)onRefreshStart
 {
-#ifndef TARGET_OS_TV
+#if !TARGET_OS_TV
   if (!onRefreshStart) {
     _onRefreshStart = nil;
     _scrollView.refreshControl = nil;
@@ -925,7 +925,7 @@ RCT_SET_AND_PRESERVE_OFFSET(setScrollIndicatorInsets, scrollIndicatorInsets, UIE
 
 - (void)endRefreshing
 {
-#ifndef TARGET_OS_TV
+#if !TARGET_OS_TV
   [_scrollView.refreshControl endRefreshing];
 #endif
 }

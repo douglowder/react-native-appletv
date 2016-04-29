@@ -147,7 +147,7 @@ RCT_CUSTOM_VIEW_PROPERTY(region, MKCoordinateRegion, RCTMap)
   }
 }
 
-#ifndef TARGET_OS_TV
+#if !TARGET_OS_TV
 - (void)mapView:(RCTMap *)mapView annotationView:(MKAnnotationView *)view
                               didChangeDragState:(MKAnnotationViewDragState)newState
                                     fromOldState:(MKAnnotationViewDragState)oldState
@@ -280,7 +280,7 @@ RCT_CUSTOM_VIEW_PROPERTY(region, MKCoordinateRegion, RCTMap)
     }
   }
 
-#ifndef TARGET_OS_TV
+#if !TARGET_OS_TV
   annotationView.draggable = annotation.draggable;
 #endif
   

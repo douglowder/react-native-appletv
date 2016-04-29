@@ -84,7 +84,7 @@
 
     _scrollView = [[UIScrollView alloc] initWithFrame:CGRectZero];
     [_scrollView addSubview:_textView];
-#ifndef TARGET_OS_TV
+#if !TARGET_OS_TV
     _textView.scrollsToTop = NO;
     _scrollView.scrollsToTop = NO;
 #endif
@@ -264,7 +264,7 @@ static NSAttributedString *removeReactTagFromString(NSAttributedString *string)
     _placeholderView.userInteractionEnabled = NO;
     _placeholderView.backgroundColor = [UIColor clearColor];
     _placeholderView.scrollEnabled = false;
-#ifndef TARGET_OS_TV
+#if !TARGET_OS_TV
     _placeholderView.editable = NO;
     _placeholderView.scrollsToTop = NO;
 #endif

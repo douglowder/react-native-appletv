@@ -12,7 +12,7 @@
 #import "RCTBridgeModule.h"
 #import "RCTConvert.h"
 
-#ifndef TARGET_OS_TV
+#if !TARGET_OS_TV
 
 @interface RCTConvert (UIStatusBar)
 

@@ -80,7 +80,7 @@ RCT_EXTERN BOOL RCTForceTouchAvailable(void);
 
 // Return a UIAlertView initialized with the given values
 // or nil if running in an app extension
-#ifndef TARGET_OS_TV
+#if !TARGET_OS_TV
 RCT_EXTERN UIAlertView *__nullable RCTAlertView(NSString *title,
                                                 NSString *__nullable message,
                                                 id __nullable delegate,

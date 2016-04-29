@@ -11,7 +11,7 @@
 
 #import <tgmath.h>
 
-#ifndef TARGET_OS_TV
+#if !TARGET_OS_TV
 @implementation RCTSlider
 {
   float _unclippedValue;

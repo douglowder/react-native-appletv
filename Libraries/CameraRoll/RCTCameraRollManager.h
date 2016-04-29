@@ -10,7 +10,7 @@
 #import "RCTBridgeModule.h"
 #import "RCTConvert.h"
 
-#ifndef TARGET_OS_TV
+#if !TARGET_OS_TV
 #import <AssetsLibrary/AssetsLibrary.h>
 
 @interface RCTConvert (ALAssetGroup)

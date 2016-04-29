@@ -16,7 +16,7 @@
 #import "RCTBridge.h"
 #import "RCTUIManager.h"
 
-#ifndef TARGET_OS_TV
+#if !TARGET_OS_TV
 
 @interface RCTActionSheetManager () <UIActionSheetDelegate>
 @end

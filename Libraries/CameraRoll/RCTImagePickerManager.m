@@ -20,14 +20,14 @@
 
 #import <MobileCoreServices/UTCoreTypes.h>
 
-#ifndef TARGET_OS_TV
+#if !TARGET_OS_TV
 @interface RCTImagePickerManager ()<UIImagePickerControllerDelegate, UINavigationControllerDelegate>
 
 @end
 #endif
 
 @implementation RCTImagePickerManager
-#ifndef TARGET_OS_TV
+#if !TARGET_OS_TV
 {
   NSMutableArray<UIImagePickerController *> *_pickers;
   NSMutableArray<RCTResponseSenderBlock> *_pickerCallbacks;
@@ -37,7 +37,7 @@
 
 RCT_EXPORT_MODULE(ImagePickerIOS);
 
-#ifndef TARGET_OS_TV
+#if !TARGET_OS_TV
 
 @synthesize bridge = _bridge;
 

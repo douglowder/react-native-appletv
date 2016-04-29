@@ -9,7 +9,7 @@
 
 #import "RCTAssetsLibraryRequestHandler.h"
 
-#ifndef TARGET_OS_TV
+#if !TARGET_OS_TV
 #import <AssetsLibrary/AssetsLibrary.h>
 #endif
 
@@ -20,7 +20,7 @@
 
 @implementation RCTAssetsLibraryRequestHandler
 
-#ifndef TARGET_OS_TV
+#if !TARGET_OS_TV
 {
   ALAssetsLibrary *_assetsLibrary;
 }
@@ -30,7 +30,7 @@ RCT_EXPORT_MODULE()
 
 @synthesize bridge = _bridge;
 
-#ifndef TARGET_OS_TV
+#if !TARGET_OS_TV
 - (ALAssetsLibrary *)assetsLibrary
 {
   return _assetsLibrary ?: (_assetsLibrary = [ALAssetsLibrary new]);
@@ -41,7 +41,7 @@ RCT_EXPORT_MODULE()
 
 - (BOOL)canHandleRequest:(NSURLRequest *)request
 {
-#ifdef TARGET_OS_TV
+#if TARGET_OS_TV
   return NO;
 #else
   return [request.URL.scheme caseInsensitiveCompare:@"assets-library"] == NSOrderedSame;
@@ -51,7 +51,7 @@ RCT_EXPORT_MODULE()
 - (id)sendRequest:(NSURLRequest *)request
      withDelegate:(id<RCTURLRequestDelegate>)delegate
 {
-#ifdef TARGET_OS_TV
+#if TARGET_OS_TV
   return nil;
 #else
   __block volatile uint32_t cancelled = 0;
