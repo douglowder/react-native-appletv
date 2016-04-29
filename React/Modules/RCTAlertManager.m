@@ -14,6 +14,8 @@
 #import "RCTLog.h"
 #import "RCTUtils.h"
 
+#ifndef TARGET_OS_TV
+
 @implementation RCTConvert (UIAlertViewStyle)
 
 RCT_ENUM_CONVERTER(UIAlertViewStyle, (@{
@@ -278,3 +280,5 @@ RCT_EXPORT_METHOD(alertWithArgs:(NSDictionary *)args
 }
 
 @end
+
+#endif //TARGET_OS_TV

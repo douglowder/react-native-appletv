@@ -10,7 +10,10 @@
 #import <UIKit/UIKit.h>
 
 #import "RCTBridge.h"
+#ifndef TARGET_OS_TV
 
 @interface RCTActionSheetManager : NSObject <RCTBridgeModule>
 
 @end
+
+#endif

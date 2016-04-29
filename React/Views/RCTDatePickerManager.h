@@ -10,11 +10,15 @@
 #import "RCTViewManager.h"
 #import "RCTConvert.h"
 
+#ifndef TARGET_OS_TV
+
 @interface RCTConvert(UIDatePicker)
 
 + (UIDatePickerMode)UIDatePickerMode:(id)json;
 
 @end
+
+#endif
 
 @interface RCTDatePickerManager : RCTViewManager
 

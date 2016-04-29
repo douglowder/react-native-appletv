@@ -14,6 +14,8 @@
 #import "RCTWebView.h"
 #import "UIView+React.h"
 
+#ifndef TARGET_OS_TV
+
 @interface RCTWebViewManager () <RCTWebViewDelegate>
 
 @end
@@ -132,3 +134,5 @@ RCT_EXPORT_METHOD(startLoadWithResult:(BOOL)result lockIdentifier:(NSInteger)loc
 }
 
 @end
+
+#endif //TARGET_OS_TV

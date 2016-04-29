@@ -12,9 +12,13 @@
 
 #import "RCTComponent.h"
 
+#ifndef TARGET_OS_TV
+
 @interface RCTSwitch : UISwitch
 
 @property (nonatomic, assign) BOOL wasOn;
 @property (nonatomic, copy) RCTBubblingEventBlock onChange;
 
 @end
+
+#endif

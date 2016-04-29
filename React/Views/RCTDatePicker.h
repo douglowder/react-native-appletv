@@ -9,6 +9,10 @@
 
 #import <UIKit/UIKit.h>
 
+#ifndef TARGET_OS_TV
+
 @interface RCTDatePicker : UIDatePicker
 
 @end
+
+#endif

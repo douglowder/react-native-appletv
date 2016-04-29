@@ -21,7 +21,7 @@
 #import "RCTUtils.h"
 #import "RCTWebSocketProxy.h"
 
-#if RCT_DEV
+#if RCT_DEV && !TARGET_OS_TV
 
 static NSString *const RCTShowDevMenuNotification = @"RCTShowDevMenuNotification";
 static NSString *const RCTDevMenuSettingsKey = @"RCTDevMenu";

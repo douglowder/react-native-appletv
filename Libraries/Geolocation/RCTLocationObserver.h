@@ -9,6 +9,10 @@
 
 #import "RCTBridgeModule.h"
 
+#ifndef TARGET_OS_TV
+
 @interface RCTLocationObserver : NSObject<RCTBridgeModule>
 
 @end
+
+#endif

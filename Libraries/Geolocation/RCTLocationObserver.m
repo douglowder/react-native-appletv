@@ -19,6 +19,8 @@
 #import "RCTEventDispatcher.h"
 #import "RCTLog.h"
 
+#ifndef TARGET_OS_TV
+
 typedef NS_ENUM(NSInteger, RCTPositionErrorCode) {
   RCTPositionErrorDenied = 1,
   RCTPositionErrorUnavailable,
@@ -347,3 +349,5 @@ RCT_EXPORT_METHOD(getCurrentPosition:(RCTLocationOptions)options
 }
 
 @end
+
+#endif //TARGET_OS_TV

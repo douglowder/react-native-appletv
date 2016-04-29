@@ -7,6 +7,7 @@
  * of patent rights can be found in the PATENTS file in the same directory.
  */
 
+
 #import "RCTActionSheetManager.h"
 
 #import "RCTConvert.h"
@@ -14,6 +15,8 @@
 #import "RCTUtils.h"
 #import "RCTBridge.h"
 #import "RCTUIManager.h"
+
+#ifndef TARGET_OS_TV
 
 @interface RCTActionSheetManager () <UIActionSheetDelegate>
 @end
@@ -70,7 +73,7 @@ RCT_EXPORT_METHOD(showActionSheetWithOptions:(NSDictionary *)options
   while (controller.presentedViewController) {
     controller = controller.presentedViewController;
   }
-
+    
   if (controller == nil) {
     RCTLogError(@"Tried to display action sheet but there is no application window. options: %@", options);
     return;
@@ -246,3 +249,5 @@ RCT_EXPORT_METHOD(showShareActionSheetWithOptions:(NSDictionary *)options
 }
 
 @end
+
+#endif //TARGET_OS_TV

@@ -79,14 +79,15 @@
 
     _textView = [[RCTUITextView alloc] initWithFrame:CGRectZero];
     _textView.backgroundColor = [UIColor clearColor];
-    _textView.scrollsToTop = NO;
     _textView.scrollEnabled = NO;
     _textView.delegate = self;
 
     _scrollView = [[UIScrollView alloc] initWithFrame:CGRectZero];
-    _scrollView.scrollsToTop = NO;
     [_scrollView addSubview:_textView];
-
+#ifndef TARGET_OS_TV
+    _textView.scrollsToTop = NO;
+    _scrollView.scrollsToTop = NO;
+#endif
     _previousSelectionRange = _textView.selectedTextRange;
 
     _subviews = [NSMutableArray new];
@@ -260,11 +261,13 @@ static NSAttributedString *removeReactTagFromString(NSAttributedString *string)
 
   if (_placeholder) {
     _placeholderView = [[UITextView alloc] initWithFrame:self.bounds];
-    _placeholderView.editable = NO;
     _placeholderView.userInteractionEnabled = NO;
     _placeholderView.backgroundColor = [UIColor clearColor];
     _placeholderView.scrollEnabled = false;
+#ifndef TARGET_OS_TV
+    _placeholderView.editable = NO;
     _placeholderView.scrollsToTop = NO;
+#endif
     _placeholderView.attributedText =
     [[NSAttributedString alloc] initWithString:_placeholder attributes:@{
       NSFontAttributeName : (_textView.font ? _textView.font : [self defaultPlaceholderFont]),
@@ -323,7 +326,7 @@ static NSAttributedString *removeReactTagFromString(NSAttributedString *string)
   if (textView.textWasPasted) {
     textView.textWasPasted = NO;
   } else {
-
+    
     [_eventDispatcher sendTextEventWithType:RCTTextEventTypeKeyPress
                                    reactTag:self.reactTag
                                        text:nil

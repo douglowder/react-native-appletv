@@ -30,6 +30,8 @@ NSString *const RCTRemoteNotificationsRegistered = @"RemoteNotificationsRegister
 
 @implementation RCTConvert (UILocalNotification)
 
+#ifndef TARGET_OS_TV
+
 + (UILocalNotification *)UILocalNotification:(id)json
 {
   NSDictionary<NSString *, id> *details = [self NSDictionary:json];
@@ -42,12 +44,15 @@ NSString *const RCTRemoteNotificationsRegistered = @"RemoteNotificationsRegister
   notification.category = [RCTConvert NSString:details[@"category"]];
   return notification;
 }
+#endif //TARGET_OS_TV
 
 @end
 
 @implementation RCTPushNotificationManager
 
 RCT_EXPORT_MODULE()
+
+#ifndef TARGET_OS_TV
 
 @synthesize bridge = _bridge;
 
@@ -250,5 +255,7 @@ RCT_EXPORT_METHOD(cancelLocalNotifications:(NSDictionary *)userInfo)
     }
   }
 }
+
+#endif //TARGET_OS_TV
 
 @end

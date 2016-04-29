@@ -67,8 +67,11 @@ RCT_EXPORT_METHOD(showMessage:(NSString *)message color:(UIColor *)color backgro
     if (!_window && !RCTRunningInTestEnvironment()) {
       CGFloat screenWidth = [UIScreen mainScreen].bounds.size.width;
       _window = [[UIWindow alloc] initWithFrame:CGRectMake(0, 0, screenWidth, 22)];
+#ifdef TARGET_OS_TV
+      _window.windowLevel = UIWindowLevelNormal + 1;
+#else
       _window.windowLevel = UIWindowLevelStatusBar + 1;
-
+#endif
       // set a root VC so rotation is supported
       _window.rootViewController = [UIViewController new];
 

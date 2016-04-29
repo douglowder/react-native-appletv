@@ -77,7 +77,9 @@ static vm_size_t RCTGetResidentMemorySize(void)
 
 @interface RCTPerfMonitor : NSObject <RCTBridgeModule, RCTInvalidating, UITableViewDataSource, UITableViewDelegate>
 
+#ifndef TARGET_OS_TV
 @property (nonatomic, strong, readonly) RCTDevMenuItem *devMenuItem;
+#endif
 @property (nonatomic, strong, readonly) UIPanGestureRecognizer *gestureRecognizer;
 @property (nonatomic, strong, readonly) UIView *container;
 @property (nonatomic, strong, readonly) UILabel *memory;
@@ -92,7 +94,9 @@ static vm_size_t RCTGetResidentMemorySize(void)
 @end
 
 @implementation RCTPerfMonitor {
+#ifndef TARGET_OS_TV
   RCTDevMenuItem *_devMenuItem;
+#endif
   UIPanGestureRecognizer *_gestureRecognizer;
   UIView *_container;
   UILabel *_memory;
@@ -130,6 +134,7 @@ RCT_EXPORT_MODULE()
   [self hide];
 }
 
+#ifndef TARGET_OS_TV
 - (RCTDevMenuItem *)devMenuItem
 {
   if (!_devMenuItem) {
@@ -150,6 +155,7 @@ RCT_EXPORT_MODULE()
 
   return _devMenuItem;
 }
+#endif
 
 - (UIPanGestureRecognizer *)gestureRecognizer
 {
@@ -281,7 +287,9 @@ RCT_EXPORT_MODULE()
 {
   _bridge = bridge;
 
+#ifndef TARGET_OS_TV
   [_bridge.devMenu addItem:self.devMenuItem];
+#endif
 }
 
 - (void)show

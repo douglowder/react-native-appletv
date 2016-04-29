@@ -20,6 +20,8 @@
 #import "RCTLog.h"
 #import "RCTUtils.h"
 
+#ifndef TARGET_OS_TV
+
 @implementation RCTConvert (ALAssetGroup)
 
 RCT_ENUM_CONVERTER(ALAssetsGroupType, (@{
@@ -73,9 +75,13 @@ RCT_ENUM_CONVERTER(ALAssetsGroupType, (@{
 
 @end
 
+#endif //TARGET_OS_TV
+
 @implementation RCTCameraRollManager
 
 RCT_EXPORT_MODULE()
+
+#ifndef TARGET_OS_TV
 
 @synthesize bridge = _bridge;
 
@@ -205,5 +211,6 @@ RCT_EXPORT_METHOD(getPhotos:(NSDictionary *)params
     reject(RCTErrorUnableToLoad, nil, error);
   }];
 }
+#endif //TARGET_OS_TV
 
 @end

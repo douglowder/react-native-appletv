@@ -12,6 +12,10 @@
 #import "RCTBridgeModule.h"
 #import "RCTInvalidating.h"
 
+#ifndef TARGET_OS_TV
+
 @interface RCTAlertManager : NSObject <RCTBridgeModule, RCTInvalidating>
 
 @end
+
+#endif

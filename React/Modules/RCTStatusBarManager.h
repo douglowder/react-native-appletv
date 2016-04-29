@@ -12,12 +12,16 @@
 #import "RCTBridgeModule.h"
 #import "RCTConvert.h"
 
+#ifndef TARGET_OS_TV
+
 @interface RCTConvert (UIStatusBar)
 
 + (UIStatusBarStyle)UIStatusBarStyle:(id)json;
 + (UIStatusBarAnimation)UIStatusBarAnimation:(id)json;
 
 @end
+
+#endif //TARGET_OS_TV
 
 @interface RCTStatusBarManager : NSObject <RCTBridgeModule>
 

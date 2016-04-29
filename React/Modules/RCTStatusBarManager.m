@@ -13,6 +13,9 @@
 #import "RCTLog.h"
 #import "RCTUtils.h"
 
+
+#ifndef TARGET_OS_TV
+
 @implementation RCTConvert (UIStatusBar)
 
 RCT_ENUM_CONVERTER(UIStatusBarStyle, (@{
@@ -27,6 +30,8 @@ RCT_ENUM_CONVERTER(UIStatusBarAnimation, (@{
 }), UIStatusBarAnimationNone, integerValue);
 
 @end
+
+#endif //TARGET_OS_TV
 
 @implementation RCTStatusBarManager
 
@@ -50,9 +55,12 @@ RCT_EXPORT_MODULE()
 {
   _bridge = bridge;
 
+#ifndef TARGET_OS_TV
   NSNotificationCenter *nc = [NSNotificationCenter defaultCenter];
   [nc addObserver:self selector:@selector(applicationDidChangeStatusBarFrame:) name:UIApplicationDidChangeStatusBarFrameNotification object:nil];
   [nc addObserver:self selector:@selector(applicationWillChangeStatusBarFrame:) name:UIApplicationWillChangeStatusBarFrameNotification object:nil];
+#endif
+  
 }
 
 - (void)dealloc
@@ -67,6 +75,9 @@ RCT_EXPORT_MODULE()
 
 - (void)emitEvent:(NSString *)eventName forNotification:(NSNotification *)notification
 {
+#ifdef TARGET_OS_TV
+  NSDictionary *event = @{};
+#else
   CGRect frame = [notification.userInfo[UIApplicationStatusBarFrameUserInfoKey] CGRectValue];
   NSDictionary *event = @{
     @"frame": @{
@@ -76,6 +87,7 @@ RCT_EXPORT_MODULE()
       @"height": @(frame.size.height),
     },
   };
+#endif
   [_bridge.eventDispatcher sendDeviceEventWithName:eventName body:event];
 }
 
@@ -91,14 +103,21 @@ RCT_EXPORT_MODULE()
 
 RCT_EXPORT_METHOD(getHeight:(RCTResponseSenderBlock)callback)
 {
+#ifdef TARGET_OS_TV
+  callback(@[@{
+    @"height":@0
+               }]);
+#else
   callback(@[@{
     @"height": @([UIApplication sharedApplication].statusBarFrame.size.height),
   }]);
+#endif
 }
 
-RCT_EXPORT_METHOD(setStyle:(UIStatusBarStyle)statusBarStyle
+RCT_EXPORT_METHOD(setStyle:(NSInteger)statusBarStyle
                   animated:(BOOL)animated)
 {
+#ifndef TARGET_OS_TV
   if (RCTViewControllerBasedStatusBarAppearance()) {
     RCTLogError(@"RCTStatusBarManager module requires that the \
                 UIViewControllerBasedStatusBarAppearance key in the Info.plist is set to NO");
@@ -106,11 +125,13 @@ RCT_EXPORT_METHOD(setStyle:(UIStatusBarStyle)statusBarStyle
     [RCTSharedApplication() setStatusBarStyle:statusBarStyle
                                      animated:animated];
   }
+#endif
 }
 
 RCT_EXPORT_METHOD(setHidden:(BOOL)hidden
-                  withAnimation:(UIStatusBarAnimation)animation)
+                  withAnimation:(NSInteger)animation)
 {
+#ifndef TARGET_OS_TV
   if (RCTViewControllerBasedStatusBarAppearance()) {
     RCTLogError(@"RCTStatusBarManager module requires that the \
                 UIViewControllerBasedStatusBarAppearance key in the Info.plist is set to NO");
@@ -118,11 +139,15 @@ RCT_EXPORT_METHOD(setHidden:(BOOL)hidden
     [RCTSharedApplication() setStatusBarHidden:hidden
                                  withAnimation:animation];
   }
+#endif
 }
 
 RCT_EXPORT_METHOD(setNetworkActivityIndicatorVisible:(BOOL)visible)
 {
+#ifndef TARGET_OS_TV
   RCTSharedApplication().networkActivityIndicatorVisible = visible;
+#endif
 }
+
 
 @end
