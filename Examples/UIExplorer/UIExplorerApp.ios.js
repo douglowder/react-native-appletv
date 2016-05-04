@@ -88,6 +88,7 @@ class UIExplorerApp extends React.Component {
     // scenario. So after the initial example list is shown, we then transition
     // to the initial example.
     setTimeout(this._handleOpenInitialExample, 500);
+    ReactNative.NativeAppEventEmitter.addListener( 'tvEvent', evt => console.log( 'Received Apple TV event: ' + evt.eventType));
   }
   render() {
     return (

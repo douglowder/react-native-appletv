@@ -27,6 +27,10 @@
 #import "UIView+React.h"
 #import "RCTProfile.h"
 
+#if TARGET_OS_TV
+#import "RCTTVRemoteHandler.h"
+#endif
+
 NSString *const RCTContentDidAppearNotification = @"RCTContentDidAppearNotification";
 
 @interface RCTUIManager (RCTRootView)
@@ -39,6 +43,10 @@ NSString *const RCTContentDidAppearNotification = @"RCTContentDidAppearNotificat
 
 @property (nonatomic, readonly) BOOL contentHasAppeared;
 @property (nonatomic, readonly, strong) RCTTouchHandler *touchHandler;
+
+#if TARGET_OS_TV
+@property (nonatomic, readwrite, strong) RCTTVRemoteHandler *tvRemoteHandler;
+#endif
 
 - (instancetype)initWithFrame:(CGRect)frame
                        bridge:(RCTBridge *)bridge
@@ -328,6 +336,12 @@ RCT_NOT_IMPLEMENTED(- (instancetype)initWithCoder:(NSCoder *)aDecoder)
     self.reactTag = reactTag;
     _touchHandler = [[RCTTouchHandler alloc] initWithBridge:_bridge];
     [self addGestureRecognizer:_touchHandler];
+#if TARGET_OS_TV
+    self.tvRemoteHandler = [[RCTTVRemoteHandler alloc] initWithBridge:_bridge];
+    for(UIGestureRecognizer *gr in self.tvRemoteHandler.tvRemoteGestureRecognizers) {
+      [self addGestureRecognizer:gr];
+    }
+#endif
     [_bridge.uiManager registerRootView:self withSizeFlexibility:sizeFlexibility];
     self.layer.backgroundColor = NULL;
   }
