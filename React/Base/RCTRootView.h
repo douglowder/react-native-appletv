@@ -12,6 +12,7 @@
 #import "RCTBridge.h"
 
 @protocol RCTRootViewDelegate;
+@class RCTTVRemoteHandler;
 
 /**
  * This enum is used to define size flexibility type of the root view.
@@ -108,6 +109,13 @@ extern NSString *const RCTContentDidAppearNotification;
  * The React-managed contents view of the root view.
  */
 @property (nonatomic, strong, readonly) UIView *contentView;
+
+/**
+ * TV remote gesture recognizers
+ */
+#if TARGET_OS_TV
+@property (nonatomic, strong, readwrite) RCTTVRemoteHandler *tvRemoteHandler;
+#endif
 
 /**
  * A view to display while the JavaScript is loading, so users aren't presented
