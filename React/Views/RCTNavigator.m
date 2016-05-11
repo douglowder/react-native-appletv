@@ -355,18 +355,21 @@ RCT_NOT_IMPLEMENTED(- (instancetype)initWithCoder:(NSCoder *)aDecoder)
 - (void)setInteractivePopGestureEnabled:(BOOL)interactivePopGestureEnabled
 {
   _interactivePopGestureEnabled = interactivePopGestureEnabled;
- 
+#if !TARGET_OS_TV
   _navigationController.interactivePopGestureRecognizer.delegate = self;
   _navigationController.interactivePopGestureRecognizer.enabled = interactivePopGestureEnabled;
 
   _popGestureState = interactivePopGestureEnabled ? RCTPopGestureStateEnabled : RCTPopGestureStateDisabled;
+#endif
 }
 
 - (void)dealloc
 {
+#if !TARGET_OS_TV
   if (_navigationController.interactivePopGestureRecognizer.delegate == self) {
     _navigationController.interactivePopGestureRecognizer.delegate = nil;
   }
+#endif
   _navigationController.delegate = nil;
   [_navigationController removeFromParentViewController];
 }

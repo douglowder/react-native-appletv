@@ -133,7 +133,7 @@ class UIExplorerApp extends React.Component {
     ReactNative.NativeAppEventEmitter.addListener( 'tvEvent', evt => {
         console.log("Navigation: " + evt.eventType);
         if(evt.eventType === "menu") {
-            onNavigate(NavigationRootContainer.getBackAction());
+            this._handleAction({ type: 'BackAction' });
         }
     });
     return (

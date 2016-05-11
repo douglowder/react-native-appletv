@@ -145,7 +145,9 @@ RCT_EXPORT_MODULE()
 {
   _bridge = bridge;
 
+#if !TARGET_OS_TV
   [_bridge.devMenu addItem:self.devMenuItem];
+#endif
 }
 
 - (void)invalidate
@@ -297,23 +299,6 @@ RCT_EXPORT_MODULE()
   return _metrics;
 }
 
-<<<<<<< HEAD
-- (dispatch_queue_t)methodQueue
-{
-  return dispatch_get_main_queue();
-}
-
-- (void)setBridge:(RCTBridge *)bridge
-{
-  _bridge = bridge;
-
-#if !TARGET_OS_TV
-  [_bridge.devMenu addItem:self.devMenuItem];
-#endif
-}
-
-=======
->>>>>>> upstream/master
 - (void)show
 {
   if (_container) {

@@ -62,13 +62,10 @@ RCT_EXPORT_MODULE()
 {
   _bridge = bridge;
 
-<<<<<<< HEAD
 #if !TARGET_OS_TV
-=======
   // TODO: if we add an explicit "startObserving" method, we can take this out
   // of the application startup path
 
->>>>>>> upstream/master
   NSNotificationCenter *nc = [NSNotificationCenter defaultCenter];
   [nc addObserver:self selector:@selector(applicationDidChangeStatusBarFrame:) name:UIApplicationDidChangeStatusBarFrameNotification object:nil];
   [nc addObserver:self selector:@selector(applicationWillChangeStatusBarFrame:) name:UIApplicationWillChangeStatusBarFrameNotification object:nil];
