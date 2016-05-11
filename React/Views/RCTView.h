@@ -100,6 +100,8 @@
  */
 @property (nonatomic, assign) UIEdgeInsets hitTestEdgeInsets;
 
+#if TARGET_OS_TV
 @property (nonatomic, strong) UIColor *savedBackgroundColor;
+#endif
 
 @end

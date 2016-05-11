@@ -12,7 +12,10 @@
 #import "RCTBridge.h"
 
 @protocol RCTRootViewDelegate;
+
+#if TARGET_OS_TV
 @class RCTTVRemoteHandler;
+#endif
 
 /**
  * This enum is used to define size flexibility type of the root view.

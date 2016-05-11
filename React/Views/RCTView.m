@@ -19,7 +19,10 @@
 #import "RCTBridge.h"
 #import "RCTEventDispatcher.h"
 
+#if TARGET_OS_TV
+#import "RCTRootView.h"
 #import "RCTTVRemoteHandler.h"
+#endif
 
 @implementation UIView (RCTViewUnmounting)
 
@@ -143,24 +146,28 @@ RCT_NOT_IMPLEMENTED(- (instancetype)initWithCoder:unused)
 }
 
 - (BOOL)canBecomeFocused {
-  if (self.onTVSelect != nil) {
-    return YES;
+  return (self.onTVSelect != nil);
+}
+
+- (RCTRootView*)rootView {
+  UIView *v = (UIView*)self;
+  while(v != nil && ![v isKindOfClass:[RCTRootView class]]) {
+    v = v.superview;
   }
-  return NO;
+  return (RCTRootView*)v;
 }
 
 - (void)didUpdateFocusInContext:(UIFocusUpdateContext *)context withAnimationCoordinator:(UIFocusAnimationCoordinator *)coordinator {
   if(context.nextFocusedView == self && self.onTVSelect != nil) {
-    NSLog(@"focused view = %@",[self description]);
     self.savedBackgroundColor = self.backgroundColor;
     self.backgroundColor = [UIColor colorWithRed:0.8 green:0.8 blue:1.0 alpha:1.0];
     [self becomeFirstResponder];
-    RCTTVRemoteHandler *tvRemoteHandler = [RCTTVRemoteHandler instance];
+    RCTTVRemoteHandler *tvRemoteHandler = [[self rootView] tvRemoteHandler];
     [self addGestureRecognizer:tvRemoteHandler.selectRecognizer];
   } else {
     [self resignFirstResponder];
     self.backgroundColor = self.savedBackgroundColor;
-    RCTTVRemoteHandler *tvRemoteHandler = [RCTTVRemoteHandler instance];
+    RCTTVRemoteHandler *tvRemoteHandler = [[self rootView] tvRemoteHandler];
     [self removeGestureRecognizer:tvRemoteHandler.selectRecognizer];
   }
 }

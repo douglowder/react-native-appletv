@@ -19,16 +19,9 @@
 #import "RCTView.h"
 #import "UIView+React.h"
 
-
-static RCTTVRemoteHandler *_instance = nil;
-
 @implementation RCTTVRemoteHandler
 {
   __weak RCTEventDispatcher *_eventDispatcher;
-}
-
-+ (instancetype)instance {
-  return _instance;
 }
 
 - (instancetype)initWithBridge:(RCTBridge *)bridge
@@ -90,7 +83,7 @@ static RCTTVRemoteHandler *_instance = nil;
                                       direction:UISwipeGestureRecognizerDirectionRight];
     
   }
-  _instance = self;
+
   return self;
 }
 

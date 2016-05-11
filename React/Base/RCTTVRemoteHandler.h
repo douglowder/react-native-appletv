@@ -20,6 +20,4 @@
 - (instancetype _Nullable)initWithBridge:(RCTBridge * _Nullable)bridge NS_DESIGNATED_INITIALIZER;
 - (void)cancel;
 
-+ (instancetype _Nullable)instance;
-
 @end
