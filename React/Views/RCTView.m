@@ -60,7 +60,9 @@
   UIView *testView = self;
   UIView *clipView = nil;
   CGRect clipRect = self.bounds;
-  while (testView) {
+  // We will only look for a clipping view up the view hierarchy until we hit the root view.
+  BOOL passedRootView = NO;
+  while (testView && !passedRootView) {
     if (testView.clipsToBounds) {
       if (clipView) {
         CGRect testRect = [clipView convertRect:clipRect toView:testView];
@@ -72,6 +74,9 @@
         clipView = testView;
         clipRect = [self convertRect:self.bounds toView:clipView];
       }
+    }
+    if ([testView isReactRootView]) {
+      passedRootView = YES;
     }
     testView = testView.superview;
   }

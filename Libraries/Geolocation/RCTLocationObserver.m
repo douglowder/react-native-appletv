@@ -132,11 +132,11 @@ RCT_EXPORT_MODULE()
 
 #pragma mark - Private API
 
-- (void)beginLocationUpdatesWithDesiredAccuracy:(CLLocationAccuracy)desiredAccuracy
+
+- (void)beginLocationUpdatesWithDesiredAccuracy:(CLLocationAccuracy)desiredAccuracy distanceFilter:(CLLocationDistance)distanceFilter
 {
   if (!_locationManager) {
     _locationManager = [CLLocationManager new];
-    _locationManager.distanceFilter = _observerOptions.distanceFilter;
     _locationManager.delegate = self;
   }
 
@@ -149,6 +149,7 @@ RCT_EXPORT_MODULE()
     [_locationManager requestWhenInUseAuthorization];
   }
 
+  _locationManager.distanceFilter  = distanceFilter;
   _locationManager.desiredAccuracy = desiredAccuracy;
   // Start observing location
   [_locationManager startUpdatingLocation];
@@ -181,7 +182,7 @@ RCT_EXPORT_METHOD(startObserving:(RCTLocationOptions)options)
     _observerOptions.accuracy = MIN(_observerOptions.accuracy, request.options.accuracy);
   }
 
-  [self beginLocationUpdatesWithDesiredAccuracy:_observerOptions.accuracy];
+  [self beginLocationUpdatesWithDesiredAccuracy:_observerOptions.accuracy distanceFilter:_observerOptions.distanceFilter];
   _observingLocation = YES;
 }
 
@@ -255,7 +256,7 @@ RCT_EXPORT_METHOD(getCurrentPosition:(RCTLocationOptions)options
   if (_locationManager) {
     accuracy = MIN(_locationManager.desiredAccuracy, accuracy);
   }
-  [self beginLocationUpdatesWithDesiredAccuracy:accuracy];
+  [self beginLocationUpdatesWithDesiredAccuracy:accuracy distanceFilter:options.distanceFilter];
 }
 
 #pragma mark - CLLocationManagerDelegate

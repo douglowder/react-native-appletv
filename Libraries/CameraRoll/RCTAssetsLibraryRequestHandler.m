@@ -14,6 +14,7 @@
 #endif
 
 #import <libkern/OSAtomic.h>
+#import <MobileCoreServices/MobileCoreServices.h>
 
 #import "RCTBridge.h"
 #import "RCTUtils.h"
@@ -68,10 +69,13 @@ RCT_EXPORT_MODULE()
 
       ALAssetRepresentation *representation = [asset defaultRepresentation];
       NSInteger length = (NSInteger)representation.size;
+      
+        
+      CFStringRef MIMEType = UTTypeCopyPreferredTagWithClass((__bridge CFStringRef _Nonnull)(representation.UTI), kUTTagClassMIMEType);
 
       NSURLResponse *response =
       [[NSURLResponse alloc] initWithURL:request.URL
-                                MIMEType:representation.UTI
+                                MIMEType:(__bridge NSString *)(MIMEType)
                    expectedContentLength:length
                         textEncodingName:nil];
 
