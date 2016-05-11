@@ -139,7 +139,7 @@ class UIExplorerExampleList extends React.Component {
     return (
       <View key={key || title}>
         <TouchableHighlight onPress={handler}>
-          <View style={styles.row}>
+          <View style={styles.row} onTVSelect={handler}>
             <Text style={styles.rowTitleText}>
               {title}
             </Text>

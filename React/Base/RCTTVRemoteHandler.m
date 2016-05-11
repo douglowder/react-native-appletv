@@ -16,17 +16,19 @@
 #import "RCTUIManager.h"
 #import "RCTUtils.h"
 #import "RCTRootView.h"
+#import "RCTView.h"
 #import "UIView+React.h"
 
-@interface RCTTVRemoteHandler()
 
-@end
+static RCTTVRemoteHandler *_instance = nil;
 
 @implementation RCTTVRemoteHandler
 {
   __weak RCTEventDispatcher *_eventDispatcher;
-  
-  
+}
+
++ (instancetype)instance {
+  return _instance;
 }
 
 - (instancetype)initWithBridge:(RCTBridge *)bridge
@@ -35,7 +37,6 @@
   
   if ((self = [super init])) {
     _eventDispatcher = [bridge moduleForClass:[RCTEventDispatcher class]];
-    
     
     self.tvRemoteGestureRecognizers = [NSMutableArray array];
     
@@ -89,7 +90,7 @@
                                       direction:UISwipeGestureRecognizerDirectionRight];
     
   }
-  
+  _instance = self;
   return self;
 }
 
@@ -106,6 +107,12 @@ RCT_NOT_IMPLEMENTED(- (instancetype)init)
 
 - (void)selectPressed:(UIGestureRecognizer*)r {
   [self sendAppleTVEvent:@"select"];
+  
+  RCTView *v = (RCTView*)r.view;
+  if(v.onTVSelect) {
+    v.onTVSelect(nil);
+  }
+  
 }
 
 - (void)longPress:(UIGestureRecognizer*)r {
@@ -135,8 +142,13 @@ RCT_NOT_IMPLEMENTED(- (instancetype)init)
   UISwipeGestureRecognizer *recognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:selector];
   recognizer.allowedPressTypes = @[[NSNumber numberWithInteger:pressType]];
   
-  NSMutableArray *gestureRecognizers = (NSMutableArray*)self.tvRemoteGestureRecognizers;
-  [gestureRecognizers addObject:recognizer];
+  
+  if(pressType == UIPressTypeSelect) {
+    self.selectRecognizer = recognizer;
+  } else {
+    NSMutableArray *gestureRecognizers = (NSMutableArray*)self.tvRemoteGestureRecognizers;
+    [gestureRecognizers addObject:recognizer];
+  }
 }
 
 - (void)addSwipeGestureRecognizerWithSelector:(nonnull SEL)selector direction:(UISwipeGestureRecognizerDirection)direction {

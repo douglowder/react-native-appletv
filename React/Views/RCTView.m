@@ -16,6 +16,11 @@
 #import "RCTUtils.h"
 #import "UIView+React.h"
 
+#import "RCTBridge.h"
+#import "RCTEventDispatcher.h"
+
+#import "RCTTVRemoteHandler.h"
+
 @implementation UIView (RCTViewUnmounting)
 
 - (void)react_remountAllSubviews
@@ -112,6 +117,7 @@ static NSString *RCTRecursiveAccessibilityLabel(UIView *view)
     _hitTestEdgeInsets = UIEdgeInsetsZero;
 
     _backgroundColor = super.backgroundColor;
+    
   }
 
   return self;
@@ -126,6 +132,35 @@ RCT_NOT_IMPLEMENTED(- (instancetype)initWithCoder:unused)
   }
   return RCTRecursiveAccessibilityLabel(self);
 }
+#if TARGET_OS_TV
+- (BOOL)isUserInteractionEnabled {
+  return YES;
+}
+
+- (BOOL)canBecomeFocused {
+  if (self.onTVSelect != nil) {
+    return YES;
+  }
+  return NO;
+}
+
+- (void)didUpdateFocusInContext:(UIFocusUpdateContext *)context withAnimationCoordinator:(UIFocusAnimationCoordinator *)coordinator {
+  if(context.nextFocusedView == self && self.onTVSelect != nil) {
+    NSLog(@"focused view = %@",[self description]);
+    self.savedBackgroundColor = self.backgroundColor;
+    self.backgroundColor = [UIColor colorWithRed:0.8 green:0.8 blue:1.0 alpha:1.0];
+    [self becomeFirstResponder];
+    RCTTVRemoteHandler *tvRemoteHandler = [RCTTVRemoteHandler instance];
+    [self addGestureRecognizer:tvRemoteHandler.selectRecognizer];
+  } else {
+    [self resignFirstResponder];
+    self.backgroundColor = self.savedBackgroundColor;
+    RCTTVRemoteHandler *tvRemoteHandler = [RCTTVRemoteHandler instance];
+    [self removeGestureRecognizer:tvRemoteHandler.selectRecognizer];
+  }
+}
+
+#endif
 
 - (void)setPointerEvents:(RCTPointerEvents)pointerEvents
 {

@@ -28,6 +28,11 @@
 @property (nonatomic, copy) RCTDirectEventBlock onMagicTap;
 
 /**
+ * TV select handler
+ */
+@property (nonatomic, copy) RCTDirectEventBlock onTVSelect;
+
+/**
  * Used to control how touch events are processed.
  */
 @property (nonatomic, assign) RCTPointerEvents pointerEvents;
@@ -94,5 +99,7 @@
  *  Insets used when hit testing inside this view.
  */
 @property (nonatomic, assign) UIEdgeInsets hitTestEdgeInsets;
+
+@property (nonatomic, strong) UIColor *savedBackgroundColor;
 
 @end
