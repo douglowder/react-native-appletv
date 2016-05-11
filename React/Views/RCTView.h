@@ -81,6 +81,8 @@
 @property (nonatomic, assign) CGColorRef borderLeftColor;
 @property (nonatomic, assign) CGColorRef borderColor;
 
+@property (nonatomic, strong) UIColor *tvFocusedBorderColor;
+
 /**
  * Border widths.
  */
@@ -101,7 +103,7 @@
 @property (nonatomic, assign) UIEdgeInsets hitTestEdgeInsets;
 
 #if TARGET_OS_TV
-@property (nonatomic, strong) UIColor *savedBackgroundColor;
+@property (nonatomic, assign) CGColorRef savedBorderColor;
 #endif
 
 @end

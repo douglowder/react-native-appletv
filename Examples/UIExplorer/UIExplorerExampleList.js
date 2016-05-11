@@ -182,6 +182,7 @@ const styles = StyleSheet.create({
     backgroundColor: 'white',
   },
   row: {
+    tvFocusedBorderColor: '#ffffcc',
     backgroundColor: 'white',
     justifyContent: 'center',
     paddingHorizontal: 15,
