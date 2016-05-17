@@ -9,7 +9,7 @@
 
 #import <UIKit/UIKit.h>
 
-#import "RCTBridgeModule.h"
+#import "RCTEventEmitter.h"
 #import "RCTConvert.h"
 
 #if !TARGET_OS_TV
@@ -23,6 +23,6 @@
 
 #endif //TARGET_OS_TV
 
-@interface RCTStatusBarManager : NSObject <RCTBridgeModule>
+@interface RCTStatusBarManager : RCTEventEmitter
 
 @end
