@@ -159,16 +159,17 @@ RCT_NOT_IMPLEMENTED(- (instancetype)initWithCoder:unused)
 
 - (void)didUpdateFocusInContext:(UIFocusUpdateContext *)context withAnimationCoordinator:(UIFocusAnimationCoordinator *)coordinator {
   if(context.nextFocusedView == self && self.onTVSelect != nil) {
-    self.savedBorderColor = self.borderColor;
-    self.borderColor = self.tvFocusedBorderColor ? [self.tvFocusedBorderColor CGColor] : [[UIColor blueColor] CGColor];
-    self.borderWidth = self.borderWidth + 5;
+    if(self.onTVFocus) {
+      self.onTVFocus(nil);
+    }
     [self becomeFirstResponder];
     RCTTVRemoteHandler *tvRemoteHandler = [[self rootView] tvRemoteHandler];
     [self addGestureRecognizer:tvRemoteHandler.selectRecognizer];
   } else {
+    if(self.onTVBlur) {
+      self.onTVBlur(nil);
+    }
     [self resignFirstResponder];
-    self.borderColor = self.savedBorderColor;
-    self.borderWidth = self.borderWidth - 5;
     RCTTVRemoteHandler *tvRemoteHandler = [[self rootView] tvRemoteHandler];
     [self removeGestureRecognizer:tvRemoteHandler.selectRecognizer];
   }

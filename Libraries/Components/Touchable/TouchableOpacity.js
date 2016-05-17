@@ -58,11 +58,13 @@ var TouchableOpacity = React.createClass({
      * active. Defaults to 0.2.
      */
     activeOpacity: React.PropTypes.number,
+    focusedOpacity: React.PropTypes.number,
   },
 
   getDefaultProps: function() {
     return {
       activeOpacity: 0.2,
+      focusedOpacity: 0.7
     };
   },
 
@@ -157,6 +159,10 @@ var TouchableOpacity = React.createClass({
     );
   },
 
+  _opacityFocused: function() {
+    this.setOpacityTo(this.props.focusedOpacity);
+  },
+
   render: function() {
     return (
       <Animated.View
@@ -167,6 +173,9 @@ var TouchableOpacity = React.createClass({
         style={[this.props.style, {opacity: this.state.anim}]}
         testID={this.props.testID}
         onLayout={this.props.onLayout}
+        onTVSelect={this.props.onPress}
+        onTVFocus={this._opacityFocused}
+        onTVBlur={this._opacityInactive}
         hitSlop={this.props.hitSlop}
         onStartShouldSetResponder={this.touchableHandleStartShouldSetResponder}
         onResponderTerminationRequest={this.touchableHandleResponderTerminationRequest}

@@ -911,12 +911,14 @@ RCT_ENUM_CONVERTER(RCTAnimationType, (@{
                           orientation:image.imageOrientation];
   }
 
+#if !TARGET_OS_TV
   if (!CGSizeEqualToSize(imageSource.size, CGSizeZero) &&
       !CGSizeEqualToSize(imageSource.size, image.size)) {
     RCTLogError(@"Image source size %@ does not match loaded image size %@.",
                 NSStringFromCGSize(imageSource.size), NSStringFromCGSize(image.size));
   }
-
+#endif
+  
   return image;
 }
 

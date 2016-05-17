@@ -311,7 +311,7 @@ var styles = StyleSheet.create({
     color: 'blue',
     fontWeight: 'bold',
     fontSize: 18,
-    fontFamily: 'Cochin',
+    fontFamily: 'Courier',
     height: 60,
   },
   multilineChild: {

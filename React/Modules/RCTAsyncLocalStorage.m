@@ -240,6 +240,9 @@ RCT_EXPORT_MODULE()
 
 - (NSDictionary *)_writeManifest:(NSMutableArray<NSDictionary *> **)errors
 {
+#if TARGET_OS_TV
+  return nil;
+#endif
   NSError *error;
   NSString *serialized = RCTJSONStringify(_manifest, &error);
   [serialized writeToFile:RCTGetManifestFilePath() atomically:YES encoding:NSUTF8StringEncoding error:&error];
@@ -285,6 +288,9 @@ RCT_EXPORT_MODULE()
 
 - (NSDictionary *)_writeEntry:(NSArray<NSString *> *)entry changedManifest:(BOOL *)changedManifest
 {
+#if TARGET_OS_TV
+  return nil;
+#endif
   if (entry.count != 2) {
     return RCTMakeAndLogError(@"Entries must be arrays of the form [key: string, value: string], got: ", entry, nil);
   }

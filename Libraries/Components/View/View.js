@@ -181,6 +181,8 @@ const View = React.createClass({
     onMagicTap: PropTypes.func,
 
     onTVSelect: PropTypes.func,
+    onTVFocus: PropTypes.func,
+    onTVBlur: PropTypes.func,
 
     /**
      * Used to locate this view in end-to-end tests. NB: disables the 'layout-only

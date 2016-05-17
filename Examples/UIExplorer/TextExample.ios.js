@@ -101,11 +101,11 @@ exports.examples = [
   render: function() {
     return (
       <View>
-        <Text style={{fontFamily: 'Cochin'}}>
-          Cochin
+        <Text style={{fontFamily: 'Courier'}}>
+          Courier
         </Text>
-        <Text style={{fontFamily: 'Cochin', fontWeight: 'bold'}}>
-          Cochin bold
+        <Text style={{fontFamily: 'Courier', fontWeight: 'bold'}}>
+          Courier bold
         </Text>
         <Text style={{fontFamily: 'Helvetica'}}>
           Helvetica
@@ -113,11 +113,11 @@ exports.examples = [
         <Text style={{fontFamily: 'Helvetica', fontWeight: 'bold'}}>
           Helvetica bold
         </Text>
-        <Text style={{fontFamily: 'Verdana'}}>
-          Verdana
+        <Text style={{fontFamily: 'Times'}}>
+          Times
         </Text>
-        <Text style={{fontFamily: 'Verdana', fontWeight: 'bold'}}>
-          Verdana bold
+        <Text style={{fontFamily: 'Times', fontWeight: 'bold'}}>
+          Times bold
         </Text>
       </View>
     );

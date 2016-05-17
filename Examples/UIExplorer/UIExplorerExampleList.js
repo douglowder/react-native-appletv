@@ -147,7 +147,7 @@ class UIExplorerExampleList extends React.Component {
     return (
       <View key={key || title}>
         <TouchableHighlight onPress={handler}>
-          <View style={styles.row} onTVSelect={handler}>
+          <View style={styles.row}>
             <Text style={styles.rowTitleText}>
               {title}
             </Text>
@@ -182,7 +182,6 @@ const styles = StyleSheet.create({
     backgroundColor: 'white',
   },
   row: {
-    tvFocusedBorderColor: '#ffffcc',
     backgroundColor: 'white',
     justifyContent: 'center',
     paddingHorizontal: 15,

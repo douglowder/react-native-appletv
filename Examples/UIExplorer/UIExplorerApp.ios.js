@@ -197,6 +197,9 @@ const styles = StyleSheet.create({
   exampleContainer: {
     flex: 1,
     paddingTop: NavigationHeader.HEIGHT,
+    paddingLeft: 100,
+    paddingRight: 100,
+    paddingBottom: 100
   },
 });
 
