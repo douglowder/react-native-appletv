@@ -95,6 +95,7 @@ static UIViewAnimationOptions UIViewAnimationOptionsFromRCTAnimationType(RCTAnim
 // `UIKeyboardWillChangeFrameNotification`s.
 + (void)initializeStatics
 {
+#if !TARGET_OS_TV
   static dispatch_once_t onceToken;
   dispatch_once(&onceToken, ^{
     [[NSNotificationCenter defaultCenter] addObserver:self
@@ -102,12 +103,15 @@ static UIViewAnimationOptions UIViewAnimationOptionsFromRCTAnimationType(RCTAnim
                                                 name:UIKeyboardWillChangeFrameNotification
                                                object:nil];
   });
+#endif
 }
 
 + (void)keyboardWillChangeFrame:(NSNotification *)notification
 {
+#if !TARGET_OS_TV
   NSDictionary *userInfo = notification.userInfo;
   _currentKeyboardAnimationCurve = [userInfo[UIKeyboardAnimationCurveUserInfoKey] integerValue];
+#endif
 }
 
 - (instancetype)initWithDuration:(NSTimeInterval)duration dictionary:(NSDictionary *)config

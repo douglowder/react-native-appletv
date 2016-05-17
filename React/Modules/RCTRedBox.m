@@ -168,9 +168,10 @@ RCT_NOT_IMPLEMENTED(- (instancetype)initWithCoder:(NSCoder *)aDecoder)
       [fullStackTrace appendString:lineInfo];
     }
   }
-  
+#if !TARGET_OS_TV
   UIPasteboard *pb = [UIPasteboard generalPasteboard];
   [pb setString:fullStackTrace];
+#endif
 }
 
 #pragma mark - TableView
