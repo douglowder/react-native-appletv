@@ -77,7 +77,11 @@
      * Load from pre-bundled file on disk. To re-generate the static bundle, `cd`
      * to your Xcode project folder and run
      *
+     * (iPhone, iPad)
      * $ curl 'http://localhost:8081/Examples/UIExplorer/UIExplorerApp.ios.bundle?platform=ios' -o main.jsbundle
+     *
+     * (AppleTV)
+     * $ curl 'http://localhost:8081/Examples/UIExplorer/UIExplorerApp.ios.bundle?platform=ios&appletv=true' -o main.jsbundle
      *
      * then add the `main.jsbundle` file to your project and uncomment this line:
      */

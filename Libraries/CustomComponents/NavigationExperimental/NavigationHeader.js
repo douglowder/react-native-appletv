@@ -119,6 +119,7 @@ class NavigationHeader extends React.Component<DefaultProps, Props, any> {
     );
   }
 
+
   render(): ReactElement {
     const { scenes, style, viewProps } = this.props;
 
@@ -126,6 +127,13 @@ class NavigationHeader extends React.Component<DefaultProps, Props, any> {
       const props = NavigationPropTypes.extractSceneRendererProps(this.props);
       props.scene = scene;
       return props;
+    });
+
+    ReactNative.NativeAppEventEmitter.addListener( 'tvEvent', evt => {
+        console.log("Navigation: " + evt.eventType);
+        if(evt.eventType === "menu") {
+            this.props.onNavigate({type: 'BackAction'});
+        }
     });
 
     return (

@@ -16,7 +16,7 @@ var Image = require('Image');
 var NavigationContext = require('NavigationContext');
 var RCTNavigatorManager = require('NativeModules').NavigatorManager;
 var React = require('React');
-var ReactNative = require('ReactNative');
+var ReactNative = require('react-native');
 var StaticContainer = require('StaticContainer.react');
 var StyleSheet = require('StyleSheet');
 var View = require('View');
@@ -341,6 +341,11 @@ var NavigatorIOS = React.createClass({
   },
 
   componentDidMount: function() {
+    ReactNative.NativeAppEventEmitter.addListener( 'tvEvent', evt => {
+      if(evt.eventType === "menu") {
+        this.pop();
+      }
+    });
     this._emitDidFocus(this.state.routeStack[this.state.observedTopOfStack]);
   },
 

@@ -80,7 +80,6 @@ class UIExplorerApp extends React.Component {
   }
 
   componentDidMount() {
-    ReactNative.NativeAppEventEmitter.addListener( 'tvEvent', evt => console.log( 'Received Apple TV event: ' + evt.eventType));
     Linking.getInitialURL().then((url) => {
       AsyncStorage.getItem('UIExplorerAppState', (err, storedString) => {
         const exampleAction = URIActionMap(this.props.exampleFromAppetizeParams);
@@ -130,12 +129,6 @@ class UIExplorerApp extends React.Component {
         />
       );
     }
-    ReactNative.NativeAppEventEmitter.addListener( 'tvEvent', evt => {
-        console.log("Navigation: " + evt.eventType);
-        if(evt.eventType === "menu") {
-            this._handleAction({ type: 'BackAction' });
-        }
-    });
     return (
       <NavigationCardStack
         navigationState={this.state.stack}
