@@ -67,8 +67,11 @@
      * on the same Wi-Fi network.
      */
 
-    sourceURL = [NSURL URLWithString:@"http://localhost:8081/Examples/UIExplorer/UIExplorerApp.ios.bundle?platform=ios&dev=true"];
-
+#if TARGET_OS_TV
+    sourceURL = [NSURL URLWithString:@"http://localhost:8081/Examples/UIExplorer/UIExplorerApp.ios.bundle?platform=ios&dev=true&appletv=true"];
+#else
+  sourceURL = [NSURL URLWithString:@"http://localhost:8081/Examples/UIExplorer/UIExplorerApp.ios.bundle?platform=ios&dev=true"];
+#endif
     /**
      * OPTION 2
      * Load from pre-bundled file on disk. To re-generate the static bundle, `cd`
@@ -79,7 +82,7 @@
      * then add the `main.jsbundle` file to your project and uncomment this line:
      */
 
-    //sourceURL = [[NSBundle mainBundle] URLForResource:@"main" withExtension:@"jsbundle"];
+    // sourceURL = [[NSBundle mainBundle] URLForResource:@"main" withExtension:@"jsbundle"];
 
   #if RUNNING_ON_CI
      sourceURL = [[NSBundle mainBundle] URLForResource:@"main" withExtension:@"jsbundle"];

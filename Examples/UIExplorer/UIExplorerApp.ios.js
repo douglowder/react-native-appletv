@@ -197,9 +197,9 @@ const styles = StyleSheet.create({
   exampleContainer: {
     flex: 1,
     paddingTop: NavigationHeader.HEIGHT,
-    paddingLeft: 100,
-    paddingRight: 100,
-    paddingBottom: 100
+    paddingLeft: (__APPLETV__ ? 100 : 0),
+    paddingRight: (__APPLETV__ ? 100 : 0),
+    paddingBottom: (__APPLETV__ ? 100 : 0)
   },
 });
 

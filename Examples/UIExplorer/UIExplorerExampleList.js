@@ -65,7 +65,7 @@ class UIExplorerExampleList extends React.Component {
   render(): ?ReactElement {
     const filterText = this.props.filter || '';
     const filterRegex = new RegExp(String(filterText), 'i');
-    const filter = (example) => filterRegex.test(example.module.title);
+    const filter = (example) => (filterRegex.test(example.module.title) && (example.tvosSupported || !__APPLETV__));
 
     const dataSource = ds.cloneWithRowsAndSections({
       components: this.props.list.ComponentExamples.filter(filter),
