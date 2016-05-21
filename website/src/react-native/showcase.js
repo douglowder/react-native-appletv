@@ -332,7 +332,7 @@ var apps = [
     icon: 'http://a4.mzstatic.com/us/r30/Purple60/v4/1a/42/5b/1a425b56-848a-91f5-8078-9f5473c9021f/icon350x350.png',
     link: 'https://itunes.apple.com/us/app/clapit/id1062124740?mt=8',
     author: 'Refined Edge Solutions, LLC'
-  }, 
+  },
   {
     name: 'Codementor - Live 1:1 Expert Developer Help',
     icon: 'http://a1.mzstatic.com/us/r30/Purple3/v4/db/cf/35/dbcf3523-bac7-0f54-c6a8-a80bf4f43c38/icon175x175.jpeg',
@@ -689,6 +689,24 @@ var apps = [
     author: 'ProjectSeptember.com',
   },
   {
+    name: 'QQ',
+    icon: 'http://pp.myapp.com/ma_icon/0/icon_6633_1461768893/96',
+    link: 'http://android.myapp.com/myapp/detail.htm?apkName=com.tencent.mobileqq',
+    author: '邱俊',
+  },
+  {
+    name: 'QQ空间',
+    icon: 'http://pp.myapp.com/ma_icon/0/icon_9959_1460036593/96',
+    link: 'http://android.myapp.com/myapp/detail.htm?apkName=com.qzone',
+    author: '薛丰',
+  },
+  {
+    name: 'QQ音乐',
+    icon: 'http://pp.myapp.com/ma_icon/0/icon_6259_1462429453/96',
+    link: 'http://android.myapp.com/myapp/detail.htm?apkName=com.tencent.qqmusic',
+    author: '石玉磊',
+  },
+  {
     name: 'Raindrop.io',
     icon: 'http://a5.mzstatic.com/us/r30/Purple3/v4/f0/a4/57/f0a4574e-4a59-033f-05ff-5c421f0a0b00/icon175x175.png',
     link: 'https://itunes.apple.com/us/app/raindrop.io-keep-your-favorites/id1021913807',
@@ -983,6 +1001,18 @@ var apps = [
     icon: 'https://xiaoxian.ele.me/download/images/share_page/ic_launcher.png',
     linkAppStore: 'https://itunes.apple.com/cn/app/e-xiao-xian/id1092025196',
     author: 'Eleme',
+  },
+  {
+    name: '全民K歌',
+    icon: 'http://pp.myapp.com/ma_icon/0/icon_10966186_1460087288/96',
+    link: 'http://android.myapp.com/myapp/detail.htm?apkName=com.tencent.karaoke',
+    author: '石玉磊',
+  },
+  {
+    name: 'Emberall',
+    icon: 'http://assets.emberall.com/images/app/icons/medium.png',
+    link: 'https://emberall.com/',
+    author: 'Kyle Corbitt',
   },
 ];
 
