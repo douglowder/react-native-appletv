@@ -46,9 +46,7 @@ var NavigatorIOSColors = React.createClass({
 
   render: function() {
     // Set StatusBar with light contents to get better contrast
-    if(!__APPLETV__) {
-      StatusBar.setBarStyle('light-content');
-    }
+    StatusBar.setBarStyle('light-content');
     return (
       <NavigatorIOS
         style={styles.container}
@@ -57,9 +55,7 @@ var NavigatorIOSColors = React.createClass({
           title: '<NavigatorIOS>',
           rightButtonTitle: 'Done',
           onRightButtonPress: () => {
-            if(!__APPLETV__) {
-              StatusBar.setBarStyle('default');
-            }
+            StatusBar.setBarStyle('default');
             this.props.onExampleExit();
           },
           passProps: {

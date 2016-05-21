@@ -150,6 +150,10 @@ const StatusBar = React.createClass({
         console.warn('`setBarStyle` is only available on iOS');
         return;
       }
+      if (__APPLETV__) {
+        console.warn('`setBarStyle` is not available on Apple TV');
+        return;
+      }
       animated = animated || false;
       StatusBar._defaultProps.barStyle.value = style;
       StatusBarManager.setStyle(style, animated);
