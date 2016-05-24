@@ -640,6 +640,13 @@ var apps = [
     author: 'Rhyble',
   },
   {
+    name: 'NeoReader',
+    icon: 'http://firicon.fir.im/a4c5f1e8c52d9d98e7b990e5098a161a8f698653',
+    linkAppStore: 'https://itunes.apple.com/cn/app/niu-du-neoreader/id1111443079?l=cn&mt=8',
+    linkPlayStore: 'http://fir.im/neoreader',
+    author: 'Neo Nie',
+  },
+  {
     name: 'New Music - listen to recent albums, EPs & singles',
     icon: 'http://a5.mzstatic.com/us/r30/Purple60/v4/fa/d9/be/fad9be3d-474c-4380-6391-37f234a81901/icon175x175.png',
     link: 'https://itunes.apple.com/app/new-music-keep-track-latest/id1104646834',
@@ -669,6 +676,13 @@ var apps = [
     icon: 'http://a5.mzstatic.com/us/r30/Purple69/v4/aa/93/17/aa93171e-d0ed-7e07-54a1-be27490e210c/icon175x175.jpeg',
     link: 'https://itunes.apple.com/us/app/okanagan-news-reader-for-viewing/id1049147148?mt=8',
     author: 'Levi Cabral',
+  },
+  {
+    name: 'passpoints',
+    icon: 'http://a5.mzstatic.com/eu/r30/Purple1/v4/8c/a0/72/8ca072ac-2304-1bf6-16e5-701e71921f42/icon350x350.png',
+    linkAppStore: 'https://itunes.apple.com/app/passpoints/id930988932',
+    linkPlayStore: 'https://play.google.com/store/apps/details?id=com.passpointsreactnative',
+    author: 'passpoints.de',
   },
   {
     name: 'Pimmr',

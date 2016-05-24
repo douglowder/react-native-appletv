@@ -954,39 +954,6 @@ RCT_SET_AND_PRESERVE_OFFSET(setShowsVerticalScrollIndicator, showsVerticalScroll
 RCT_SET_AND_PRESERVE_OFFSET(setZoomScale, zoomScale, CGFloat);
 RCT_SET_AND_PRESERVE_OFFSET(setScrollIndicatorInsets, scrollIndicatorInsets, UIEdgeInsets);
 
-- (void)setOnRefreshStart:(RCTDirectEventBlock)onRefreshStart
-{
-#if !TARGET_OS_TV
-  if (!onRefreshStart) {
-    _onRefreshStart = nil;
-    _scrollView.refreshControl = nil;
-    return;
-  }
-  _onRefreshStart = [onRefreshStart copy];
-
-  if (!_scrollView.refreshControl) {
-    RCTRefreshControl *refreshControl = [RCTRefreshControl new];
-    [refreshControl addTarget:self action:@selector(refreshControlValueChanged) forControlEvents:UIControlEventValueChanged];
-    _scrollView.refreshControl = refreshControl;
-  }
-#endif
-  
-}
-
-- (void)refreshControlValueChanged
-{
-  if (self.onRefreshStart) {
-    self.onRefreshStart(nil);
-  }
-}
-
-- (void)endRefreshing
-{
-#if !TARGET_OS_TV
-  [_scrollView.refreshControl endRefreshing];
-#endif
-}
-
 - (void)sendScrollEventWithName:(NSString *)eventName
                      scrollView:(UIScrollView *)scrollView
                        userData:(NSDictionary *)userData

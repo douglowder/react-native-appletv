@@ -475,7 +475,7 @@ static NSAttributedString *removeReactTagFromString(NSAttributedString *string)
   [self _setPlaceholderVisibility];
   _nativeEventCount++;
 
-  if (!self.reactTag) {
+  if (!self.reactTag || !_onChange) {
     return;
   }
 
@@ -493,8 +493,7 @@ static NSAttributedString *removeReactTagFromString(NSAttributedString *string)
   }
   _previousTextLength = textLength;
   _previousContentHeight = contentHeight;
-
-  NSDictionary *event = @{
+  _onChange(@{
     @"text": self.text,
     @"contentSize": @{
       @"height": @(contentHeight),
@@ -502,8 +501,7 @@ static NSAttributedString *removeReactTagFromString(NSAttributedString *string)
     },
     @"target": self.reactTag,
     @"eventCount": @(_nativeEventCount),
-  };
-  [_eventDispatcher sendInputEventWithName:@"change" body:event];
+  });
 }
 
 - (void)textViewDidEndEditing:(UITextView *)textView
