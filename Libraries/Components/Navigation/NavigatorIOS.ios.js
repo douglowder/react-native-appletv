@@ -341,11 +341,6 @@ var NavigatorIOS = React.createClass({
   },
 
   componentDidMount: function() {
-    ReactNative.NativeAppEventEmitter.addListener( 'tvEvent', evt => {
-      if(evt.eventType === "menu") {
-        this.pop();
-      }
-    });
     this._emitDidFocus(this.state.routeStack[this.state.observedTopOfStack]);
   },
 
@@ -710,7 +705,7 @@ var NavigatorIOS = React.createClass({
 
   render: function() {
     return (
-      <View style={this.props.style}>
+      <View style={this.props.style} onTVMenu={this.pop}>
         {this._renderNavigationStackItems()}
       </View>
     );

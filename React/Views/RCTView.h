@@ -33,6 +33,7 @@
 @property (nonatomic, copy) RCTDirectEventBlock onTVSelect;
 @property (nonatomic, copy) RCTDirectEventBlock onTVFocus;
 @property (nonatomic, copy) RCTDirectEventBlock onTVBlur;
+@property (nonatomic, copy) RCTDirectEventBlock onTVMenu;
 
 /**
  * Used to control how touch events are processed.

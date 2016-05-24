@@ -96,16 +96,24 @@ RCT_NOT_IMPLEMENTED(- (instancetype)init)
 
 - (void)menuPressed:(UIGestureRecognizer*)r {
   [self sendAppleTVEvent:@"menu"];
+  RCTRootView *rootView = (RCTRootView*)r.view;
+  [self bubbleDownMenuEvent:rootView];
+}
+
+- (void)bubbleDownMenuEvent:(UIView*)v {
+  if([v respondsToSelector:@selector(onTVMenu)]) {
+    RCTDirectEventBlock onTVMenu = [v performSelector:@selector(onTVMenu) withObject:nil];
+    if(onTVMenu) {
+      onTVMenu(nil);
+    }
+  }
+  for(UIView *u in [v subviews]) {
+    [self bubbleDownMenuEvent:u];
+  }
 }
 
 - (void)selectPressed:(UIGestureRecognizer*)r {
   [self sendAppleTVEvent:@"select"];
-  
-  RCTView *v = (RCTView*)r.view;
-  if(v.onTVSelect) {
-    v.onTVSelect(nil);
-  }
-  
 }
 
 - (void)longPress:(UIGestureRecognizer*)r {
@@ -132,16 +140,12 @@ RCT_NOT_IMPLEMENTED(- (instancetype)init)
 
 - (void)addTapGestureRecognizerWithSelector:(nonnull SEL)selector pressType:(UIPressType)pressType {
   
-  UISwipeGestureRecognizer *recognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:selector];
+  UITapGestureRecognizer *recognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:selector];
   recognizer.allowedPressTypes = @[[NSNumber numberWithInteger:pressType]];
   
   
-  if(pressType == UIPressTypeSelect) {
-    self.selectRecognizer = recognizer;
-  } else {
-    NSMutableArray *gestureRecognizers = (NSMutableArray*)self.tvRemoteGestureRecognizers;
-    [gestureRecognizers addObject:recognizer];
-  }
+  NSMutableArray *gestureRecognizers = (NSMutableArray*)self.tvRemoteGestureRecognizers;
+  [gestureRecognizers addObject:recognizer];
 }
 
 - (void)addSwipeGestureRecognizerWithSelector:(nonnull SEL)selector direction:(UISwipeGestureRecognizerDirection)direction {

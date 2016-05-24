@@ -119,6 +119,9 @@ class NavigationHeader extends React.Component<DefaultProps, Props, any> {
     );
   }
 
+  _navigateBack(props: NavigationSceneRendererProps): void {
+    props.onNavigate && props.onNavigate({type: 'BackAction'});
+  }
 
   render(): ReactElement {
     const { scenes, style, viewProps } = this.props;
@@ -129,15 +132,8 @@ class NavigationHeader extends React.Component<DefaultProps, Props, any> {
       return props;
     });
 
-    ReactNative.NativeAppEventEmitter.addListener( 'tvEvent', evt => {
-        console.log("Navigation: " + evt.eventType);
-        if(evt.eventType === "menu") {
-            this.props.onNavigate({type: 'BackAction'});
-        }
-    });
-
     return (
-      <View style={[ styles.appbar, style ]} {...viewProps}>
+      <View style={[ styles.appbar, style ]} onTVMenu={() => this._navigateBack(this.props)} {...viewProps}>
         {scenesProps.map(this._renderLeft, this)}
         {scenesProps.map(this._renderTitle, this)}
         {scenesProps.map(this._renderRight, this)}

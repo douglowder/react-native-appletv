@@ -15,7 +15,6 @@
 @interface RCTTVRemoteHandler : NSObject
 
 @property(nonatomic, nonnull, readwrite, strong) NSArray *tvRemoteGestureRecognizers;
-@property(nonatomic, nonnull, readwrite, strong) UITapGestureRecognizer *selectRecognizer;
 
 - (instancetype _Nullable)initWithBridge:(RCTBridge * _Nullable)bridge NS_DESIGNATED_INITIALIZER;
 - (void)cancel;

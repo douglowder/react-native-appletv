@@ -19,11 +19,6 @@
 #import "RCTBridge.h"
 #import "RCTEventDispatcher.h"
 
-#if TARGET_OS_TV
-#import "RCTRootView.h"
-#import "RCTTVRemoteHandler.h"
-#endif
-
 @implementation UIView (RCTViewUnmounting)
 
 - (void)react_remountAllSubviews
@@ -107,6 +102,8 @@ static NSString *RCTRecursiveAccessibilityLabel(UIView *view)
 {
   NSMutableArray<UIView *> *_reactSubviews;
   UIColor *_backgroundColor;
+  UITapGestureRecognizer *_selectRecognizer;
+  UITapGestureRecognizer *_menuRecognizer;
 }
 
 - (instancetype)initWithFrame:(CGRect)frame
@@ -141,6 +138,29 @@ RCT_NOT_IMPLEMENTED(- (instancetype)initWithCoder:unused)
   return RCTRecursiveAccessibilityLabel(self);
 }
 #if TARGET_OS_TV
+
+- (void)setOnTVSelect:(RCTDirectEventBlock)onTVSelect {
+  _onTVSelect = [onTVSelect copy];
+  if(_onTVSelect) {
+    UITapGestureRecognizer *recognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleSelect:)];
+    recognizer.allowedPressTypes = @[[NSNumber numberWithInteger:UIPressTypeSelect]];
+    _selectRecognizer = recognizer;
+    [self addGestureRecognizer:_selectRecognizer];
+  } else {
+    if(_selectRecognizer) {
+      [self removeGestureRecognizer:_selectRecognizer];
+    }
+  }
+  
+}
+
+- (void)handleSelect:(UIGestureRecognizer*)r {
+  RCTView *v = (RCTView*)r.view;
+  if(v.onTVSelect) {
+    v.onTVSelect(nil);
+  }
+}
+
 - (BOOL)isUserInteractionEnabled {
   return YES;
 }
@@ -149,29 +169,17 @@ RCT_NOT_IMPLEMENTED(- (instancetype)initWithCoder:unused)
   return (self.onTVSelect != nil);
 }
 
-- (RCTRootView*)rootView {
-  UIView *v = (UIView*)self;
-  while(v != nil && ![v isKindOfClass:[RCTRootView class]]) {
-    v = v.superview;
-  }
-  return (RCTRootView*)v;
-}
-
 - (void)didUpdateFocusInContext:(UIFocusUpdateContext *)context withAnimationCoordinator:(UIFocusAnimationCoordinator *)coordinator {
   if(context.nextFocusedView == self && self.onTVSelect != nil) {
     if(self.onTVFocus) {
       self.onTVFocus(nil);
     }
     [self becomeFirstResponder];
-    RCTTVRemoteHandler *tvRemoteHandler = [[self rootView] tvRemoteHandler];
-    [self addGestureRecognizer:tvRemoteHandler.selectRecognizer];
   } else {
     if(self.onTVBlur) {
       self.onTVBlur(nil);
     }
     [self resignFirstResponder];
-    RCTTVRemoteHandler *tvRemoteHandler = [[self rootView] tvRemoteHandler];
-    [self removeGestureRecognizer:tvRemoteHandler.selectRecognizer];
   }
 }
 
