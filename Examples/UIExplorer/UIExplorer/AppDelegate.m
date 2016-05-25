@@ -89,9 +89,11 @@
 
     // sourceURL = [[NSBundle mainBundle] URLForResource:@"main" withExtension:@"jsbundle"];
 
+#if !TARGET_OS_TV
   if (!getenv("CI_USE_PACKAGER")) {
      sourceURL = [[NSBundle mainBundle] URLForResource:@"main" withExtension:@"jsbundle"];
   }
+#endif
 
   return sourceURL;
 }
