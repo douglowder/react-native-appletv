@@ -183,7 +183,7 @@ const View = React.createClass({
     onTVSelect: PropTypes.func,
     onTVFocus: PropTypes.func,
     onTVBlur: PropTypes.func,
-    onTVMenu: PropTypes.func,
+    onTVNavEvent: PropTypes.func,
 
     /**
      * Used to locate this view in end-to-end tests. NB: disables the 'layout-only

@@ -194,14 +194,30 @@ class Game2048 extends React.Component {
     }
   }
 
+  handleTVNavEvent(evt) {
+      console.log("TV remote event: " + evt.nativeEvent.eventType);
+      if(evt.nativeEvent.eventType === "left") {
+        this.setState({board: this.state.board.move(0)});
+      } else if(evt.nativeEvent.eventType === "right") {
+        this.setState({board: this.state.board.move(2)});
+      } else if(evt.nativeEvent.eventType === "up") {
+        this.setState({board: this.state.board.move(1)});
+      } else if(evt.nativeEvent.eventType === "down") {
+        this.setState({board: this.state.board.move(3)});
+      } 
+  }
+
   render() {
     var tiles = this.state.board.tiles
       .filter((tile) => tile.value)
       .map((tile) => <Tile ref={tile.id} key={tile.id} tile={tile} />);
 
+    ReactNative.NativeAppEventEmitter.addListener( 'tvEvent', evt => {
+    });
     return (
       <View
         style={styles.container}
+        onTVNavEvent={(event) => this.handleTVNavEvent(event)}
         onTouchStart={(event) => this.handleTouchStart(event)}
         onTouchEnd={(event) => this.handleTouchEnd(event)}>
         <Board>
@@ -273,7 +289,7 @@ var styles = StyleSheet.create({
   value: {
     fontSize: 24,
     color: '#776666',
-    fontFamily: 'Verdana',
+    fontFamily: __APPLETV__ ? 'Helvetica' : 'Verdana',
     fontWeight: '500',
   },
   tile2: {

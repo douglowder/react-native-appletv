@@ -35,9 +35,11 @@
    * `inet` value under `en0:`) and make sure your computer and iOS device are
    * on the same Wi-Fi network.
    */
-
+#if TARGET_OS_TV
+  jsCodeLocation = [NSURL URLWithString:@"http://localhost:8081/Examples/2048/Game2048.bundle?platform=ios&dev=true&appletv=true"];
+#else
   jsCodeLocation = [NSURL URLWithString:@"http://localhost:8081/Examples/2048/Game2048.bundle?platform=ios&dev=true"];
-
+#endif
   /**
    * OPTION 2
    * Load from pre-bundled file on disk. To re-generate the static bundle, `cd`

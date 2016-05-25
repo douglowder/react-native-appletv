@@ -91,49 +91,35 @@ RCT_NOT_IMPLEMENTED(- (instancetype)init)
 
 
 - (void)playPausePressed:(UIGestureRecognizer*)r {
-  [self sendAppleTVEvent:@"playPause"];
+  [self sendAppleTVEvent:@"playPause" toView:r.view];
 }
 
 - (void)menuPressed:(UIGestureRecognizer*)r {
-  [self sendAppleTVEvent:@"menu"];
-  RCTRootView *rootView = (RCTRootView*)r.view;
-  [self bubbleDownMenuEvent:rootView];
-}
-
-- (void)bubbleDownMenuEvent:(UIView*)v {
-  if([v respondsToSelector:@selector(onTVMenu)]) {
-    RCTDirectEventBlock onTVMenu = [v performSelector:@selector(onTVMenu) withObject:nil];
-    if(onTVMenu) {
-      onTVMenu(nil);
-    }
-  }
-  for(UIView *u in [v subviews]) {
-    [self bubbleDownMenuEvent:u];
-  }
+  [self sendAppleTVEvent:@"menu" toView:r.view];
 }
 
 - (void)selectPressed:(UIGestureRecognizer*)r {
-  [self sendAppleTVEvent:@"select"];
+  [self sendAppleTVEvent:@"select" toView:r.view];
 }
 
 - (void)longPress:(UIGestureRecognizer*)r {
-  [self sendAppleTVEvent:@"longPress"];
+  [self sendAppleTVEvent:@"longPress" toView:r.view];
 }
 
 - (void)swipedUp:(UIGestureRecognizer*)r {
-  [self sendAppleTVEvent:@"up"];
+  [self sendAppleTVEvent:@"up" toView:r.view];
 }
 
 - (void)swipedDown:(UIGestureRecognizer*)r {
-  [self sendAppleTVEvent:@"down"];
+  [self sendAppleTVEvent:@"down" toView:r.view];
 }
 
 - (void)swipedLeft:(UIGestureRecognizer*)r {
-  [self sendAppleTVEvent:@"left"];
+  [self sendAppleTVEvent:@"left" toView:r.view];
 }
 
 - (void)swipedRight:(UIGestureRecognizer*)r {
-  [self sendAppleTVEvent:@"right"];
+  [self sendAppleTVEvent:@"right" toView:r.view];
 }
 
 #pragma mark -
@@ -157,11 +143,16 @@ RCT_NOT_IMPLEMENTED(- (instancetype)init)
   [gestureRecognizers addObject:recognizer];
 }
 
-- (void)sendAppleTVEvent:(NSString*)eventType {
-  NSDictionary *event = @{
-                          @"eventType": eventType
-                          };
-  [_eventDispatcher sendAppEventWithName:@"tvEvent" body:event];
+- (void)sendAppleTVEvent:(NSString*)eventType toView:(UIView*)v {
+  if([v respondsToSelector:@selector(onTVNavEvent)]) {
+    RCTDirectEventBlock onTVNavEvent = [v performSelector:@selector(onTVNavEvent) withObject:nil];
+    if(onTVNavEvent) {
+      onTVNavEvent(@{@"eventType":eventType});
+    }
+  }
+  for(UIView *u in [v subviews]) {
+    [self sendAppleTVEvent:eventType toView:u];
+  }
 }
 
 

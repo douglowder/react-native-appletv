@@ -703,9 +703,15 @@ var NavigatorIOS = React.createClass({
     );
   },
 
+  _handleTVEvent(evt: Object): void {
+    if(evt && evt.nativeEvent && evt.nativeEvent.eventType === "menu") {
+      this.pop();
+    }
+  },
+  
   render: function() {
     return (
-      <View style={this.props.style} onTVMenu={this.pop}>
+      <View style={this.props.style} onTVNavEvent={(evt) => this._handleTVEvent(evt)}>
         {this._renderNavigationStackItems()}
       </View>
     );

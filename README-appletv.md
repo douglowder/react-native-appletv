@@ -14,13 +14,31 @@ This branch includes a working version of the UIExplorer example project for App
 ## Code changes
 
 - *General support for tvOS*: Apple TV specific changes in native code are all wrapped by the TARGET_OS_TV define.  These include changes to suppress APIs that are not supported on tvOS (e.g. web views, sliders, switches, status bar, etc.), and changes to support user input from the TV remote or keyboard.
-- *TV remote/keyboard input*: A new native class, RCTTVRemoteHandler, sets up gesture recognizers for TV remote events and fires corresponding application events in the Javascript layer.  An application can add a listener for these events, e.g.
+- *TV remote/keyboard input*: A new native class, RCTTVRemoteHandler, sets up gesture recognizers for TV remote events.  Views now have an optional method, onTVNavEvent.  When a TV remote event occurs, the gesture recognizer walks the root view tree, calling onTVNavEvent for any view that has implemented the method.  A component can use this to detect menu button presses or arrow key/swipe gestures, as in the below code snippet from Examples/2048: 
 
 ```js
-ReactNative.NativeAppEventEmitter.addListener( 'tvEvent', evt => {
-  console.log("TV remote event: " + evt.eventType);
-});
+  handleTVNavEvent(evt) {
+      if(evt.nativeEvent.eventType === "left") {
+        this.setState({board: this.state.board.move(0)});
+      } else if(evt.nativeEvent.eventType === "right") {
+        this.setState({board: this.state.board.move(2)});
+      } else if(evt.nativeEvent.eventType === "up") {
+        this.setState({board: this.state.board.move(1)});
+      } else if(evt.nativeEvent.eventType === "down") {
+        this.setState({board: this.state.board.move(3)});
+      } 
+  }
+
+  render() {
+    .
+    .
+    .
+    return (
+      <View
+        style={styles.container}
+        onTVNavEvent={(event) => this.handleTVNavEvent(event)}
+        onTouchStart={(event) => this.handleTouchStart(event)}
 ```
 
-- *Access to touchable controls*: The View class now has optional methods onTVSelect, onTVFocus, onTVBlur, and onTVMenu.  Code has been added to RCTView in the native layer to make any view with a non-null onTVSelect method to be focusable and navigable with the TV remote.  If the view is focused and the TV remote select button is pressed, the onTVSelect method is called.  The TouchableHighlight and TouchableOpacity components have these methods implemented such that when they are selected, the onPress method fires as expected.
-- *Back navigation with the TV remote menu button*: The RCTRootView native class has a gesture recognizer that detects when the menu button is pressed, and then propagates through all its subviews, calling the onTVMenu method if it exists in a subview.  The NavigationExperimental and NavigatorIOS components have views with onTVMenu implemented to navigate back as expected.
+- *Access to touchable controls*: The View class now has optional methods onTVSelect, onTVFocus, onTVBlur.  Code has been added to RCTView in the native layer to make any view with a non-null onTVSelect method to be focusable and navigable with the TV remote.  If the view is focused and the TV remote select button is pressed, the onTVSelect method is called.  The TouchableHighlight and TouchableOpacity components have these methods implemented such that when they are selected, the onPress method fires as expected.
+- *Back navigation with the TV remote menu button*: The NavigationExperimental and NavigatorIOS components have views with onTVNavEvent implemented to navigate back as expected.
