@@ -57,27 +57,8 @@ RCT_EXPORT_MODULE()
 
 #if !TARGET_OS_TV
 
-@synthesize bridge = _bridge;
-
-- (void)dealloc
+- (void)startObserving
 {
-  [[NSNotificationCenter defaultCenter] removeObserver:self];
-}
-
-- (instancetype)init
-{
-  // We're only overriding this to ensure the module gets created at startup
-  // TODO (t11106126): Remove once we have more declarative control over module setup.
-  return [super init];
-}
-
-- (void)setBridge:(RCTBridge *)bridge
-{
-  _bridge = bridge;
-
-  // TODO: if we add an explicit "startObserving" method, we can take this out
-  // of the application startup path
-
   [[NSNotificationCenter defaultCenter] addObserver:self
                                            selector:@selector(handleLocalNotificationReceived:)
                                                name:RCTLocalNotificationReceived
@@ -92,10 +73,24 @@ RCT_EXPORT_MODULE()
                                              object:nil];
 }
 
+- (void)stopObserving
+{
+  [[NSNotificationCenter defaultCenter] removeObserver:self];
+}
+
+- (NSArray<NSString *> *)supportedEvents
+{
+  return @[@"localNotificationReceived",
+           @"remoteNotificationReceived",
+           @"remoteNotificationsRegistered"];
+}
+
+// TODO: Once all JS call sites for popInitialNotification have
+// been removed we can get rid of this
 - (NSDictionary<NSString *, id> *)constantsToExport
 {
   NSDictionary<NSString *, id> *initialNotification =
-    [_bridge.launchOptions[UIApplicationLaunchOptionsRemoteNotificationKey] copy];
+    [self.bridge.launchOptions[UIApplicationLaunchOptionsRemoteNotificationKey] copy];
   return @{@"initialNotification": RCTNullIfNil(initialNotification)};
 }
 
@@ -142,20 +137,17 @@ RCT_EXPORT_MODULE()
 
 - (void)handleLocalNotificationReceived:(NSNotification *)notification
 {
-  [_bridge.eventDispatcher sendDeviceEventWithName:@"localNotificationReceived"
-                                              body:notification.userInfo];
+  [self sendEventWithName:@"localNotificationReceived" body:notification.userInfo];
 }
 
 - (void)handleRemoteNotificationReceived:(NSNotification *)notification
 {
-  [_bridge.eventDispatcher sendDeviceEventWithName:@"remoteNotificationReceived"
-                                              body:notification.userInfo];
+  [self sendEventWithName:@"remoteNotificationReceived" body:notification.userInfo];
 }
 
 - (void)handleRemoteNotificationsRegistered:(NSNotification *)notification
 {
-  [_bridge.eventDispatcher sendDeviceEventWithName:@"remoteNotificationsRegistered"
-                                              body:notification.userInfo];
+  [self sendEventWithName:@"remoteNotificationsRegistered" body:notification.userInfo];
 }
 
 /**
@@ -267,6 +259,14 @@ RCT_EXPORT_METHOD(cancelLocalNotifications:(NSDictionary *)userInfo)
       [[UIApplication sharedApplication] cancelLocalNotification:notification];
     }
   }
+}
+
+RCT_EXPORT_METHOD(getInitialNotification:(RCTPromiseResolveBlock)resolve
+                  reject:(__unused RCTPromiseRejectBlock)reject)
+{
+  NSDictionary<NSString *, id> *initialNotification =
+    [self.bridge.launchOptions[UIApplicationLaunchOptionsRemoteNotificationKey] copy];
+  resolve(RCTNullIfNil(initialNotification));
 }
 
 #endif //TARGET_OS_TV

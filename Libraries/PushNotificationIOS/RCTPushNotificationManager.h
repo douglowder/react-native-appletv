@@ -7,11 +7,9 @@
  * of patent rights can be found in the PATENTS file in the same directory.
  */
 
-#import <UIKit/UIKit.h>
+#import "RCTEventEmitter.h"
 
-#import "RCTBridgeModule.h"
-
-@interface RCTPushNotificationManager : NSObject <RCTBridgeModule>
+@interface RCTPushNotificationManager : RCTEventEmitter
 #if !TARGET_OS_TV
 
 + (void)didRegisterUserNotificationSettings:(UIUserNotificationSettings *)notificationSettings;

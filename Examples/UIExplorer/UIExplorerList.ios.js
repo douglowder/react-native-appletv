@@ -32,8 +32,8 @@ export type UIExplorerExample = {
 
 const ComponentExamples: Array<UIExplorerExample> = [
   {
-    key: 'ActivityIndicatorIOSExample',
-    module: require('./ActivityIndicatorIOSExample'),
+    key: 'ActivityIndicatorExample',
+    module: require('./ActivityIndicatorExample'),
     tvosSupported: true
   },
   {
@@ -207,11 +207,6 @@ const APIExamples: Array<UIExplorerExample> = [
   {
     key: 'AnExApp',
     module: require('./AnimatedGratuitousApp/AnExApp'),
-    tvosSupported: true
-  },
-  {
-    key: 'AppStateIOSExample',
-    module: require('./AppStateIOSExample'),
     tvosSupported: true
   },
   {

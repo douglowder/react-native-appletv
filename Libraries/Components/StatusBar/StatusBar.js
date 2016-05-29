@@ -325,7 +325,7 @@ const StatusBar = React.createClass({
     });
   },
 
-  render(): ?ReactElement {
+  render(): ?ReactElement<any> {
     return null;
   },
 });
