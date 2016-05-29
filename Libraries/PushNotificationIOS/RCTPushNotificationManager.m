@@ -78,12 +78,21 @@ RCT_EXPORT_MODULE()
   [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 
+#endif //TARGET_OS_TV
+
+
 - (NSArray<NSString *> *)supportedEvents
 {
+#if TARGET_OS_TV
+  return @[];
+#else
   return @[@"localNotificationReceived",
            @"remoteNotificationReceived",
            @"remoteNotificationsRegistered"];
+#endif
 }
+
+#if !TARGET_OS_TV
 
 // TODO: Once all JS call sites for popInitialNotification have
 // been removed we can get rid of this
