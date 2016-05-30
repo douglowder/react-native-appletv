@@ -134,7 +134,7 @@ var styles = StyleSheet.create({
     marginVertical: 5,
   },
   mpaaText: {
-    fontFamily: 'Palatino',
+    fontFamily: __APPLETV__ ? 'Helvetica' : 'Palatino',
     fontSize: 13,
     fontWeight: '500',
   },
