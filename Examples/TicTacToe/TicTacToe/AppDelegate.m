@@ -36,7 +36,11 @@
    * on the same Wi-Fi network.
    */
 
+#if TARGET_OS_TV
+  jsCodeLocation = [NSURL URLWithString:@"http://localhost:8081/Examples/TicTacToe/TicTacToeApp.bundle?platform=ios&dev=true&appletv=true"];
+#else
   jsCodeLocation = [NSURL URLWithString:@"http://localhost:8081/Examples/TicTacToe/TicTacToeApp.bundle?platform=ios&dev=true"];
+#endif
 
   /**
    * OPTION 2

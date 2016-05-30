@@ -237,7 +237,7 @@ var styles = StyleSheet.create({
     backgroundColor: 'white'
   },
   title: {
-    fontFamily: 'Chalkduster',
+    fontFamily: __APPLETV__ ? 'Helvetica' : 'Chalkduster',
     fontSize: 39,
     marginBottom: 20,
   },
