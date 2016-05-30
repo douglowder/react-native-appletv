@@ -13,8 +13,34 @@
 #import "RCTLog.h"
 #import "RCTUtils.h"
 
+#if TARGET_OS_TV
+typedef enum {
+  RCTStatusBarStyleDefault = 0,
+  RCTStatusBarStyleLightContent
+} RCTStatusBarStyle;
 
-#if !TARGET_OS_TV
+typedef enum {
+  RCTStatusBarAnimationNone = 0,
+  RCTStatusBarAnimationFade,
+  RCTStatusBarAnimationSlide
+} RCTStatusBarAnimation;
+
+@implementation RCTConvert (UIStatusBar)
+
+RCT_ENUM_CONVERTER(RCTStatusBarStyle, (@{
+                                        @"default": @(RCTStatusBarStyleDefault),
+                                        @"light-content": @(RCTStatusBarStyleLightContent),
+                                        }), RCTStatusBarStyleDefault, integerValue);
+
+RCT_ENUM_CONVERTER(RCTStatusBarAnimation, (@{
+                                            @"none": @(RCTStatusBarAnimationNone),
+                                            @"fade": @(RCTStatusBarAnimationFade),
+                                            @"slide": @(RCTStatusBarAnimationSlide),
+                                            }), RCTStatusBarAnimationNone, integerValue);
+
+@end
+
+#else
 
 @implementation RCTConvert (UIStatusBar)
 
@@ -116,10 +142,10 @@ RCT_EXPORT_METHOD(getHeight:(RCTResponseSenderBlock)callback)
 #endif
 }
 
-RCT_EXPORT_METHOD(setStyle:(NSInteger)statusBarStyle
+#if !TARGET_OS_TV
+RCT_EXPORT_METHOD(setStyle:(UIStatusBarStyle)statusBarStyle
                   animated:(BOOL)animated)
 {
-#if !TARGET_OS_TV
   if (RCTViewControllerBasedStatusBarAppearance()) {
     RCTLogError(@"RCTStatusBarManager module requires that the \
                 UIViewControllerBasedStatusBarAppearance key in the Info.plist is set to NO");
@@ -127,13 +153,11 @@ RCT_EXPORT_METHOD(setStyle:(NSInteger)statusBarStyle
     [RCTSharedApplication() setStatusBarStyle:statusBarStyle
                                      animated:animated];
   }
-#endif
 }
 
 RCT_EXPORT_METHOD(setHidden:(BOOL)hidden
-                  withAnimation:(NSInteger)animation)
+                  withAnimation:(UIStatusBarAnimation)animation)
 {
-#if !TARGET_OS_TV
   if (RCTViewControllerBasedStatusBarAppearance()) {
     RCTLogError(@"RCTStatusBarManager module requires that the \
                 UIViewControllerBasedStatusBarAppearance key in the Info.plist is set to NO");
@@ -141,8 +165,8 @@ RCT_EXPORT_METHOD(setHidden:(BOOL)hidden
     [RCTSharedApplication() setStatusBarHidden:hidden
                                  withAnimation:animation];
   }
-#endif
 }
+#endif
 
 RCT_EXPORT_METHOD(setNetworkActivityIndicatorVisible:(BOOL)visible)
 {

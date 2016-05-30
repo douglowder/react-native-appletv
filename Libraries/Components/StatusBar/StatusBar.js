@@ -136,6 +136,10 @@ const StatusBar = React.createClass({
     // Provide an imperative API as static functions of the component.
     // See the corresponding prop for more detail.
     setHidden(hidden: boolean, animation?: StatusBarAnimation) {
+      if (__APPLETV__) {
+        console.warn('`setHidden` is not available on Apple TV');
+        return;
+      }
       animation = animation || 'none';
       StatusBar._defaultProps.hidden.value = hidden;
       if (Platform.OS === 'ios') {
@@ -285,7 +289,7 @@ const StatusBar = React.createClass({
       const mergedProps = mergePropsStack(StatusBar._propsStack, StatusBar._defaultProps);
 
       // Update the props that have changed using the merged values from the props stack.
-      if (Platform.OS === 'ios') {
+      if (Platform.OS === 'ios' && !__APPLETV__) {
         if (!oldProps || oldProps.barStyle.value !== mergedProps.barStyle.value) {
           StatusBarManager.setStyle(
             mergedProps.barStyle.value,
