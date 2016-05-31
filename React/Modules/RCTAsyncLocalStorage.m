@@ -212,6 +212,9 @@ RCT_EXPORT_MODULE()
 
 - (NSDictionary *)_ensureSetup
 {
+#if TARGET_OS_TV
+  return nil;
+#endif
   RCTAssertThread(RCTGetMethodQueue(), @"Must be executed on storage thread");
 
   NSError *error = nil;

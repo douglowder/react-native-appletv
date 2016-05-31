@@ -216,6 +216,7 @@ static css_dim_t RCTMeasure(void *context, float width, css_measure_mode_t width
     } else if ([child isKindOfClass:[RCTShadowRawText class]]) {
       RCTShadowRawText *shadowRawText = (RCTShadowRawText *)child;
       [attributedString appendAttributedString:[[NSAttributedString alloc] initWithString:shadowRawText.text ?: @""]];
+    } else if ([child isKindOfClass:[RCTShadowView class]]) {
     } else if ([child conformsToProtocol:@protocol(RCTImageComponent)]) {
       NSTextAttachment *imageAttachment = [NSTextAttachment new];
       imageAttachment.image = ((id<RCTImageComponent>)child).image;
