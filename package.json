@@ -98,6 +98,7 @@
   "files": [
     "React",
     "React.podspec",
+    "ReactTV.podspec",
     "ReactAndroid",
     "react.gradle",
     "android",
