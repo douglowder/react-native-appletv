@@ -103,7 +103,6 @@ static NSString *RCTRecursiveAccessibilityLabel(UIView *view)
   NSMutableArray<UIView *> *_reactSubviews;
   UIColor *_backgroundColor;
   UITapGestureRecognizer *_selectRecognizer;
-  UITapGestureRecognizer *_menuRecognizer;
 }
 
 - (instancetype)initWithFrame:(CGRect)frame
