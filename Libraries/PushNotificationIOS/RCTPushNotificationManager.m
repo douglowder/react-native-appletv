@@ -60,6 +60,10 @@ NSString *const RCTErrorUnableToRequestPermissions = @"E_UNABLE_TO_REQUEST_PERMI
 
 @implementation RCTPushNotificationManager
 
+RCT_EXPORT_MODULE()
+
+#if !TARGET_OS_TV
+
 static NSDictionary *formatLocalNotification(UILocalNotification *notification)
 {
   NSMutableDictionary *formattedLocalNotification = [NSMutableDictionary dictionary];
@@ -77,10 +81,6 @@ static NSDictionary *formatLocalNotification(UILocalNotification *notification)
   formattedLocalNotification[@"userInfo"] = RCTNullIfNil(RCTJSONClean(notification.userInfo));
   return formattedLocalNotification;
 }
-
-RCT_EXPORT_MODULE()
-
-#if !TARGET_OS_TV
 
 - (void)startObserving
 {
