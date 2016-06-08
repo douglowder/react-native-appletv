@@ -67,7 +67,6 @@
   NSInteger _nativeEventCount;
   RCTText *_richTextView;
   NSAttributedString *_pendingAttributedText;
-  NSMutableArray<UIView *> *_subviews;
   BOOL _blockTextShouldChange;
   UITextRange *_previousSelectionRange;
   NSUInteger _previousTextLength;
@@ -87,6 +86,7 @@
 
     _textView = [[RCTUITextView alloc] initWithFrame:CGRectZero];
     _textView.backgroundColor = [UIColor clearColor];
+    _textView.textColor = [UIColor blackColor];
     _textView.scrollEnabled = NO;
     _textView.delegate = self;
 
@@ -98,7 +98,6 @@
 #endif
     _previousSelectionRange = _textView.selectedTextRange;
 
-    _subviews = [NSMutableArray new];
     [self addSubview:_scrollView];
   }
   return self;
@@ -107,19 +106,14 @@
 RCT_NOT_IMPLEMENTED(- (instancetype)initWithFrame:(CGRect)frame)
 RCT_NOT_IMPLEMENTED(- (instancetype)initWithCoder:(NSCoder *)aDecoder)
 
-- (NSArray<UIView *> *)reactSubviews
-{
-  return _subviews;
-}
-
 - (void)insertReactSubview:(UIView *)subview atIndex:(NSInteger)index
 {
+  [super insertReactSubview:subview atIndex:index];
   if ([subview isKindOfClass:[RCTText class]]) {
     if (_richTextView) {
       RCTLogError(@"Tried to insert a second <Text> into <TextInput> - there can only be one.");
     }
     _richTextView = (RCTText *)subview;
-    [_subviews insertObject:_richTextView atIndex:index];
 
     // If this <TextInput> is in rich text editing mode, and the child <Text> node providing rich text
     // styling has a backgroundColor, then the attributedText produced by the child <Text> node will have an
@@ -132,21 +126,20 @@ RCT_NOT_IMPLEMENTED(- (instancetype)initWithCoder:(NSCoder *)aDecoder)
       attrs[NSBackgroundColorAttributeName] = subview.backgroundColor;
       _textView.typingAttributes = attrs;
     }
-  } else {
-    [_subviews insertObject:subview atIndex:index];
-    [self insertSubview:subview atIndex:index];
   }
 }
 
 - (void)removeReactSubview:(UIView *)subview
 {
+  [super removeReactSubview:subview];
   if (_richTextView == subview) {
-    [_subviews removeObject:_richTextView];
     _richTextView = nil;
-  } else {
-    [_subviews removeObject:subview];
-    [subview removeFromSuperview];
   }
+}
+
+- (void)didUpdateReactSubviews
+{
+  // Do nothing, as we don't allow non-text subviews
 }
 
 - (void)setMostRecentEventCount:(NSInteger)mostRecentEventCount

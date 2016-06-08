@@ -20,9 +20,6 @@
 #import "RCTNetworking.h"
 #import "RCTUtils.h"
 
-static NSString *const RCTErrorInvalidURI = @"E_INVALID_URI";
-static NSString *const RCTErrorPrefetchFailure = @"E_PREFETCH_FAILURE";
-
 static const NSUInteger RCTMaxCachableDecodedImageSizeInBytes = 1048576; // 1MB
 
 static NSString *RCTCacheKeyForImage(NSString *imageTag, CGSize size,
@@ -293,7 +290,7 @@ static UIImage *RCTResizeImageIfNeeded(UIImage *image,
   __weak RCTImageLoader *weakSelf = self;
 
   void (^completionHandler)(NSError *error, id imageOrData) = ^(NSError *error, id imageOrData) {
-    if ([NSThread isMainThread]) {
+    if (RCTIsMainQueue()) {
 
       // Most loaders do not return on the main thread, so caller is probably not
       // expecting it, and may do expensive post-processing in the callback
@@ -400,7 +397,7 @@ static UIImage *RCTResizeImageIfNeeded(UIImage *image,
             return;
           }
 
-          NSURL *redirectURL = [NSURL URLWithString: location];
+          NSURL *redirectURL = [NSURL URLWithString: location relativeToURL: request.URL];
           request = [NSURLRequest requestWithURL:redirectURL];
           cachedResponse = [_URLCache cachedResponseForRequest:request];
           continue;
@@ -545,7 +542,7 @@ static UIImage *RCTResizeImageIfNeeded(UIImage *image,
 
   __block volatile uint32_t cancelled = 0;
   void (^completionHandler)(NSError *, UIImage *) = ^(NSError *error, UIImage *image) {
-    if ([NSThread isMainThread]) {
+    if (RCTIsMainQueue()) {
       // Most loaders do not return on the main thread, so caller is probably not
       // expecting it, and may do expensive post-processing in the callback
       dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
@@ -667,27 +664,6 @@ static UIImage *RCTResizeImageIfNeeded(UIImage *image,
                         }
                         completionBlock(error, size);
                       }];
-}
-
-#pragma mark - Bridged methods
-
-RCT_EXPORT_METHOD(prefetchImage:(NSString *)uri
-                        resolve:(RCTPromiseResolveBlock)resolve
-                         reject:(RCTPromiseRejectBlock)reject)
-{
-  if (!uri.length) {
-    reject(RCTErrorInvalidURI, @"Cannot prefetch an image for an empty URI", nil);
-    return;
-  }
-
-  [_bridge.imageLoader loadImageWithURLRequest:[RCTConvert NSURLRequest:uri] callback:^(NSError *error, UIImage *image) {
-    if (error) {
-      reject(RCTErrorPrefetchFailure, nil, error);
-      return;
-    }
-
-    resolve(@YES);
-  }];
 }
 
 #pragma mark - RCTURLRequestHandler

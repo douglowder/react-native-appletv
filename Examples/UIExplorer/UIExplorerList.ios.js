@@ -47,6 +47,10 @@ const ComponentExamples: Array<UIExplorerExample> = [
     tvosSupported: true
   },
   {
+    key: 'KeyboardAvoidingViewExample',
+    module: require('./KeyboardAvoidingViewExample'),
+  },
+  {
     key: 'LayoutEventsExample',
     module: require('./LayoutEventsExample'),
     tvosSupported: true
@@ -297,11 +301,6 @@ const APIExamples: Array<UIExplorerExample> = [
   {
     key: 'SnapshotExample',
     module: require('./SnapshotExample'),
-    tvosSupported: false
-  },
-  {
-    key: 'StatusBarIOSExample',
-    module: require('./StatusBarIOSExample'),
     tvosSupported: false
   },
   {

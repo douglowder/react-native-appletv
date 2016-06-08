@@ -62,7 +62,7 @@ NSString *const RCTContentDidAppearNotification = @"RCTContentDidAppearNotificat
                     moduleName:(NSString *)moduleName
              initialProperties:(NSDictionary *)initialProperties
 {
-  RCTAssertMainThread();
+  RCTAssertMainQueue();
   RCTAssert(bridge, @"A bridge instance is required to create an RCTRootView");
   RCTAssert(moduleName, @"A moduleName is required to create an RCTRootView");
 
@@ -187,7 +187,7 @@ RCT_NOT_IMPLEMENTED(- (instancetype)initWithCoder:(NSCoder *)aDecoder)
 
 - (NSNumber *)reactTag
 {
-  RCTAssertMainThread();
+  RCTAssertMainQueue();
   if (!super.reactTag) {
     /**
      * Every root view that is created must have a unique react tag.
@@ -203,14 +203,14 @@ RCT_NOT_IMPLEMENTED(- (instancetype)initWithCoder:(NSCoder *)aDecoder)
 
 - (void)bridgeDidReload
 {
-  RCTAssertMainThread();
+  RCTAssertMainQueue();
   // Clear the reactTag so it can be re-assigned
   self.reactTag = nil;
 }
 
 - (void)javaScriptDidLoad:(NSNotification *)notification
 {
-  RCTAssertMainThread();
+  RCTAssertMainQueue();
   RCTBridge *bridge = notification.userInfo[@"bridge"];
   [self bundleFinishedLoading:bridge];
 }
@@ -262,7 +262,7 @@ RCT_NOT_IMPLEMENTED(- (instancetype)initWithCoder:(NSCoder *)aDecoder)
 
 - (void)setAppProperties:(NSDictionary *)appProperties
 {
-  RCTAssertMainThread();
+  RCTAssertMainQueue();
 
   if ([_appProperties isEqualToDictionary:appProperties]) {
     return;
@@ -349,7 +349,7 @@ RCT_NOT_IMPLEMENTED(- (instancetype)initWithCoder:(NSCoder *)aDecoder)
 RCT_NOT_IMPLEMENTED(-(instancetype)initWithFrame:(CGRect)frame)
 RCT_NOT_IMPLEMENTED(-(instancetype)initWithCoder:(nonnull NSCoder *)aDecoder)
 
-- (void)insertReactSubview:(id<RCTComponent>)subview atIndex:(NSInteger)atIndex
+- (void)insertReactSubview:(UIView *)subview atIndex:(NSInteger)atIndex
 {
   [super insertReactSubview:subview atIndex:atIndex];
   RCTPerformanceLoggerEnd(RCTPLTTI);

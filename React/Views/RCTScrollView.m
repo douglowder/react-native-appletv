@@ -424,8 +424,9 @@ RCT_NOT_IMPLEMENTED(- (instancetype)initWithCoder:(NSCoder *)aDecoder)
   // Does nothing
 }
 
-- (void)insertReactSubview:(UIView *)view atIndex:(__unused NSInteger)atIndex
+- (void)insertReactSubview:(UIView *)view atIndex:(NSInteger)atIndex
 {
+  [super insertReactSubview:view atIndex:atIndex];
 #if !TARGET_OS_TV
   if ([view isKindOfClass:[RCTRefreshControl class]]) {
     _scrollView.refreshControl = (RCTRefreshControl*)view;
@@ -441,6 +442,7 @@ RCT_NOT_IMPLEMENTED(- (instancetype)initWithCoder:(NSCoder *)aDecoder)
 
 - (void)removeReactSubview:(UIView *)subview
 {
+  [super removeReactSubview:subview];
 #if !TARGET_OS_TV
   if ([subview isKindOfClass:[RCTRefreshControl class]]) {
     _scrollView.refreshControl = nil;
@@ -448,20 +450,14 @@ RCT_NOT_IMPLEMENTED(- (instancetype)initWithCoder:(NSCoder *)aDecoder)
 #endif
     RCTAssert(_contentView == subview, @"Attempted to remove non-existent subview");
     _contentView = nil;
-    [subview removeFromSuperview];
 #if !TARGET_OS_TV
   }
 #endif
 }
 
-- (NSArray<UIView *> *)reactSubviews
+- (void)didUpdateReactSubviews
 {
-#if !TARGET_OS_TV
-  if (_contentView && _scrollView.refreshControl) {
-    return @[_contentView, _scrollView.refreshControl];
-  }
-#endif
-  return _contentView ? @[_contentView] : @[];
+  // Do nothing, as subviews are managed by `insertReactSubview:atIndex:`
 }
 
 - (BOOL)centerContent
@@ -912,8 +908,13 @@ RCT_SCROLL_EVENT_HANDLER(scrollViewDidZoom, onScroll)
                  lastIndex, subviewCount);
     }
   }
+}
 
-  [_scrollView dockClosestSectionHeader];
+- (void)didSetProps:(NSArray<NSString *> *)changedProps
+{
+  if ([changedProps containsObject:@"stickyHeaderIndices"]) {
+    [_scrollView dockClosestSectionHeader];
+  }
 }
 
 // Note: setting several properties of UIScrollView has the effect of
