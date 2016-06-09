@@ -175,4 +175,54 @@ RCT_NOT_IMPLEMENTED(- (instancetype)initWithCoder:(NSCoder *)aDecoder)
   return NO;
 }
 
+#if TARGET_OS_TV
+
+//- (void)setOnTVSelect:(RCTDirectEventBlock)onTVSelect {
+//  _onTVSelect = [onTVSelect copy];
+//  if(_onTVSelect) {
+//    UITapGestureRecognizer *recognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleSelect:)];
+//    recognizer.allowedPressTypes = @[[NSNumber numberWithInteger:UIPressTypeSelect]];
+//    _selectRecognizer = recognizer;
+//    [self addGestureRecognizer:_selectRecognizer];
+//  } else {
+//    if(_selectRecognizer) {
+//      [self removeGestureRecognizer:_selectRecognizer];
+//    }
+//  }
+//  
+//}
+
+//- (void)handleSelect:(UIGestureRecognizer*)r {
+//  RCTView *v = (RCTView*)r.view;
+//  if(v.onTVSelect) {
+//    v.onTVSelect(nil);
+//  }
+//}
+
+- (BOOL)isUserInteractionEnabled {
+  return YES;
+}
+
+- (BOOL)canBecomeFocused {
+//  return (self.onTVSelect != nil);
+  return YES;
+}
+
+- (void)didUpdateFocusInContext:(UIFocusUpdateContext *)context withAnimationCoordinator:(UIFocusAnimationCoordinator *)coordinator {
+  if(context.nextFocusedView == self) {
+    if(self.onTVFocus) {
+      self.onTVFocus(nil);
+    }
+    [self becomeFirstResponder];
+  } else {
+    if(self.onTVBlur) {
+      self.onTVBlur(nil);
+    }
+    [self resignFirstResponder];
+  }
+}
+
+#endif
+
+
 @end
