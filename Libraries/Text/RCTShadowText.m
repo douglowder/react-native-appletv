@@ -378,7 +378,11 @@ static css_dim_t RCTMeasure(void *context, float width, css_measure_mode_t width
     paragraphStyle.maximumLineHeight = lineHeight;
 
     // vertically center text
+#if TARGET_OS_TV
+    CGFloat fontSize = _fontSize && !isnan(_fontSize) ? _fontSize : [UIFont preferredFontForTextStyle:UIFontTextStyleBody].pointSize;
+#else
     CGFloat fontSize = _fontSize && !isnan(_fontSize) ? _fontSize : UIFont.systemFontSize;
+#endif
     fontSize *= fontSizeMultiplier;
 
     [attributedString addAttribute:NSBaselineOffsetAttributeName

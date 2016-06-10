@@ -126,7 +126,7 @@ class NavigationHeader extends React.Component<DefaultProps, Props, any> {
 
   _handleTVEvent(props: NavigationSceneRendererProps, evt: Object): void {
     if(evt && evt.nativeEvent && evt.nativeEvent.eventType === "menu") {
-      props.onNavigate && props.onNavigate({type: 'BackAction'});
+      props.onNavigateBack && props.onNavigateBack();
     }
   }
 
