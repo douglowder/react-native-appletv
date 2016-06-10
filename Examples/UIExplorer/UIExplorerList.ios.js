@@ -81,6 +81,10 @@ const ComponentExamples: Array<UIExplorerExample> = [
     tvosSupported: true
   },
   {
+    key: 'NativeAnimationsExample',
+    module: require('./NativeAnimationsExample'),
+  },
+  {
     key: 'NavigatorExample',
     module: require('./Navigator/NavigatorExample'),
     tvosSupported: true
