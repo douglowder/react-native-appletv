@@ -157,10 +157,14 @@ var TouchableOpacity = React.createClass({
     this.setOpacityTo(
       childStyle.opacity === undefined ? 1 : childStyle.opacity
     );
+
+    this.props.onTVBlur && this.props.onTVBlur();
   },
 
   _opacityFocused: function() {
     this.setOpacityTo(this.props.focusedOpacity);
+
+    this.props.onTVFocus && this.props.onTVFocus();
   },
 
   render: function() {
