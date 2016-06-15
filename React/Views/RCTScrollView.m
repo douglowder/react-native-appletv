@@ -141,7 +141,7 @@ RCT_NOT_IMPLEMENTED(- (instancetype)init)
 @property (nonatomic, copy) NSIndexSet *stickyHeaderIndices;
 @property (nonatomic, assign) BOOL centerContent;
 #if !TARGET_OS_TV
-@property (nonatomic, strong) RCTRefreshControl *refreshControl;
+@property (nonatomic, strong) RCTRefreshControl *rctRefreshControl;
 #endif
 
 @end
@@ -278,8 +278,8 @@ RCT_NOT_IMPLEMENTED(- (instancetype)init)
   // If the RefreshControl is refreshing, remove it's height so sticky headers are
   // positioned properly when scrolling down while refreshing.
 #if !TARGET_OS_TV
-  if (self.refreshControl != nil && self.refreshControl.refreshing) {
-    scrollTop -= self.refreshControl.frame.size.height;
+  if (_rctRefreshControl != nil && _rctRefreshControl.refreshing) {
+    scrollTop -= _rctRefreshControl.frame.size.height;
   }
 #endif
   
@@ -363,13 +363,13 @@ RCT_NOT_IMPLEMENTED(- (instancetype)init)
 }
 
 #if !TARGET_OS_TV
-- (void)setRefreshControl:(RCTRefreshControl *)refreshControl
+- (void)setRctRefreshControl:(RCTRefreshControl *)refreshControl
 {
-  if (_refreshControl) {
-    [_refreshControl removeFromSuperview];
+  if (_rctRefreshControl) {
+    [_rctRefreshControl removeFromSuperview];
   }
-  _refreshControl = refreshControl;
-  [self addSubview:_refreshControl];
+  _rctRefreshControl = refreshControl;
+  [self addSubview:_rctRefreshControl];
 }
 #endif //TARGET_OS_TV
 
@@ -429,7 +429,7 @@ RCT_NOT_IMPLEMENTED(- (instancetype)initWithCoder:(NSCoder *)aDecoder)
   [super insertReactSubview:view atIndex:atIndex];
 #if !TARGET_OS_TV
   if ([view isKindOfClass:[RCTRefreshControl class]]) {
-    _scrollView.refreshControl = (RCTRefreshControl*)view;
+    [_scrollView setRctRefreshControl:(RCTRefreshControl *)view];
   } else {
 #endif
     RCTAssert(_contentView == nil, @"RCTScrollView may only contain a single subview");
@@ -445,7 +445,7 @@ RCT_NOT_IMPLEMENTED(- (instancetype)initWithCoder:(NSCoder *)aDecoder)
   [super removeReactSubview:subview];
 #if !TARGET_OS_TV
   if ([subview isKindOfClass:[RCTRefreshControl class]]) {
-    _scrollView.refreshControl = nil;
+    [_scrollView setRctRefreshControl:nil];
   } else {
 #endif
     RCTAssert(_contentView == subview, @"Attempted to remove non-existent subview");
@@ -505,7 +505,7 @@ RCT_NOT_IMPLEMENTED(- (instancetype)initWithCoder:(NSCoder *)aDecoder)
 
 #if !TARGET_OS_TV
   // Adjust the refresh control frame if the scrollview layout changes.
-  RCTRefreshControl *refreshControl = _scrollView.refreshControl;
+  RCTRefreshControl *refreshControl = _scrollView.rctRefreshControl;
   if (refreshControl && refreshControl.refreshing) {
     refreshControl.frame = (CGRect){_scrollView.contentOffset, {_scrollView.frame.size.width, refreshControl.frame.size.height}};
   }
