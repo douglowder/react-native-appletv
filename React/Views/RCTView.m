@@ -168,16 +168,51 @@ RCT_NOT_IMPLEMENTED(- (instancetype)initWithCoder:unused)
   return (self.onTVSelect != nil);
 }
 
+- (void)addParallaxMotionEffectsWithTiltValue:(CGFloat)tiltValue andPanValue:(CGFloat)panValue {
+  UIInterpolatingMotionEffect *xTilt = [[UIInterpolatingMotionEffect alloc] initWithKeyPath:@"layer.transform.rotation.y"
+                                                                                      type:UIInterpolatingMotionEffectTypeTiltAlongHorizontalAxis];
+  UIInterpolatingMotionEffect *yTilt = [[UIInterpolatingMotionEffect alloc] initWithKeyPath:@"layer.transform.rotation.x"
+                                                                                      type:UIInterpolatingMotionEffectTypeTiltAlongVerticalAxis];
+  UIInterpolatingMotionEffect *xPan = [[UIInterpolatingMotionEffect alloc] initWithKeyPath:@"center.x"
+                                                                                     type:UIInterpolatingMotionEffectTypeTiltAlongHorizontalAxis];
+  UIInterpolatingMotionEffect *yPan = [[UIInterpolatingMotionEffect alloc] initWithKeyPath:@"center.y"
+                                                                                     type:UIInterpolatingMotionEffectTypeTiltAlongVerticalAxis];
+  
+  xTilt.minimumRelativeValue = @(-tiltValue);
+  xTilt.maximumRelativeValue = @(tiltValue);
+  
+  yTilt.minimumRelativeValue = @(-tiltValue);
+  yTilt.maximumRelativeValue = @(tiltValue);
+  
+  xPan.minimumRelativeValue = @(-panValue);
+  xPan.maximumRelativeValue = @(tiltValue);
+
+  yPan.minimumRelativeValue = @(-panValue);
+  yPan.maximumRelativeValue = @(tiltValue);
+
+  UIMotionEffectGroup *motionGroup = [UIMotionEffectGroup new];
+  
+  motionGroup.motionEffects = @[xTilt,yTilt,xPan,yPan];
+  [self addMotionEffect:motionGroup];
+  
+}
+
 - (void)didUpdateFocusInContext:(UIFocusUpdateContext *)context withAnimationCoordinator:(UIFocusAnimationCoordinator *)coordinator {
   if(context.nextFocusedView == self && self.onTVSelect != nil) {
-    if(self.onTVFocus) {
-      self.onTVFocus(nil);
-    }
     [self becomeFirstResponder];
+    [coordinator addCoordinatedAnimations:^(void){
+      [self addParallaxMotionEffectsWithTiltValue:0.25 andPanValue:5.0];
+      if(self.onTVFocus) {
+        self.onTVFocus(nil);
+      }
+    } completion:^(void){}];
   } else {
-    if(self.onTVBlur) {
-      self.onTVBlur(nil);
-    }
+    [coordinator addCoordinatedAnimations:^(void){
+      if(self.onTVBlur) {
+        self.onTVBlur(nil);
+      }
+      self.motionEffects = @[];
+    } completion:^(void){}];
     [self resignFirstResponder];
   }
 }
