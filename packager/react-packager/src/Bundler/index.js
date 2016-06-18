@@ -531,12 +531,14 @@ class Bundler {
 
   _toModuleTransport({module, bundle, entryFilePath, transformOptions, getModuleId}) {
     let moduleTransport;
+    const moduleId = getModuleId(module);
+
     if (module.isAsset_DEPRECATED()) {
       moduleTransport =
-        this._generateAssetModule_DEPRECATED(bundle, module, getModuleId);
+        this._generateAssetModule_DEPRECATED(bundle, module, moduleId);
     } else if (module.isAsset()) {
       moduleTransport = this._generateAssetModule(
-        bundle, module, getModuleId, transformOptions.platform);
+        bundle, module, moduleId, transformOptions.platform);
     }
 
     if (moduleTransport) {
@@ -557,7 +559,7 @@ class Bundler {
 
       return new ModuleTransport({
         name,
-        id: getModuleId(module),
+        id: moduleId,
         code,
         map,
         meta: {dependencies, dependencyOffsets, preloaded},
@@ -567,11 +569,7 @@ class Bundler {
     });
   }
 
-  getGraphDebugInfo() {
-    return this._resolver.getDebugInfo();
-  }
-
-  _generateAssetModule_DEPRECATED(bundle, module, getModuleId) {
+  _generateAssetModule_DEPRECATED(bundle, module, moduleId) {
     return Promise.all([
       sizeOf(module.path),
       module.getName(),
@@ -591,7 +589,7 @@ class Bundler {
 
       return new ModuleTransport({
         name: id,
-        id: getModuleId(module),
+        id: moduleId,
         code: code,
         sourceCode: code,
         sourcePath: module.path,
@@ -650,7 +648,7 @@ class Bundler {
   }
 
 
-  _generateAssetModule(bundle, module, getModuleId, platform = null) {
+  _generateAssetModule(bundle, module, moduleId, platform = null) {
     return Promise.all([
       module.getName(),
       this._generateAssetObjAndCode(module, platform),
@@ -658,7 +656,7 @@ class Bundler {
       bundle.addAsset(asset);
       return new ModuleTransport({
         name,
-        id: getModuleId(module),
+        id: moduleId,
         code,
         meta: meta,
         sourceCode: code,
