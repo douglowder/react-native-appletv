@@ -64,7 +64,7 @@ var TouchableOpacity = React.createClass({
   getDefaultProps: function() {
     return {
       activeOpacity: 0.2,
-      focusedOpacity: 0.7
+      focusedOpacity: 1.0
     };
   },
 
