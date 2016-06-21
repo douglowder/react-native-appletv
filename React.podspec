@@ -30,7 +30,7 @@ Pod::Spec.new do |s|
 
   s.subspec 'Core' do |ss|
     ss.source_files        = "React/**/*.{c,h,m,mm,S}"
-    ss.exclude_files       = "**/__tests__/*", "IntegrationTests/*"
+    ss.exclude_files       = "**/__tests__/*", "IntegrationTests/*", "React/Layout/Layout.c"
     ss.frameworks          = "JavaScriptCore"
     ss.libraries           = "stdc++"
     ss.pod_target_xcconfig = { "CLANG_CXX_LANGUAGE_STANDARD" => "c++14" }
