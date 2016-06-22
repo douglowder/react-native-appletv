@@ -454,6 +454,15 @@ static void RCTInstallJSCProfiler(RCTBridge *bridge, JSContextRef context)
     }
   }];
 
+  for (NSString *event in @[RCTProfileDidStartProfiling, RCTProfileDidEndProfiling]) {
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(toggleProfilingFlag:)
+                                                 name:event
+                                               object:nil];
+  }
+#endif
+
+#if RCT_DEV
   [self executeBlockOnJavaScriptQueue:^{
     RCTJSCExecutor *strongSelf = weakSelf;
     if (!strongSelf.valid) {
@@ -464,15 +473,6 @@ static void RCTInstallJSCProfiler(RCTBridge *bridge, JSContextRef context)
     RCTInstallJSCProfiler(_bridge, context.JSGlobalContextRef);
   }];
 
-  for (NSString *event in @[RCTProfileDidStartProfiling, RCTProfileDidEndProfiling]) {
-    [[NSNotificationCenter defaultCenter] addObserver:self
-                                             selector:@selector(toggleProfilingFlag:)
-                                                 name:event
-                                               object:nil];
-  }
-#endif
-
-#if RCT_DEV
   // Inject handler used by HMR
   [self addSynchronousHookWithName:@"nativeInjectHMRUpdate" usingBlock:^(NSString *sourceCode, NSString *sourceCodeURL) {
     RCTJSCExecutor *strongSelf = weakSelf;
