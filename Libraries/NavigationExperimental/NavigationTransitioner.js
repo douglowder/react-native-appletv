@@ -195,15 +195,26 @@ class NavigationTransitioner extends React.Component<any, Props, State> {
     layout.height.setValue(height);
     layout.width.setValue(width);
 
-    this.setState({ layout });
+    const nextState = {
+      ...this.state,
+      layout,
+    };
+
+    this._transitionProps = buildTransitionProps(this.props, nextState);
+    this.setState(nextState);
   }
 
   _onTransitionEnd(): void {
     const prevTransitionProps = this._prevTransitionProps;
     this._prevTransitionProps = null;
 
-    const scenes = this.state.scenes.filter(isSceneNotStale);
-    this.setState({ scenes });
+    const nextState = {
+      ...this.state,
+      scenes: this.state.scenes.filter(isSceneNotStale),
+    };
+
+    this._transitionProps = buildTransitionProps(this.props, nextState);
+    this.setState(nextState);
 
     this.props.onTransitionEnd && this.props.onTransitionEnd(
       this._transitionProps,
