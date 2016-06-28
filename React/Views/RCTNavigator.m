@@ -279,6 +279,8 @@ NSInteger kNeverProgressed = -10000;
 // navigation animation/interaction.
 @property (nonatomic, readonly, strong) UIView *dummyView;
 
+@property (nonatomic, strong) UIGestureRecognizer *menuGestureRecognizer;
+
 @end
 
 @implementation RCTNavigator
@@ -571,6 +573,11 @@ BOOL jsGettingtooSlow =
     RCTLogError(@"should be at least one current view");
   }
   if (jsGettingAhead) {
+    if(currentReactCount == 1){
+      [self removeTypeMenuGesture];
+    } else if (currentReactCount > 1 && _menuGestureRecognizer){
+      [self addTypeMenuGesture];
+    }
     if (reactPushOne) {
       UIView *lastView = self.reactSubviews.lastObject;
       RCTWrapperViewController *vc = [[RCTWrapperViewController alloc] initWithNavItem:(RCTNavItem *)lastView];
@@ -625,6 +632,26 @@ didMoveToNavigationController:(UINavigationController *)navigationController
     [self handleTopOfStackChanged];
     [self freeLock];
   }
+}
+
+- (void) removeTypeMenuGesture {
+    UIViewController *rootViewController = [UIApplication sharedApplication].keyWindow.rootViewController;
+    NSArray *gestureRecognizers = [rootViewController.view gestureRecognizers];
+    for(UIGestureRecognizer *recognizer in gestureRecognizers){
+        NSLog(@"test");
+        NSArray *allowedPressTypes = recognizer.allowedPressTypes;
+        
+        if([[allowedPressTypes objectAtIndex:0] intValue] == UIPressTypeMenu){
+            _menuGestureRecognizer = recognizer;
+            [rootViewController.view removeGestureRecognizer:recognizer];
+        };
+    }
+}
+
+- (void) addTypeMenuGesture {
+    UIViewController *rootViewController = [UIApplication sharedApplication].keyWindow.rootViewController;
+    [rootViewController.view addGestureRecognizer:_menuGestureRecognizer];
+    _menuGestureRecognizer = nil;
 }
 
 @end

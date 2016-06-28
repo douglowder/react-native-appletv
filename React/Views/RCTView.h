@@ -36,6 +36,11 @@
 @property (nonatomic, copy) RCTDirectEventBlock onTVNavEvent; // Called on any TV remote action other than select (menu, play/pause, swipes or arrow keys);
 
 /**
+ *  Boolean to disable custom parallax effects
+ */
+@property (nonatomic, assign) BOOL disableParallax;
+
+/**
  * Used to control how touch events are processed.
  */
 @property (nonatomic, assign) RCTPointerEvents pointerEvents;
