@@ -32,7 +32,7 @@
  */
 'use strict';
 
-const NavigationTransitioner = require('NavigationTransitioner');
+const NavigationAnimatedView = require('NavigationAnimatedView');
 const NavigationCard = require('NavigationCard');
 const NavigationCardStackStyleInterpolator = require('NavigationCardStackStyleInterpolator');
 const NavigationCardStackPanResponder = require('NavigationCardStackPanResponder');
@@ -40,7 +40,6 @@ const NavigationPropTypes = require('NavigationPropTypes');
 const React = require('React');
 const ReactComponentWithPureRenderMixin = require('ReactComponentWithPureRenderMixin');
 const StyleSheet = require('StyleSheet');
-const View = require('View');
 
 const emptyFunction = require('fbjs/lib/emptyFunction');
 
@@ -51,7 +50,6 @@ import type {
   NavigationState,
   NavigationSceneRenderer,
   NavigationSceneRendererProps,
-  NavigationTransitionProps,
 } from 'NavigationTypeDefinition';
 
 import type {
@@ -87,7 +85,6 @@ type DefaultProps = {
  *     +------------+
  */
 class NavigationCardStack extends React.Component<DefaultProps, Props, void> {
-  _render : NavigationSceneRenderer;
   _renderScene : NavigationSceneRenderer;
 
   static propTypes = {
@@ -108,7 +105,6 @@ class NavigationCardStack extends React.Component<DefaultProps, Props, void> {
   }
 
   componentWillMount(): void {
-    this._render = this._render.bind(this);
     this._renderScene = this._renderScene.bind(this);
   }
 
@@ -122,52 +118,12 @@ class NavigationCardStack extends React.Component<DefaultProps, Props, void> {
 
   render(): ReactElement<any> {
     return (
-      <NavigationTransitioner
+      <NavigationAnimatedView
         navigationState={this.props.navigationState}
-        render={this._render}
-        style={this.props.style}
+        renderOverlay={this.props.renderOverlay}
+        renderScene={this._renderScene}
+        style={[styles.animatedView, this.props.style]}
       />
-    );
-  }
-
-  _render(props: NavigationTransitionProps): ReactElement<any> {
-    const {
-       navigationState,
-     } = props;
-
-    let overlay = null;
-    const renderOverlay = this.props.renderOverlay;
-
-    if (renderOverlay) {
-      const route = navigationState.routes[navigationState.index];
-
-      const activeScene = props.scenes.find(
-       scene => !scene.isStale && scene.route === route ? scene : undefined
-      );
-
-      overlay = renderOverlay({
-       ...props,
-       scene: activeScene
-      });
-    }
-
-    const scenes = props.scenes.map(
-     scene => this._renderScene({
-       ...props,
-       scene,
-     }),
-     this
-    );
-
-    return (
-      <View
-        style={styles.container}>
-        <View
-          style={styles.scenes}>
-          {scenes}
-        </View>
-        {overlay}
-      </View>
     );
   }
 
@@ -199,10 +155,7 @@ class NavigationCardStack extends React.Component<DefaultProps, Props, void> {
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
-  scenes: {
+  animatedView: {
     flex: 1,
   },
 });

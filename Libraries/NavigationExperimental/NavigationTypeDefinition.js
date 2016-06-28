@@ -64,15 +64,18 @@ export type NavigationTransitionProps = {
 
   // All the scenes of the transitioner.
   scenes: Array<NavigationScene>,
-
-  // The active scene, corresponding to the route at
-  // `navigationState.routes[navigationState.index]`.
-  scene: NavigationScene,
 };
 
-// Similar to `NavigationTransitionProps`, except that the prop `scene`
-// represents the scene for the renderer to render.
-export type NavigationSceneRendererProps = NavigationTransitionProps;
+export type NavigationSceneRendererProps = {
+  layout: NavigationLayout,
+  navigationState: NavigationState,
+  position: NavigationAnimatedValue,
+  progress: NavigationAnimatedValue,
+  scenes: Array<NavigationScene>,
+
+  // The scene to render.
+  scene: NavigationScene,
+};
 
 export type NavigationPanPanHandlers = {
   onMoveShouldSetResponder: Function,

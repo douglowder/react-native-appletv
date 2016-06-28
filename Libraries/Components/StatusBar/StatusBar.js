@@ -19,35 +19,14 @@ const processColor = require('processColor');
 
 const StatusBarManager = require('NativeModules').StatusBarManager;
 
-/**
- * Status bar style
- */
 export type StatusBarStyle = $Enum<{
-  /**
-   * Default status bar style
-   */
   'default': string,
-  /**
-   * Dark background style
-   */
   'light-content': string,
 }>;
 
-/**
- * Status bar animation
- */
 export type StatusBarAnimation = $Enum<{
-  /**
-   * No animation
-   */
   'none': string,
-  /**
-   * Fade animation
-   */
   'fade': string,
-  /**
-   * Slide animation
-   */
   'slide': string,
 }>;
 
@@ -156,13 +135,6 @@ const StatusBar = React.createClass({
 
     // Provide an imperative API as static functions of the component.
     // See the corresponding prop for more detail.
-
-    /**
-     * Show or hide the status bar
-     * @param hidden The dialog's title.
-     * @param animation Optional animation when
-     *    changing the status bar hidden property.
-     */
     setHidden(hidden: boolean, animation?: StatusBarAnimation) {
       if (__APPLETV__) {
         console.warn('`setHidden` is not available on Apple TV');
@@ -177,11 +149,6 @@ const StatusBar = React.createClass({
       }
     },
 
-    /**
-     * Set the status bar style
-     * @param style Status bar style to set
-     * @param animated Animate the style change.
-     */
     setBarStyle(style: StatusBarStyle, animated?: boolean) {
       if (Platform.OS !== 'ios') {
         console.warn('`setBarStyle` is only available on iOS');
@@ -196,10 +163,6 @@ const StatusBar = React.createClass({
       StatusBarManager.setStyle(style, animated);
     },
 
-    /**
-     * Control the visibility of the network activity indicator
-     * @param visible Show the indicator.
-     */
     setNetworkActivityIndicatorVisible(visible: boolean) {
       if (Platform.OS !== 'ios') {
         console.warn('`setNetworkActivityIndicatorVisible` is only available on iOS');
@@ -209,11 +172,6 @@ const StatusBar = React.createClass({
       StatusBarManager.setNetworkActivityIndicatorVisible(visible);
     },
 
-    /**
-     * Set the background color for the status bar
-     * @param color Background color.
-     * @param animated Animate the style change.
-     */
     setBackgroundColor(color: string, animated?: boolean) {
       if (Platform.OS !== 'android') {
         console.warn('`setBackgroundColor` is only available on Android');
@@ -224,10 +182,6 @@ const StatusBar = React.createClass({
       StatusBarManager.setColor(processColor(color), animated);
     },
 
-    /**
-     * Control the translucency of the status bar
-     * @param translucent Set as translucent.
-     */
     setTranslucent(translucent: boolean) {
       if (Platform.OS !== 'android') {
         console.warn('`setTranslucent` is only available on Android');

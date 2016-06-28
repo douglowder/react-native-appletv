@@ -545,6 +545,7 @@ var createFunctionString = function(anims) {
   fn += '  return didChange;\n';
   fn += '};\n';
   fn += '})()';
+  debugger;
   return fn;
 };
 

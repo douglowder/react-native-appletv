@@ -14,7 +14,6 @@
 @interface RCTNavItem : UIView
 
 @property (nonatomic, copy) NSString *title;
-@property (nonatomic, strong) UIImage *titleImage;
 @property (nonatomic, strong) UIImage *leftButtonIcon;
 @property (nonatomic, copy) NSString *leftButtonTitle;
 @property (nonatomic, strong) UIImage *rightButtonIcon;
@@ -28,7 +27,6 @@
 @property (nonatomic, strong) UIColor *titleTextColor;
 @property (nonatomic, assign) BOOL translucent;
 
-@property (nonatomic, readonly) UIImageView *titleImageView;
 @property (nonatomic, readonly) UIBarButtonItem *backButtonItem;
 @property (nonatomic, readonly) UIBarButtonItem *leftButtonItem;
 @property (nonatomic, readonly) UIBarButtonItem *rightButtonItem;

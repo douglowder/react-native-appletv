@@ -82,26 +82,7 @@ var defaultRenderError = (errorDomain, errorCode, errorDesc) => (
 );
 
 /**
- * `WebView` renders web content in a native view.
- *
- *```
- * import React, { Component } from 'react';
- * import { WebView } from 'react-native';
- *
- * class MyWeb extends Component {
- *   render() {
- *     return (
- *       <WebView
- *         source={{uri: 'https://github.com/facebook/react-native'}}
- *         style={{marginTop: 20}}
- *       />
- *     );
- *   }
- * }
- *```
- *
- * You can use this component to navigate back and forth in the web view's
- * history and configure various properties for the web content.
+ * Renders a native WebView.
  */
 var WebView = React.createClass({
   statics: {
@@ -128,7 +109,7 @@ var WebView = React.createClass({
     source: PropTypes.oneOfType([
       PropTypes.shape({
         /*
-         * The URI to load in the `WebView`. Can be a local or remote file.
+         * The URI to load in the WebView. Can be a local or remote file.
          */
         uri: PropTypes.string,
         /*
@@ -174,125 +155,96 @@ var WebView = React.createClass({
      */
     renderLoading: PropTypes.func,
     /**
-     * Function that is invoked when the `WebView` has finished loading.
+     * Invoked when load finish
      */
     onLoad: PropTypes.func,
     /**
-     * Function that is invoked when the `WebView` load succeeds or fails.
+     * Invoked when load either succeeds or fails
      */
     onLoadEnd: PropTypes.func,
     /**
-     * Function that is invoked when the `WebView` starts loading.
+     * Invoked on load start
      */
     onLoadStart: PropTypes.func,
     /**
-     * Function that is invoked when the `WebView` load fails.
+     * Invoked when load fails
      */
     onError: PropTypes.func,
     /**
-     * Boolean value that determines whether the web view bounces
-     * when it reaches the edge of the content. The default value is `true`.
      * @platform ios
      */
     bounces: PropTypes.bool,
     /**
      * A floating-point number that determines how quickly the scroll view
-     * decelerates after the user lifts their finger. You may also use the
-     * string shortcuts `"normal"` and `"fast"` which match the underlying iOS
-     * settings for `UIScrollViewDecelerationRateNormal` and
-     * `UIScrollViewDecelerationRateFast` respectively:
-     *
+     * decelerates after the user lifts their finger. You may also use string
+     * shortcuts `"normal"` and `"fast"` which match the underlying iOS settings
+     * for `UIScrollViewDecelerationRateNormal` and
+     * `UIScrollViewDecelerationRateFast` respectively.
      *   - normal: 0.998
-     *   - fast: 0.99 (the default for iOS web view)
+     *   - fast: 0.99 (the default for iOS WebView)
      * @platform ios
      */
     decelerationRate: ScrollView.propTypes.decelerationRate,
     /**
-     * Boolean value that determines whether scrolling is enabled in the
-     * `WebView`. The default value is `true`.
      * @platform ios
      */
     scrollEnabled: PropTypes.bool,
-    /**
-     * Controls whether to adjust the content inset for web views that are
-     * placed behind a navigation bar, tab bar, or toolbar. The default value
-     * is `true`.
-     */
     automaticallyAdjustContentInsets: PropTypes.bool,
-    /**
-     * The amount by which the web view content is inset from the edges of
-     * the scroll view. Defaults to {top: 0, left: 0, bottom: 0, right: 0}.
-     */
     contentInset: EdgeInsetsPropType,
-    /**
-     * Function that is invoked when the `WebView` loading starts or ends.
-     */
     onNavigationStateChange: PropTypes.func,
-    /**
-     * Boolean value that forces the `WebView` to show the loading view
-     * on the first load.
-     */
-    startInLoadingState: PropTypes.bool,
-    /**
-     * The style to apply to the `WebView`.
-     */
+    startInLoadingState: PropTypes.bool, // force WebView to show loadingView on first load
     style: View.propTypes.style,
 
     /**
-     * Boolean value to enable JavaScript in the `WebView`. Used on Android only
-     * as JavaScript is enabled by default on iOS. The default value is `true`.
+     * Used on Android only, JS is enabled by default for WebView on iOS
      * @platform android
      */
     javaScriptEnabled: PropTypes.bool,
 
     /**
-     * Boolean value to control whether DOM Storage is enabled. Used only in
-     * Android.
+     * Used on Android only, controls whether DOM Storage is enabled or not
      * @platform android
      */
     domStorageEnabled: PropTypes.bool,
 
     /**
-     * Set this to provide JavaScript that will be injected into the web page
-     * when the view loads.
+     * Sets the JS to be injected when the webpage loads.
      */
     injectedJavaScript: PropTypes.string,
 
     /**
-     * Sets the user-agent for the `WebView`.
+     * Sets the user-agent for this WebView. The user-agent can also be set in native using
+     * WebViewConfig. This prop will overwrite that config.
      * @platform android
      */
     userAgent: PropTypes.string,
 
     /**
-     * Boolean that controls whether the web content is scaled to fit
-     * the view and enables the user to change the scale. The default value
-     * is `true`.
+     * Sets whether the webpage scales to fit the view and the user can change the scale.
      */
     scalesPageToFit: PropTypes.bool,
 
     /**
-     * Function that allows custom handling of any web view requests. Return
-     * `true` from the function to continue loading the request and `false`
-     * to stop loading.
+     * Allows custom handling of any webview requests by a JS handler. Return true
+     * or false from this method to continue loading the request.
      * @platform ios
      */
     onShouldStartLoadWithRequest: PropTypes.func,
 
     /**
-     * Boolean that determines whether HTML5 videos play inline or use the
-     * native full-screen controller. The default value is `false`.
-     *
-     * **NOTE** : In order for video to play inline, not only does this
-     * property need to be set to `true`, but the video element in the HTML
-     * document must also include the `webkit-playsinline` attribute.
+     * Determines whether HTML5 videos play inline or use the native full-screen
+     * controller.
+     * default value `false`
+     * **NOTE** : "In order for video to play inline, not only does this
+     * property need to be set to true, but the video element in the HTML
+     * document must also include the webkit-playsinline attribute."
      * @platform ios
      */
     allowsInlineMediaPlayback: PropTypes.bool,
 
     /**
-     * Boolean that determines whether HTML5 audio and video requires the user
-     * to tap them before they start playing. The default value is `false`.
+     * Determines whether HTML5 audio & videos require the user to tap before they can
+     * start playing. The default value is `false`.
      */
     mediaPlaybackRequiresUserAction: PropTypes.bool,
   },
@@ -385,7 +337,7 @@ var WebView = React.createClass({
   },
 
   /**
-   * Go forward one page in the web view's history.
+   * Go forward one page in the webview's history.
    */
   goForward: function() {
     UIManager.dispatchViewManagerCommand(
@@ -396,7 +348,7 @@ var WebView = React.createClass({
   },
 
   /**
-   * Go back one page in the web view's history.
+   * Go back one page in the webview's history.
    */
   goBack: function() {
     UIManager.dispatchViewManagerCommand(
@@ -410,7 +362,6 @@ var WebView = React.createClass({
    * Reloads the current page.
    */
   reload: function() {
-    this.setState({viewState: WebViewState.LOADING});
     UIManager.dispatchViewManagerCommand(
       this.getWebViewHandle(),
       UIManager.RCTWebView.Commands.reload,
@@ -418,9 +369,6 @@ var WebView = React.createClass({
     );
   },
 
-  /**
-   * Stop loading the current page.
-   */
   stopLoading: function() {
     UIManager.dispatchViewManagerCommand(
       this.getWebViewHandle(),
@@ -440,7 +388,7 @@ var WebView = React.createClass({
   },
 
   /**
-   * Returns the native `WebView` node.
+   * Returns the native webview node.
    */
   getWebViewHandle: function(): any {
     return ReactNative.findNodeHandle(this.refs[RCT_WEBVIEW_REF]);

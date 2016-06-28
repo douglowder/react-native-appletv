@@ -170,7 +170,7 @@ var TouchableOpacity = React.createClass({
   render: function() {
     return (
       <Animated.View
-        accessible={this.props.accessible !== false}
+        accessible={true}
         accessibilityLabel={this.props.accessibilityLabel}
         accessibilityComponentType={this.props.accessibilityComponentType}
         accessibilityTraits={this.props.accessibilityTraits}

@@ -32,7 +32,7 @@ var onlyChild = require('onlyChild');
 type Event = Object;
 
 var DEFAULT_PROPS = {
-  activeOpacity: 0.8,
+  activeOpacity: 1.0,
   underlayColor: 'black',
 };
 
@@ -196,6 +196,7 @@ var TouchableHighlight = React.createClass({
     if (!this.isMounted() || !this._hasPressHandler()) {
       return;
     }
+    this.props.onTVFocus && this.props.onTVFocus();
 
     this.refs[UNDERLAY_REF].setNativeProps(this.state.activeUnderlayProps);
     this.refs[CHILD_REF].setNativeProps(this.state.activeProps);
@@ -203,6 +204,8 @@ var TouchableHighlight = React.createClass({
   },
 
   _hideUnderlay: function() {
+    this.props.onTVBlur && this.props.onTVBlur();
+
     this.clearTimeout(this._hideTimeout);
     this._hideTimeout = null;
     if (this._hasPressHandler() && this.refs[UNDERLAY_REF]) {
@@ -227,7 +230,7 @@ var TouchableHighlight = React.createClass({
   render: function() {
     return (
       <View
-        accessible={this.props.accessible !== false}
+        accessible={true}
         accessibilityLabel={this.props.accessibilityLabel}
         accessibilityComponentType={this.props.accessibilityComponentType}
         accessibilityTraits={this.props.accessibilityTraits}
@@ -244,7 +247,8 @@ var TouchableHighlight = React.createClass({
         onResponderMove={this.touchableHandleResponderMove}
         onResponderRelease={this.touchableHandleResponderRelease}
         onResponderTerminate={this.touchableHandleResponderTerminate}
-        testID={this.props.testID}>
+        testID={this.props.testID}
+        disableParallax={this.props.disableParallax}>
         {React.cloneElement(
           onlyChild(this.props.children),
           {

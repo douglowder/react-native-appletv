@@ -17,7 +17,6 @@
  * 2. Bridged modules.
  *
  * @providesModule InitializeJavaScriptAppEngine
- * @flow
  */
 
 /* eslint strict: 0 */
@@ -25,15 +24,15 @@
 
 require('regenerator-runtime/runtime');
 
-if (global.GLOBAL === undefined) {
+if (typeof GLOBAL === 'undefined') {
   global.GLOBAL = global;
 }
 
-if (global.window === undefined) {
+if (typeof window === 'undefined') {
   global.window = global;
 }
 
-function setUpProcess(): void {
+function setUpProcess() {
   global.process = global.process || {};
   global.process.env = global.process.env || {};
   if (!global.process.env.NODE_ENV) {
@@ -41,12 +40,12 @@ function setUpProcess(): void {
   }
 }
 
-function setUpProfile(): void {
+function setUpProfile() {
   const Systrace = require('Systrace');
   Systrace.setEnabled(global.__RCTProfileIsProfiling || false);
 }
 
-function setUpConsole(): void {
+function setUpConsole() {
   // ExceptionsManager transitively requires Promise so we install it after
   const ExceptionsManager = require('ExceptionsManager');
   ExceptionsManager.installConsoleErrorReporter();
@@ -57,28 +56,35 @@ function setUpConsole(): void {
 }
 
 /**
- * Sets an object's property. If a property with the same name exists, this will
- * replace it but maintain its descriptor configuration.
+ * Assigns a new global property, replacing the existing one if there is one.
  *
- * The original property value will be preserved as `original[PropertyName]` so
- * that, if necessary, it can be restored. For example, if you want to route
- * network requests through DevTools (to trace them):
+ * Existing properties are preserved as `originalPropertyName`. Both properties
+ * will maintain the same enumerability & configurability.
  *
- *   global.XMLHttpRequest = global.originalXMLHttpRequest;
+ * This allows you to undo the more aggressive polyfills, should you need to.
+ * For example, if you want to route network requests through DevTools (to trace
+ * them):
  *
- * @see https://github.com/facebook/react-native/issues/934
+ *     global.XMLHttpRequest = global.originalXMLHttpRequest;
+ *
+ * For more info on that particular case, see:
+ * https://github.com/facebook/react-native/issues/934
  */
-function defineProperty(object: Object, name: string, newValue: mixed): void {
-  const descriptor = Object.getOwnPropertyDescriptor(object, name);
+function polyfillGlobal(name, newValue, scope = global) {
+  const descriptor = Object.getOwnPropertyDescriptor(scope, name);
   if (descriptor) {
     const backupName = `original${name[0].toUpperCase()}${name.substr(1)}`;
-    Object.defineProperty(object, backupName, {
-      ...descriptor,
-      value: object[name],
-    });
+    Object.defineProperty(scope, backupName, {...descriptor, value: scope[name]});
   }
+
   const {enumerable, writable} = descriptor || {};
-  Object.defineProperty(object, name, {
+
+  // jest for some bad reasons runs the polyfill code multiple times. In jest
+  // environment, XmlHttpRequest doesn't exist so getOwnPropertyDescriptor
+  // returns undefined and defineProperty default for writable is false.
+  // Therefore, the second time it runs, defineProperty will fatal :(
+
+  Object.defineProperty(scope, name, {
     configurable: true,
     enumerable: enumerable !== false,
     writable: writable !== false,
@@ -86,46 +92,41 @@ function defineProperty(object: Object, name: string, newValue: mixed): void {
   });
 }
 
-function defineLazyProperty<T>(
-  object: Object,
-  name: string,
-  getNewValue: () => T
-): void {
-  const descriptor = getPropertyDescriptor(object, name);
+function polyfillLazyGlobal(name, valueFn, scope = global) {
+  const descriptor = getPropertyDescriptor(scope, name);
   if (descriptor) {
     const backupName = `original${name[0].toUpperCase()}${name.substr(1)}`;
-    Object.defineProperty(object, backupName, descriptor);
+    Object.defineProperty(scope, backupName, descriptor);
   }
-  const config = {
+
+  const {enumerable, writable} = descriptor || {};
+  Object.defineProperty(scope, name, {
     configurable: true,
-    enumerable: descriptor ? descriptor.enumerable !== false : true,
-    writable: descriptor ? descriptor.writable !== false : true,
-  };
-  let value;
-  let valueSet = false;
-  function getValue(): T {
-    // WORKAROUND: A weird infinite loop occurs where calling `getValue` calls
-    // `setValue` which calls `Object.defineProperty` which somehow triggers
-    // `getValue` again. Adding `valueSet` breaks this loop.
-    if (!valueSet) {
-      setValue(getNewValue());
+    enumerable: enumerable !== false,
+    get() {
+      return (global[name] = valueFn());
+    },
+    set(value) {
+      Object.defineProperty(global, name, {
+        configurable: true,
+        enumerable: enumerable !== false,
+        writable: writable !== false,
+        value,
+      });
     }
-    return value;
-  }
-  function setValue(newValue: T): void {
-    value = newValue;
-    valueSet = true;
-    Object.defineProperty(object, name, {...config, value: newValue});
-  }
-  Object.defineProperty(object, name, {
-    configurable: config.configurable,
-    enumerable: config.enumerable,
-    get: getValue,
-    set: setValue,
   });
 }
 
-function setUpErrorHandler(): void {
+/**
+ * Polyfill a module if it is not already defined in `scope`.
+ */
+function polyfillIfNeeded(name, polyfill, scope = global, descriptor = {}) {
+  if (scope[name] === undefined) {
+    Object.defineProperty(scope, name, {...descriptor, value: polyfill});
+  }
+}
+
+function setUpErrorHandler() {
   if (global.__fbDisableExceptionsManager) {
     return;
   }
@@ -134,10 +135,7 @@ function setUpErrorHandler(): void {
     try {
       require('ExceptionsManager').handleException(e, isFatal);
     } catch (ee) {
-      /* eslint-disable no-console-disallow */
       console.log('Failed to print error: ', ee.message);
-      /* eslint-enable no-console-disallow */
-      throw e;
     }
   }
 
@@ -152,9 +150,9 @@ function setUpErrorHandler(): void {
  * implement our own custom timing bridge that should be immune to
  * unexplainably dropped timing signals.
  */
-function setUpTimers(): void {
-  const defineLazyTimer = name => {
-    defineLazyProperty(global, name, () => require('JSTimers')[name]);
+function setUpTimers() {
+  const defineLazyTimer = (name) => {
+    polyfillLazyGlobal(name, () => require('JSTimers')[name]);
   };
   defineLazyTimer('setTimeout');
   defineLazyTimer('setInterval');
@@ -166,7 +164,7 @@ function setUpTimers(): void {
   defineLazyTimer('cancelAnimationFrame');
 }
 
-function setUpAlert(): void {
+function setUpAlert() {
   if (!global.alert) {
     global.alert = function(text) {
       // Require Alert on demand. Requiring it too early can lead to issues
@@ -176,48 +174,45 @@ function setUpAlert(): void {
   }
 }
 
-function setUpPromise(): void {
+function setUpPromise() {
   // The native Promise implementation throws the following error:
   // ERROR: Event loop not supported.
-  defineLazyProperty(global, 'Promise', () => require('Promise'));
+  polyfillLazyGlobal('Promise', () => require('Promise'));
 }
 
-function setUpXHR(): void {
+function setUpXHR() {
   // The native XMLHttpRequest in Chrome dev tools is CORS aware and won't
   // let you fetch anything from the internet
-  defineLazyProperty(global, 'XMLHttpRequest', () => require('XMLHttpRequest'));
-  defineLazyProperty(global, 'FormData', () => require('FormData'));
+  polyfillLazyGlobal('XMLHttpRequest', () => require('XMLHttpRequest'));
+  polyfillLazyGlobal('FormData', () => require('FormData'));
 
-  defineLazyProperty(global, 'fetch', () => require('fetch').fetch);
-  defineLazyProperty(global, 'Headers', () => require('fetch').Headers);
-  defineLazyProperty(global, 'Request', () => require('fetch').Request);
-  defineLazyProperty(global, 'Response', () => require('fetch').Response);
+  polyfillLazyGlobal('fetch', () => require('fetch').fetch);
+  polyfillLazyGlobal('Headers', () => require('fetch').Headers);
+  polyfillLazyGlobal('Request', () => require('fetch').Request);
+  polyfillLazyGlobal('Response', () => require('fetch').Response);
 
-  defineLazyProperty(global, 'WebSocket', () => require('WebSocket'));
+  polyfillLazyGlobal('WebSocket', () => require('WebSocket'));
 }
 
-function setUpGeolocation(): void {
-  if (global.navigator === undefined) {
-    Object.defineProperty(global, 'navigator', {
-      configurable: true,
-      enumerable: true,
-      writable: true,
-      value: {},
-    });
-  }
-  const {navigator} = global;
-  Object.defineProperty(navigator, 'product', {value: 'ReactNative'});
-  defineLazyProperty(navigator, 'geolocation', () => require('Geolocation'));
+function setUpGeolocation() {
+  polyfillIfNeeded('navigator', {}, global, {
+    writable: true,
+    enumerable: true,
+    configurable: true,
+  });
+  Object.defineProperty(global.navigator, 'product', {value: 'ReactNative'});
+
+  polyfillLazyGlobal('geolocation', () => require('Geolocation'), global.navigator);
 }
 
-function setUpCollections(): void {
-  // We can't make these lazy because `Map` checks for `global.Map` (which would
-  // not exist if it were lazily defined).
-  defineProperty(global, 'Map', require('Map'));
-  defineProperty(global, 'Set', require('Set'));
+function setUpMapAndSet() {
+  // We can't make these lazy as Map checks the global.Map to see if it's
+  // available but in our case it'll be a lazy getter.
+  polyfillGlobal('Map', require('Map'));
+  polyfillGlobal('Set', require('Set'));
 }
 
-function setUpDevTools(): void {
+function setUpDevTools() {
   if (__DEV__) {
     // not when debugging in chrome
     if (!window.document && require('Platform').OS === 'ios') {
@@ -230,7 +225,7 @@ function setUpDevTools(): void {
   }
 }
 
-function getPropertyDescriptor(object: Object, name: string): any {
+function getPropertyDescriptor(object, name) {
   while (object) {
     const descriptor = Object.getOwnPropertyDescriptor(object, name);
     if (descriptor) {
@@ -249,7 +244,7 @@ setUpPromise();
 setUpErrorHandler();
 setUpXHR();
 setUpGeolocation();
-setUpCollections();
+setUpMapAndSet();
 setUpDevTools();
 
 // Just to make sure the JS gets packaged up. Wait until the JS environment has

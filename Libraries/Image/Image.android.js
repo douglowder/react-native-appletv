@@ -15,7 +15,6 @@ var NativeMethodsMixin = require('NativeMethodsMixin');
 var NativeModules = require('NativeModules');
 var ImageResizeMode = require('ImageResizeMode');
 var ImageStylePropTypes = require('ImageStylePropTypes');
-var ViewStylePropTypes = require('ViewStylePropTypes');
 var PropTypes = require('ReactPropTypes');
 var React = require('React');
 var ReactNativeViewAttributes = require('ReactNativeViewAttributes');
@@ -27,8 +26,6 @@ var flattenStyle = require('flattenStyle');
 var merge = require('merge');
 var requireNativeComponent = require('requireNativeComponent');
 var resolveAssetSource = require('resolveAssetSource');
-var Set = require('Set');
-var filterObject = require('fbjs/lib/filterObject');
 
 var {
   ImageLoader,
@@ -65,9 +62,6 @@ var ImageViewAttributes = merge(ReactNativeViewAttributes.UIView, {
   fadeDuration: true,
   shouldNotifyLoadEvents: true,
 });
-
-var ViewStyleKeys = new Set(Object.keys(ViewStylePropTypes));
-var ImageSpecificStyleKeys = new Set(Object.keys(ImageStylePropTypes).filter(x => !ViewStyleKeys.has(x)));
 
 var Image = React.createClass({
   propTypes: {
@@ -228,15 +222,12 @@ var Image = React.createClass({
 
       if (nativeProps.children) {
         // TODO(6033040): Consider implementing this as a separate native component
-        const containerStyle = filterObject(style, (val, key) => !ImageSpecificStyleKeys.has(key));
-        const imageStyle = filterObject(style, (val, key) => ImageSpecificStyleKeys.has(key));
         const imageProps = merge(nativeProps, {
-          style: [imageStyle, styles.absoluteImage],
+          style: styles.absoluteImage,
           children: undefined,
         });
-
         return (
-          <View style={containerStyle}>
+          <View style={nativeProps.style}>
             <RKImage {...imageProps}/>
             {this.props.children}
           </View>

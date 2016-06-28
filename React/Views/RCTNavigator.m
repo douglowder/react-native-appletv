@@ -573,11 +573,8 @@ BOOL jsGettingtooSlow =
     RCTLogError(@"should be at least one current view");
   }
   if (jsGettingAhead) {
-    if(currentReactCount == 1){
-      [self removeTypeMenuGesture];
-    } else if (currentReactCount > 1 && _menuGestureRecognizer){
-      [self addTypeMenuGesture];
-    }
+    UIViewController *rootViewController = [UIApplication sharedApplication].keyWindow.rootViewController;
+    NSArray *gestureRecognizers = [rootViewController.view gestureRecognizers];
     if (reactPushOne) {
       UIView *lastView = self.reactSubviews.lastObject;
       RCTWrapperViewController *vc = [[RCTWrapperViewController alloc] initWithNavItem:(RCTNavItem *)lastView];
@@ -594,6 +591,11 @@ BOOL jsGettingtooSlow =
   } else if (jsCatchingUp) {
     [self freeLock]; // Nothing to push/pop
   } else {
+    if(currentReactCount == 1 && !_menuGestureRecognizer){
+      [self removeTypeMenuGesture];
+    } else if (currentReactCount > 1 && _menuGestureRecognizer){
+      [self addTypeMenuGesture];
+    }
     // Else, JS making no progress, could have been unrelated to anything nav.
     return;
   }
@@ -638,7 +640,6 @@ didMoveToNavigationController:(UINavigationController *)navigationController
     UIViewController *rootViewController = [UIApplication sharedApplication].keyWindow.rootViewController;
     NSArray *gestureRecognizers = [rootViewController.view gestureRecognizers];
     for(UIGestureRecognizer *recognizer in gestureRecognizers){
-        NSLog(@"test");
         NSArray *allowedPressTypes = recognizer.allowedPressTypes;
         
         if([[allowedPressTypes objectAtIndex:0] intValue] == UIPressTypeMenu){

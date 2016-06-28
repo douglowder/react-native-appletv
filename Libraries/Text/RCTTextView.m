@@ -61,22 +61,17 @@
 @implementation RCTTextView
 {
   RCTEventDispatcher *_eventDispatcher;
-
   NSString *_placeholder;
   UITextView *_placeholderView;
   UITextView *_textView;
+  NSInteger _nativeEventCount;
   RCTText *_richTextView;
   NSAttributedString *_pendingAttributedText;
-  UIScrollView *_scrollView;
-
+  BOOL _blockTextShouldChange;
   UITextRange *_previousSelectionRange;
   NSUInteger _previousTextLength;
   CGFloat _previousContentHeight;
-  NSString *_predictedText;
-
-  BOOL _blockTextShouldChange;
-  BOOL _nativeUpdatesInFlight;
-  NSInteger _nativeEventCount;
+  UIScrollView *_scrollView;
 }
 
 - (instancetype)initWithEventDispatcher:(RCTEventDispatcher *)eventDispatcher
@@ -131,8 +126,6 @@ RCT_NOT_IMPLEMENTED(- (instancetype)initWithCoder:(NSCoder *)aDecoder)
       attrs[NSBackgroundColorAttributeName] = subview.backgroundColor;
       _textView.typingAttributes = attrs;
     }
-
-    [self performTextUpdate];
   }
 }
 
@@ -141,7 +134,6 @@ RCT_NOT_IMPLEMENTED(- (instancetype)initWithCoder:(NSCoder *)aDecoder)
   [super removeReactSubview:subview];
   if (_richTextView == subview) {
     _richTextView = nil;
-    [self performTextUpdate];
   }
 }
 
@@ -185,7 +177,7 @@ static NSAttributedString *removeReactTagFromString(NSAttributedString *string)
 
 - (void)performPendingTextUpdate
 {
-  if (!_pendingAttributedText || _mostRecentEventCount < _nativeEventCount || _nativeUpdatesInFlight) {
+  if (!_pendingAttributedText || _mostRecentEventCount < _nativeEventCount) {
     return;
   }
 
@@ -211,7 +203,6 @@ static NSAttributedString *removeReactTagFromString(NSAttributedString *string)
   NSInteger oldTextLength = _textView.attributedText.length;
 
   _textView.attributedText = _pendingAttributedText;
-  _predictedText = _pendingAttributedText.string;
   _pendingAttributedText = nil;
 
   if (selection.empty) {
@@ -225,7 +216,7 @@ static NSAttributedString *removeReactTagFromString(NSAttributedString *string)
 
   [_textView layoutIfNeeded];
 
-  [self updatePlaceholderVisibility];
+  [self _setPlaceholderVisibility];
 
   _blockTextShouldChange = NO;
 }
@@ -273,7 +264,7 @@ static NSAttributedString *removeReactTagFromString(NSAttributedString *string)
     _placeholderView = [[UITextView alloc] initWithFrame:self.bounds];
     _placeholderView.userInteractionEnabled = NO;
     _placeholderView.backgroundColor = [UIColor clearColor];
-    _placeholderView.scrollEnabled = NO;
+    _placeholderView.scrollEnabled = false;
 #if !TARGET_OS_TV
     _placeholderView.editable = NO;
     _placeholderView.scrollsToTop = NO;
@@ -286,7 +277,7 @@ static NSAttributedString *removeReactTagFromString(NSAttributedString *string)
     _placeholderView.textAlignment = _textView.textAlignment;
 
     [self insertSubview:_placeholderView belowSubview:_textView];
-    [self updatePlaceholderVisibility];
+    [self _setPlaceholderVisibility];
   }
 }
 
@@ -323,11 +314,21 @@ static NSAttributedString *removeReactTagFromString(NSAttributedString *string)
   [self updateFrames];
 }
 
+- (NSString *)text
+{
+  return _textView.text;
+}
+
 - (BOOL)textView:(RCTUITextView *)textView shouldChangeTextInRange:(NSRange)range replacementText:(NSString *)text
 {
+  if (_blockTextShouldChange) {
+    return NO;
+  }
+
   if (textView.textWasPasted) {
     textView.textWasPasted = NO;
   } else {
+    
     [_eventDispatcher sendTextEventWithType:RCTTextEventTypeKeyPress
                                    reactTag:self.reactTag
                                        text:nil
@@ -335,6 +336,7 @@ static NSAttributedString *removeReactTagFromString(NSAttributedString *string)
                                  eventCount:_nativeEventCount];
 
     if (_blurOnSubmit && [text isEqualToString:@"\n"]) {
+
       // TODO: the purpose of blurOnSubmit on RCTextField is to decide if the
       // field should lose focus when return is pressed or not. We're cheating a
       // bit here by using it on RCTextView to decide if return character should
@@ -346,6 +348,7 @@ static NSAttributedString *removeReactTagFromString(NSAttributedString *string)
       // where _blurOnSubmit = YES, this is still the correct and expected
       // behavior though, so we'll leave the don't-blur-or-add-newline problem
       // to be solved another day.
+
       [_eventDispatcher sendTextEventWithType:RCTTextEventTypeSubmit
                                      reactTag:self.reactTag
                                          text:self.text
@@ -356,60 +359,27 @@ static NSAttributedString *removeReactTagFromString(NSAttributedString *string)
     }
   }
 
-  // So we need to track that there is a native update in flight just in case JS manages to come back around and update
-  // things /before/ UITextView can update itself asynchronously.  If there is a native update in flight, we defer the
-  // JS update when it comes in and apply the deferred update once textViewDidChange fires with the native update applied.
-  if (_blockTextShouldChange) {
-    return NO;
+  if (_maxLength == nil) {
+    return YES;
   }
-
-  if (_maxLength) {
-    NSUInteger allowedLength = _maxLength.integerValue - textView.text.length + range.length;
-    if (text.length > allowedLength) {
-      if (text.length > 1) {
-        // Truncate the input string so the result is exactly maxLength
-        NSString *limitedString = [text substringToIndex:allowedLength];
-        NSMutableString *newString = textView.text.mutableCopy;
-        [newString replaceCharactersInRange:range withString:limitedString];
-        textView.text = newString;
-        // Collapse selection at end of insert to match normal paste behavior
-        UITextPosition *insertEnd = [textView positionFromPosition:textView.beginningOfDocument
-                                                            offset:(range.location + allowedLength)];
-        textView.selectedTextRange = [textView textRangeFromPosition:insertEnd toPosition:insertEnd];
-        [self textViewDidChange:textView];
-      }
-      return NO;
+  NSUInteger allowedLength = _maxLength.integerValue - textView.text.length + range.length;
+  if (text.length > allowedLength) {
+    if (text.length > 1) {
+      // Truncate the input string so the result is exactly maxLength
+      NSString *limitedString = [text substringToIndex:allowedLength];
+      NSMutableString *newString = textView.text.mutableCopy;
+      [newString replaceCharactersInRange:range withString:limitedString];
+      textView.text = newString;
+      // Collapse selection at end of insert to match normal paste behavior
+      UITextPosition *insertEnd = [textView positionFromPosition:textView.beginningOfDocument
+                                                          offset:(range.location + allowedLength)];
+      textView.selectedTextRange = [textView textRangeFromPosition:insertEnd toPosition:insertEnd];
+      [self textViewDidChange:textView];
     }
-  }
-
-  _nativeUpdatesInFlight = YES;
-
-  if (range.location + range.length > _predictedText.length) {
-    // _predictedText got out of sync in a bad way, so let's just force sync it.  Haven't been able to repro this, but
-    // it's causing a real crash here: #6523822
-    _predictedText = textView.text;
-  }
-
-  NSString *previousText = [_predictedText substringWithRange:range];
-  if (_predictedText) {
-    _predictedText = [_predictedText stringByReplacingCharactersInRange:range withString:text];
+    return NO;
   } else {
-    _predictedText = text;
+    return YES;
   }
-
-  if (_onTextInput) {
-    _onTextInput(@{
-      @"text": text,
-      @"previousText": previousText ?: @"",
-      @"range": @{
-        @"start": @(range.location),
-        @"end": @(range.location + range.length)
-      },
-      @"eventCount": @(_nativeEventCount),
-    });
-  }
-
-  return YES;
 }
 
 - (void)textViewDidChangeSelection:(RCTUITextView *)textView
@@ -432,11 +402,6 @@ static NSAttributedString *removeReactTagFromString(NSAttributedString *string)
   }
 }
 
-- (NSString *)text
-{
-  return _textView.text;
-}
-
 - (void)setText:(NSString *)text
 {
   NSInteger eventLag = _nativeEventCount - _mostRecentEventCount;
@@ -444,7 +409,6 @@ static NSAttributedString *removeReactTagFromString(NSAttributedString *string)
     UITextRange *selection = _textView.selectedTextRange;
     NSInteger oldTextLength = _textView.text.length;
 
-    _predictedText = text;
     _textView.text = text;
 
     if (selection.empty) {
@@ -456,7 +420,7 @@ static NSAttributedString *removeReactTagFromString(NSAttributedString *string)
       _textView.selectedTextRange = [_textView textRangeFromPosition:position toPosition:position];
     }
 
-    [self updatePlaceholderVisibility];
+    [self _setPlaceholderVisibility];
     [self updateContentSize]; //keep the text wrapping when the length of
     //the textline has been extended longer than the length of textinputView
   } else if (eventLag > RCTTextUpdateLagWarningThreshold) {
@@ -464,7 +428,7 @@ static NSAttributedString *removeReactTagFromString(NSAttributedString *string)
   }
 }
 
-- (void)updatePlaceholderVisibility
+- (void)_setPlaceholderVisibility
 {
   if (_textView.text.length > 0) {
     [_placeholderView setHidden:YES];
@@ -497,7 +461,7 @@ static NSAttributedString *removeReactTagFromString(NSAttributedString *string)
 {
   if (_clearTextOnFocus) {
     _textView.text = @"";
-    [self updatePlaceholderVisibility];
+    [self _setPlaceholderVisibility];
   }
 
   [_eventDispatcher sendTextEventWithType:RCTTextEventTypeFocus
@@ -507,55 +471,10 @@ static NSAttributedString *removeReactTagFromString(NSAttributedString *string)
                                eventCount:_nativeEventCount];
 }
 
-static BOOL findMismatch(NSString *first, NSString *second, NSRange *firstRange, NSRange *secondRange)
-{
-  NSInteger firstMismatch = -1;
-  for (NSUInteger ii = 0; ii < MAX(first.length, second.length); ii++) {
-    if (ii >= first.length || ii >= second.length || [first characterAtIndex:ii] != [second characterAtIndex:ii]) {
-      firstMismatch = ii;
-      break;
-    }
-  }
-
-  if (firstMismatch == -1) {
-    return NO;
-  }
-
-  NSUInteger ii = second.length;
-  NSUInteger lastMismatch = first.length;
-  while (ii > firstMismatch && lastMismatch > firstMismatch) {
-    if ([first characterAtIndex:(lastMismatch - 1)] != [second characterAtIndex:(ii - 1)]) {
-      break;
-    }
-    ii--;
-    lastMismatch--;
-  }
-
-  *firstRange = NSMakeRange(firstMismatch, lastMismatch - firstMismatch);
-  *secondRange = NSMakeRange(firstMismatch, ii - firstMismatch);
-  return YES;
-}
-
 - (void)textViewDidChange:(UITextView *)textView
 {
-  [self updatePlaceholderVisibility];
   [self updateContentSize];
-
-  // Detect when textView updates happend that didn't invoke `shouldChangeTextInRange`
-  // (e.g. typing simplified chinese in pinyin will insert and remove spaces without
-  // calling shouldChangeTextInRange).  This will cause JS to get out of sync so we
-  // update the mismatched range.
-  NSRange currentRange;
-  NSRange predictionRange;
-  if (findMismatch(textView.text, _predictedText, &currentRange, &predictionRange)) {
-    NSString *replacement = [textView.text substringWithRange:currentRange];
-    [self textView:textView shouldChangeTextInRange:predictionRange replacementText:replacement];
-    // JS will assume the selection changed based on the location of our shouldChangeTextInRange, so reset it.
-    [self textViewDidChangeSelection:textView];
-    _predictedText = textView.text;
-  }
-
-  _nativeUpdatesInFlight = NO;
+  [self _setPlaceholderVisibility];
   _nativeEventCount++;
 
   if (!self.reactTag || !_onChange) {

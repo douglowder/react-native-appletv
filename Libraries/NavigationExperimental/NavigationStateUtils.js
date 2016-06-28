@@ -112,24 +112,6 @@ function jumpTo(state: NavigationState, key: string): NavigationState {
 }
 
 /**
- * Sets the focused route to the previous route.
- */
-function back(state: NavigationState): NavigationState {
-  const index = state.index - 1;
-  const route = state.routes[index];
-  return route ? jumpToIndex(state, index) : state;
-}
-
-/**
- * Sets the focused route to the next route.
- */
-function forward(state: NavigationState): NavigationState {
-  const index = state.index + 1;
-  const route = state.routes[index];
-  return route ? jumpToIndex(state, index) : state;
-}
-
-/**
  * Replace a route by a key.
  * Note that this moves the index to the positon to where the new route in the
  * stack is at.
@@ -208,8 +190,6 @@ function reset(
 }
 
 const NavigationStateUtils = {
-  back,
-  forward,
   get: get,
   has,
   indexOf,
