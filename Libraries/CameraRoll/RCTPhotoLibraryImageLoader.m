@@ -30,7 +30,11 @@ RCT_EXPORT_MODULE()
 #if TARGET_OS_TV
   return NO;
 #else
-  return [requestURL.scheme caseInsensitiveCompare:@"ph"] == NSOrderedSame;
+  if (![PHAsset class]) {
+    return NO;
+  }
+  return [requestURL.scheme caseInsensitiveCompare:@"assets-library"] == NSOrderedSame ||
+    [requestURL.scheme caseInsensitiveCompare:@"ph"] == NSOrderedSame;
 #endif
 }
 
@@ -48,10 +52,17 @@ RCT_EXPORT_MODULE()
   // The 'ph://' prefix is used by FBMediaKit to differentiate between
   // assets-library. It is prepended to the local ID so that it is in the
   // form of an, NSURL which is what assets-library uses.
-  NSString *phAssetID = [imageURL.absoluteString substringFromIndex:@"ph://".length];
-  PHFetchResult *results = [PHAsset fetchAssetsWithLocalIdentifiers:@[phAssetID] options:nil];
+  NSString *assetID = @"";
+  PHFetchResult *results;
+  if ([imageURL.scheme caseInsensitiveCompare:@"assets-library"] == NSOrderedSame) {
+    assetID = [imageURL absoluteString];
+    results = [PHAsset fetchAssetsWithALAssetURLs:@[imageURL] options:nil];
+  } else {
+    assetID = [imageURL.absoluteString substringFromIndex:@"ph://".length];
+    results = [PHAsset fetchAssetsWithLocalIdentifiers:@[assetID] options:nil];
+  }
   if (results.count == 0) {
-    NSString *errorText = [NSString stringWithFormat:@"Failed to fetch PHAsset with local identifier %@ with no error message.", phAssetID];
+    NSString *errorText = [NSString stringWithFormat:@"Failed to fetch PHAsset with local identifier %@ with no error message.", assetID];
     completionHandler(RCTErrorWithMessage(errorText), nil);
     return ^{};
   }
