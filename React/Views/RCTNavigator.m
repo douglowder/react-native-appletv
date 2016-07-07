@@ -20,6 +20,11 @@
 #import "RCTView.h"
 #import "RCTWrapperViewController.h"
 #import "UIView+React.h"
+#import "RCTRootView.h"
+
+#if TARGET_OS_TV
+#import "RCTTVRemoteHandler.h"
+#endif
 
 typedef NS_ENUM(NSUInteger, RCTNavigationLock) {
   RCTNavigationLockNone,
@@ -280,7 +285,8 @@ NSInteger kNeverProgressed = -10000;
 @property (nonatomic, readonly, strong) UIView *dummyView;
 
 @property (nonatomic, strong) UIGestureRecognizer *menuGestureRecognizer;
-
+@property (nonatomic, assign) Boolean isMenuGestureAdded ;
+@property (nonatomic, strong) RCTTVRemoteHandler *tvRemoteHandler;
 @end
 
 @implementation RCTNavigator
@@ -299,6 +305,7 @@ NSInteger kNeverProgressed = -10000;
   if ((self = [super initWithFrame:CGRectZero])) {
     _paused = YES;
 
+      _isMenuGestureAdded = YES;
     _bridge = bridge;
     _mostRecentProgress = kNeverProgressed;
     _dummyView = [[UIView alloc] initWithFrame:CGRectZero];
@@ -313,6 +320,9 @@ NSInteger kNeverProgressed = -10000;
 
     [self addSubview:_navigationController.view];
     [_navigationController.view addSubview:_dummyView];
+      
+      _tvRemoteHandler = [[RCTTVRemoteHandler alloc] initWithBridge:_bridge];
+
   }
   return self;
 }
@@ -572,6 +582,13 @@ BOOL jsGettingtooSlow =
   if (currentReactCount < 1) {
     RCTLogError(@"should be at least one current view");
   }
+    
+    if(currentReactCount == 1 && _isMenuGestureAdded){
+        [self removeTypeMenuGesture];
+    } else if (currentReactCount > 1 && !_isMenuGestureAdded){
+        [self addTypeMenuGesture];
+    }
+
   if (jsGettingAhead) {
     UIViewController *rootViewController = [UIApplication sharedApplication].keyWindow.rootViewController;
     NSArray *gestureRecognizers = [rootViewController.view gestureRecognizers];
@@ -591,12 +608,7 @@ BOOL jsGettingtooSlow =
   } else if (jsCatchingUp) {
     [self freeLock]; // Nothing to push/pop
   } else {
-    if(currentReactCount == 1 && !_menuGestureRecognizer){
-      [self removeTypeMenuGesture];
-    } else if (currentReactCount > 1 && _menuGestureRecognizer){
-      [self addTypeMenuGesture];
-    }
-    // Else, JS making no progress, could have been unrelated to anything nav.
+        // Else, JS making no progress, could have been unrelated to anything nav.
     return;
   }
 
@@ -637,22 +649,35 @@ didMoveToNavigationController:(UINavigationController *)navigationController
 }
 
 - (void) removeTypeMenuGesture {
+     _isMenuGestureAdded = NO;
     UIViewController *rootViewController = [UIApplication sharedApplication].keyWindow.rootViewController;
+
     NSArray *gestureRecognizers = [rootViewController.view gestureRecognizers];
     for(UIGestureRecognizer *recognizer in gestureRecognizers){
         NSArray *allowedPressTypes = recognizer.allowedPressTypes;
         
         if([[allowedPressTypes objectAtIndex:0] intValue] == UIPressTypeMenu){
-            _menuGestureRecognizer = recognizer;
             [rootViewController.view removeGestureRecognizer:recognizer];
+            
         };
     }
+    
 }
 
 - (void) addTypeMenuGesture {
+    _isMenuGestureAdded = YES;
+
     UIViewController *rootViewController = [UIApplication sharedApplication].keyWindow.rootViewController;
-    [rootViewController.view addGestureRecognizer:_menuGestureRecognizer];
-    _menuGestureRecognizer = nil;
+    
+    for(UIGestureRecognizer *recognizer in _tvRemoteHandler.tvRemoteGestureRecognizers){
+        NSArray *allowedPressTypes = recognizer.allowedPressTypes;
+        
+        if([[allowedPressTypes objectAtIndex:0] intValue] == UIPressTypeMenu){
+            [rootViewController.view addGestureRecognizer:recognizer];
+            break;
+            
+        };
+    }
 }
 
 @end
