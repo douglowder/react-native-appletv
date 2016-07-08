@@ -96,7 +96,7 @@ RCT_EXPORT_METHOD(saveToCameraRoll:(NSURLRequest *)request
   if ([type isEqualToString:@"video"]) {
     // It's unclear if writeVideoAtPathToSavedPhotosAlbum is thread-safe
     dispatch_async(dispatch_get_main_queue(), ^{
-      [_bridge.assetsLibrary writeVideoAtPathToSavedPhotosAlbum:request.URL completionBlock:^(NSURL *assetURL, NSError *saveError) {
+      [self->_bridge.assetsLibrary writeVideoAtPathToSavedPhotosAlbum:request.URL completionBlock:^(NSURL *assetURL, NSError *saveError) {
         if (saveError) {
           reject(RCTErrorUnableToSave, nil, saveError);
         } else {
@@ -113,7 +113,7 @@ RCT_EXPORT_METHOD(saveToCameraRoll:(NSURLRequest *)request
       }
       // It's unclear if writeImageToSavedPhotosAlbum is thread-safe
       dispatch_async(dispatch_get_main_queue(), ^{
-        [_bridge.assetsLibrary writeImageToSavedPhotosAlbum:loadedImage.CGImage metadata:nil completionBlock:^(NSURL *assetURL, NSError *saveError) {
+        [self->_bridge.assetsLibrary writeImageToSavedPhotosAlbum:loadedImage.CGImage metadata:nil completionBlock:^(NSURL *assetURL, NSError *saveError) {
           if (saveError) {
             RCTLogWarn(@"Error saving cropped image: %@", saveError);
             reject(RCTErrorUnableToSave, nil, saveError);

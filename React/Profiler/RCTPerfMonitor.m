@@ -337,9 +337,9 @@ RCT_EXPORT_MODULE()
     [self.container addSubview:self.jsGraph];
     [self.container addSubview:self.jsGraphLabel];
     [executor executeBlockOnJavaScriptQueue:^{
-      _jsDisplayLink = [CADisplayLink displayLinkWithTarget:self
+      self->_jsDisplayLink = [CADisplayLink displayLinkWithTarget:self
                                                    selector:@selector(threadUpdate:)];
-      [_jsDisplayLink addToRunLoop:[NSRunLoop currentRunLoop]
+      [self->_jsDisplayLink addToRunLoop:[NSRunLoop currentRunLoop]
                            forMode:NSRunLoopCommonModes];
     }];
   }
@@ -406,7 +406,7 @@ RCT_EXPORT_MODULE()
           const void *buffer,
           size_t size
         ) {
-          write(_stderr, buffer, size);
+          write(self->_stderr, buffer, size);
 
           NSString *log = [[NSString alloc] initWithBytes:buffer
                                                    length:size
@@ -503,8 +503,8 @@ RCT_EXPORT_MODULE()
 
   [UIView animateWithDuration:.25 animations:^{
     CGRect tmp = self.container.frame;
-    self.container.frame = _storedMonitorFrame;
-    _storedMonitorFrame = tmp;
+    self.container.frame = self->_storedMonitorFrame;
+    self->_storedMonitorFrame = tmp;
   }];
 }
 
@@ -518,8 +518,9 @@ RCT_EXPORT_MODULE()
 {
   NSUInteger i = 0;
   NSMutableArray<NSString *> *data = [NSMutableArray new];
-  NSArray<NSNumber *> *values = RCTPerformanceLoggerOutput();
-  for (NSString *label in RCTPerformanceLoggerLabels()) {
+  RCTPerformanceLogger *performanceLogger = [_bridge performanceLogger];
+  NSArray<NSNumber *> *values = [performanceLogger valuesForTags];
+  for (NSString *label in [performanceLogger labelsForTags]) {
     long long value = values[i+1].longLongValue - values[i].longLongValue;
     NSString *unit = @"ms";
     if ([label hasSuffix:@"Size"]) {

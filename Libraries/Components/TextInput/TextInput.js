@@ -11,29 +11,29 @@
  */
 'use strict';
 
-var DocumentSelectionState = require('DocumentSelectionState');
-var EventEmitter = require('EventEmitter');
-var NativeMethodsMixin = require('NativeMethodsMixin');
-var Platform = require('Platform');
-var PropTypes = require('ReactPropTypes');
-var React = require('React');
-var ReactNative = require('ReactNative');
-var ReactChildren = require('ReactChildren');
-var StyleSheet = require('StyleSheet');
-var Text = require('Text');
-var TextInputState = require('TextInputState');
-var TimerMixin = require('react-timer-mixin');
-var TouchableWithoutFeedback = require('TouchableWithoutFeedback');
-var UIManager = require('UIManager');
-var View = require('View');
+const ColorPropType = require('ColorPropType');
+const DocumentSelectionState = require('DocumentSelectionState');
+const EventEmitter = require('EventEmitter');
+const NativeMethodsMixin = require('react/lib/NativeMethodsMixin');
+const Platform = require('Platform');
+const PropTypes = require('react/lib/ReactPropTypes');
+const React = require('React');
+const ReactNative = require('react/lib/ReactNative');
+const ReactChildren = require('react/lib/ReactChildren');
+const StyleSheet = require('StyleSheet');
+const Text = require('Text');
+const TextInputState = require('TextInputState');
+const TimerMixin = require('react-timer-mixin');
+const TouchableWithoutFeedback = require('TouchableWithoutFeedback');
+const UIManager = require('UIManager');
+const View = require('View');
 
-var createReactNativeComponentClass = require('createReactNativeComponentClass');
-var emptyFunction = require('fbjs/lib/emptyFunction');
-var invariant = require('fbjs/lib/invariant');
-var requireNativeComponent = require('requireNativeComponent');
+const emptyFunction = require('fbjs/lib/emptyFunction');
+const invariant = require('fbjs/lib/invariant');
+const requireNativeComponent = require('requireNativeComponent');
 
-var onlyMultiline = {
-  onTextInput: true, // not supported in Open Source yet
+const onlyMultiline = {
+  onTextInput: true,
   children: true,
 };
 
@@ -121,9 +121,10 @@ var TextInput = React.createClass({
      *
      * The following values work across platforms:
      *
-     * - default
-     * - numeric
-     * - email-address
+     * - `default`
+     * - `numeric`
+     * - `email-address`
+     * - `phone-pad`
      */
     keyboardType: PropTypes.oneOf([
       // Cross-platform
@@ -198,7 +199,7 @@ var TextInput = React.createClass({
      * Sets the return key to the label. Use it instead of `returnKeyType`.
      * @platform android
      */
-     returnKeyLabel: PropTypes.string,
+    returnKeyLabel: PropTypes.string,
     /**
      * Limits the maximum number of characters that can be entered. Use this
      * instead of implementing the logic in JS to avoid flicker.
@@ -238,6 +239,14 @@ var TextInput = React.createClass({
      * Changed text is passed as an argument to the callback handler.
      */
     onChangeText: PropTypes.func,
+    /**
+     * Callback that is called when the text input's content size changes.
+     * This will be called with
+     * `{ nativeEvent: { contentSize: { width, height } } }`.
+     *
+     * Only called for multiline text inputs.
+     */
+    onContentSizeChange: PropTypes.func,
     /**
      * Callback that is called when text input ends.
      */
@@ -280,8 +289,18 @@ var TextInput = React.createClass({
     */
     selectionColor: PropTypes.string,
     /**
-     * See DocumentSelectionState.js, some state that is responsible for
-     * maintaining selection information for a document
+     * An instance of `DocumentSelectionState`, this is some state that is responsible for
+     * maintaining selection information for a document.
+     *
+     * Some functionality that can be performed with this instance is:
+     *
+     * - `blur()`
+     * - `focus()`
+     * - `update()`
+     *
+     * > You can reference `DocumentSelectionState` in
+     * > [`vendor/document/selection/DocumentSelectionState.js`](https://github.com/facebook/react-native/blob/master/Libraries/vendor/document/selection/DocumentSelectionState.js)
+     *
      * @platform ios
      */
     selectionState: PropTypes.instanceOf(DocumentSelectionState),
@@ -323,9 +342,9 @@ var TextInput = React.createClass({
     /**
      * If true, the text field will blur when submitted.
      * The default value is true for single-line fields and false for
-     * multiline fields. Note that for multiline fields, setting blurOnSubmit
-     * to true means that pressing return will blur the field and trigger the
-     * onSubmitEditing event instead of inserting a newline into the field.
+     * multiline fields. Note that for multiline fields, setting `blurOnSubmit`
+     * to `true` means that pressing return will blur the field and trigger the
+     * `onSubmitEditing` event instead of inserting a newline into the field.
      */
     blurOnSubmit: PropTypes.bool,
     /**
@@ -336,7 +355,19 @@ var TextInput = React.createClass({
      * The color of the textInput underline.
      * @platform android
      */
-    underlineColorAndroid: PropTypes.string,
+    underlineColorAndroid: ColorPropType,
+
+    /**
+     * If defined, the provided image resource will be rendered on the left.
+     * @platform android
+     */
+    inlineImageLeft: PropTypes.string,
+
+    /**
+     * Padding between the inline image, if any, and the text input itself.
+     * @platform android
+     */
+    inlineImagePadding: PropTypes.number,
   },
 
   /**
@@ -444,11 +475,13 @@ var TextInput = React.createClass({
     var props = Object.assign({}, this.props);
     props.style = [styles.input, this.props.style];
     if (!props.multiline) {
-      for (var propKey in onlyMultiline) {
-        if (props[propKey]) {
-          throw new Error(
-            'TextInput prop `' + propKey + '` is only supported with multiline.'
-          );
+      if (__DEV__) {
+        for (var propKey in onlyMultiline) {
+          if (props[propKey]) {
+            throw new Error(
+              'TextInput prop `' + propKey + '` is only supported with multiline.'
+            );
+          }
         }
       }
       textContainer =
@@ -492,6 +525,7 @@ var TextInput = React.createClass({
           onFocus={this._onFocus}
           onBlur={this._onBlur}
           onChange={this._onChange}
+          onContentSizeChange={this.props.onContentSizeChange}
           onSelectionChange={onSelectionChange}
           onTextInput={this._onTextInput}
           onSelectionChangeShouldSetResponder={emptyFunction.thatReturnsTrue}
@@ -552,6 +586,7 @@ var TextInput = React.createClass({
         onFocus={this._onFocus}
         onBlur={this._onBlur}
         onChange={this._onChange}
+        onContentSizeChange={this.props.onContentSizeChange}
         onSelectionChange={onSelectionChange}
         onTextInput={this._onTextInput}
         onEndEditing={this.props.onEndEditing}
@@ -564,6 +599,8 @@ var TextInput = React.createClass({
         selectionColor={this.props.selectionColor}
         text={this._getText()}
         underlineColorAndroid={this.props.underlineColorAndroid}
+        inlineImageLeft={this.props.inlineImageLeft}
+        inlineImagePadding={this.props.inlineImagePadding}
         children={children}
         editable={this.props.editable}
         selectTextOnFocus={this.props.selectTextOnFocus}

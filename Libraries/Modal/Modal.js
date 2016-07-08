@@ -12,7 +12,7 @@
 'use strict';
 
 const Platform = require('Platform');
-const PropTypes = require('ReactPropTypes');
+const PropTypes = require('react/lib/ReactPropTypes');
 const React = require('React');
 const StyleSheet = require('StyleSheet');
 const UIManager = require('UIManager');
@@ -30,10 +30,62 @@ const RCTModalHostView = requireNativeComponent('RCTModalHostView', null);
  * your app written in React Native to present content above the enclosing
  * native view hierarchy.
  *
+<<<<<<< HEAD
  * In apps written with React Native from the root view down, you should use
  * Navigator instead of Modal. With a top-level Navigator, you have more control
  * over how to present the modal scene over the rest of your app by using the
  * configureScene property.
+=======
+ * ```javascript
+ * import React, { Component } from 'react';
+ * import { Modal, Text, TouchableHighlight, View } from 'react-native';
+ *
+ * class ModalExample extends Component {
+ *
+ *   constructor(props) {
+ *     super(props);
+ *     this.state = {modalVisible: false};
+ *   }
+ *
+ *   setModalVisible(visible) {
+ *     this.setState({modalVisible: visible});
+ *   }
+ *
+ *   render() {
+ *     return (
+ *       <View style={{marginTop: 22}}>
+ *         <Modal
+ *           animationType={"slide"}
+ *           transparent={false}
+ *           visible={this.state.modalVisible}
+ *           onRequestClose={() => {alert("Modal has been closed.")}}
+ *           >
+ *          <View style={{marginTop: 22}}>
+ *           <View>
+ *             <Text>Hello World!</Text>
+ *
+ *             <TouchableHighlight onPress={() => {
+ *               this.setModalVisible(!this.state.modalVisible)
+ *             }}>
+ *               <Text>Hide Modal</Text>
+ *             </TouchableHighlight>
+ *
+ *           </View>
+ *          </View>
+ *         </Modal>
+ *
+ *         <TouchableHighlight onPress={() => {
+ *           this.setModalVisible(true)
+ *         }}>
+ *           <Text>Show Modal</Text>
+ *         </TouchableHighlight>
+ *
+ *       </View>
+ *     );
+ *   }
+ * }
+ * ```
+>>>>>>> douglowder/master
  */
 class Modal extends React.Component {
   static propTypes = {
@@ -44,6 +96,11 @@ class Modal extends React.Component {
     animationType: PropTypes.oneOf(['none', 'slide', 'fade']),
     transparent: PropTypes.bool,
     visible: PropTypes.bool,
+    /**
+     * The `onRequestClose` prop allows passing a function that will be called once the modal has been dismissed.
+     *
+     * _On the Android platform, this is a required function._
+     */
     onRequestClose: Platform.OS === 'android' ? PropTypes.func.isRequired : PropTypes.func,
     onShow: PropTypes.func,
   };

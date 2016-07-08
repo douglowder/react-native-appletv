@@ -342,6 +342,13 @@ RCT_EXPORT_MODULE()
   [self showErrorMessage:combinedMessage];
 }
 
+- (void)showErrorMessage:(NSString *)message withRawStack:(NSString *)rawStack
+{
+  // TODO #11638796: convert rawStack into something useful
+  message = [NSString stringWithFormat:@"%@\n\n%@", message, rawStack];
+  [self showErrorMessage:message withStack:nil isUpdate:NO];
+}
+
 - (void)showErrorMessage:(NSString *)message withStack:(NSArray<NSDictionary *> *)stack
 {
   [self showErrorMessage:message withStack:stack isUpdate:NO];
@@ -355,18 +362,18 @@ RCT_EXPORT_MODULE()
 - (void)showErrorMessage:(NSString *)message withStack:(NSArray<NSDictionary *> *)stack isUpdate:(BOOL)isUpdate
 {
   dispatch_async(dispatch_get_main_queue(), ^{
-    if (!_window) {
-      _window = [[RCTRedBoxWindow alloc] initWithFrame:[UIScreen mainScreen].bounds];
-      _window.actionDelegate = self;
+    if (!self->_window) {
+      self->_window = [[RCTRedBoxWindow alloc] initWithFrame:[UIScreen mainScreen].bounds];
+      self->_window.actionDelegate = self;
     }
-    [_window showErrorMessage:message withStack:stack isUpdate:isUpdate];
+    [self->_window showErrorMessage:message withStack:stack isUpdate:isUpdate];
   });
 }
 
 RCT_EXPORT_METHOD(dismiss)
 {
   dispatch_async(dispatch_get_main_queue(), ^{
-    [_window dismiss];
+    [self->_window dismiss];
   });
 }
 
@@ -417,6 +424,7 @@ RCT_EXPORT_METHOD(dismiss)
 - (void)showError:(NSError *)message {}
 - (void)showErrorMessage:(NSString *)message {}
 - (void)showErrorMessage:(NSString *)message withDetails:(NSString *)details {}
+- (void)showErrorMessage:(NSString *)message withRawStack:(NSString *)rawStack {}
 - (void)showErrorMessage:(NSString *)message withStack:(NSArray<NSDictionary *> *)stack {}
 - (void)updateErrorMessage:(NSString *)message withStack:(NSArray<NSDictionary *> *)stack {}
 - (void)showErrorMessage:(NSString *)message withStack:(NSArray<NSDictionary *> *)stack showIfHidden:(BOOL)shouldShow {}

@@ -129,39 +129,144 @@ var GESTURE_ACTIONS = [
 ];
 
 /**
- * Use `Navigator` to transition between different scenes in your app. To
- * accomplish this, provide route objects to the navigator to identify each
- * scene, and also a `renderScene` function that the navigator can use to
- * render the scene for a given route.
+ * `Navigator` handles the transition between different scenes in your app.
+ * It is implemented in JavaScript and is available on both iOS and Android. If
+ * you are targeting iOS only, you may also want to consider using
+ * [`NavigatorIOS`](docs/navigatorios.html) as it leverages native UIKit
+ * navigation.
  *
- * To change the animation or gesture properties of the scene, provide a
- * `configureScene` prop to get the config object for a given route. See
- * `Navigator.SceneConfigs` for default animations and more info on
- * scene config options.
+ * To set up the `Navigator` you provide one or more objects called routes,
+ * to identify each scene. You also provide a `renderScene` function that
+ * renders the scene for each route object.
+ *
+ * ```
+ * import React, { Component } from 'react';
+ * import { Text, Navigator } from 'react-native';
+ *
+ * export default class NavAllDay extends Component {
+ *   render() {
+ *     return (
+ *       <Navigator
+ *         initialRoute={{ title: 'Awesome Scene', index: 0 }}
+ *         renderScene={(route, navigator) =>
+ *           <Text>Hello {route.title}!</Text>
+ *         }
+ *         style={{padding: 100}}
+ *       />
+ *     );
+ *   }
+ * }
+ * ```
+ *
+ * In the above example, `initialRoute` is used to specify the first route. It
+ * contains a `title` property that identifies the route. The `renderScene`
+ * prop returns a function that displays text based on the route's title.
+ *
+ * ### Additional Scenes
  *
  * ### Basic Usage
  *
  * ```
- *   <Navigator
- *     initialRoute={{name: 'My First Scene', index: 0}}
- *     renderScene={(route, navigator) =>
- *       <MySceneComponent
- *         name={route.name}
- *         onForward={() => {
- *           var nextIndex = route.index + 1;
- *           navigator.push({
- *             name: 'Scene ' + nextIndex,
- *             index: nextIndex,
- *           });
- *         }}
- *         onBack={() => {
- *           if (route.index > 0) {
+ * render() {
+ *   const routes = [
+ *     {title: 'First Scene', index: 0},
+ *     {title: 'Second Scene', index: 1},
+ *   ];
+ *   return (
+ *     <Navigator
+ *       initialRoute={routes[0]}
+ *       initialRouteStack={routes}
+ *       renderScene={(route, navigator) =>
+ *         <TouchableHighlight onPress={() => {
+ *           if (route.index === 0) {
+ *             navigator.push(routes[1]);
+ *           } else {
  *             navigator.pop();
  *           }
- *         }}
- *       />
+ *         }}>
+ *         <Text>Hello {route.title}!</Text>
+ *         </TouchableHighlight>
+ *       }
+ *       style={{padding: 100}}
+ *     />
+ *   );
+ * }
+ * ```
+ *
+ * In the above example, a `routes` variable is defined with two route objects
+ * representing two scenes. Each route has an `index` property that is used to
+ * manage the scene being rendered. The `renderScene` method is changed to
+ * either push or pop the navigator depending on the current route's index.
+ * Finally, the `Text` component in the scene is now wrapped in a
+ * `TouchableHighlight` component to help trigger the navigator transitions.
+ *
+ * ### Navigation Bar
+ *
+ * You can optionally pass in your own navigation bar by returning a
+ * `Navigator.NavigationBar` component to the `navigationBar` prop in
+ * `Navigator`. You can configure the navigation bar properties, through
+ * the `routeMapper` prop. There you set up the left, right, and title
+ * properties of the navigation bar:
+ *
+ * ```
+ * <Navigator
+ *   renderScene={(route, navigator) =>
+ *     // ...
+ *   }
+ *   navigationBar={
+ *      <Navigator.NavigationBar
+ *        routeMapper={{
+ *          LeftButton: (route, navigator, index, navState) =>
+ *           { return (<Text>Cancel</Text>); },
+ *          RightButton: (route, navigator, index, navState) =>
+ *            { return (<Text>Done</Text>); },
+ *          Title: (route, navigator, index, navState) =>
+ *            { return (<Text>Awesome Nav Bar</Text>); },
+ *        }}
+ *        style={{backgroundColor: 'gray'}}
+ *      />
+ *   }
+ * />
+ * ```
+ *
+ * When configuring the left, right, and title items for the navigation bar,
+ * you have access to info such as the current route object and navigation
+ * state. This allows you to customize the title for each scene as well as
+ * the buttons. For example, you can choose to hide the left button for one of
+ * the scenes.
+ *
+ * Typically you want buttons to represent the left and right buttons. Building
+ * on the previous example, you can set this up as follows:
+ *
+ * ```
+ * LeftButton: (route, navigator, index, navState) =>
+ *   {
+ *     if (route.index === 0) {
+ *       return null;
+ *     } else {
+ *       return (
+ *         <TouchableHighlight onPress={() => navigator.pop()}>
+ *           <Text>Back</Text>
+ *         </TouchableHighlight>
+ *       );
  *     }
- *   />
+ *   },
+ * ```
+ *
+ * This sets up a left navigator bar button that's visible on scenes after the
+ * the first one. When the button is tapped the navigator is popped.
+ *
+ * Another type of navigation bar, with breadcrumbs, is provided by
+ * `Navigator.BreadcrumbNavigationBar`. You can also provide your own navigation
+ * bar by passing it through the `navigationBar` prop. See the
+ * [UIExplorer](https://github.com/facebook/react-native/tree/master/Examples/UIExplorer)
+ * demo to try out both built-in navigation bars out and see how to use them.
+ *
+ * ### Scene Transitions
+ *
+ * To change the animation or gesture properties of the scene, provide a
+ * `configureScene` prop to get the config object for a given route:
+ *
  * ```
  */
 var Navigator = React.createClass({

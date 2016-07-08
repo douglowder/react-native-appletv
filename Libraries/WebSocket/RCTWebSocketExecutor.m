@@ -162,10 +162,10 @@ RCT_EXPORT_MODULE()
     }
 
     NSNumber *expectedID = @(lastID++);
-    _callbacks[expectedID] = [callback copy];
+    self->_callbacks[expectedID] = [callback copy];
     NSMutableDictionary<NSString *, id> *messageWithID = [message mutableCopy];
     messageWithID[@"id"] = expectedID;
-    [_socket send:RCTJSONStringify(messageWithID, NULL)];
+    [self->_socket send:RCTJSONStringify(messageWithID, NULL)];
   });
 }
 
@@ -223,7 +223,7 @@ RCT_EXPORT_MODULE()
 - (void)injectJSONText:(NSString *)script asGlobalObjectNamed:(NSString *)objectName callback:(RCTJavaScriptCompleteBlock)onComplete
 {
   dispatch_async(_jsQueue, ^{
-    _injectedObjects[objectName] = script;
+    self->_injectedObjects[objectName] = script;
     onComplete(nil);
   });
 }

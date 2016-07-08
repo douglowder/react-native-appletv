@@ -16,7 +16,7 @@ var Image = require('Image');
 var NavigationContext = require('NavigationContext');
 var RCTNavigatorManager = require('NativeModules').NavigatorManager;
 var React = require('React');
-var ReactNative = require('react-native');
+var ReactNative = require('react/lib/ReactNative');
 var StaticContainer = require('StaticContainer.react');
 var StyleSheet = require('StyleSheet');
 var View = require('View');
@@ -93,8 +93,17 @@ type Event = Object;
  */
 
 /**
- * NavigatorIOS wraps UIKit navigation and allows you to add back-swipe
- * functionality across your app.
+ * `NavigatorIOS` is a wrapper around
+ * [`UINavigationController`](https://developer.apple.com/library/ios/documentation/UIKit/Reference/UINavigationController_Class/),
+ * enabling you to implement a navigation stack. It works exactly the same as it
+ * would on a native app using `UINavigationController`, providing the same
+ * animations and behavior from UIKIt.
+ *
+ * As the name implies, it is only available on iOS. Take a look at
+ * [`Navigator`](/docs/navigator.html) for a similar solution for your
+ * cross-platform needs, or check out
+ * [react-native-navigation](https://github.com/wix/react-native-navigation), a
+ * component that aims to provide native navigation on both iOS and Android.
  *
  * > **NOTE**: This Component is not maintained by Facebook
  * >
@@ -102,29 +111,72 @@ type Event = Object;
  * > If a pure JavaScript solution fits your needs you may try the `Navigator`
  * > component instead.
  *
- * #### Routes
- * A route is an object used to describe each page in the navigator. The first
- * route is provided to NavigatorIOS as `initialRoute`:
+ * ```
+ * import React, { Component } from 'react';
+ * import { NavigatorIOS, Text } from 'react-native';
+ *
+ * export default class NavigatorIOSApp extends Component {
+ *   render() {
+ *     return (
+ *       <NavigatorIOS
+ *         initialRoute={{
+ *           component: MyScene,
+ *           title: 'My Initial Scene',
+ *         }}
+ *         style={{flex: 1}}
+ *       />
+ *     );
+ *   }
+ * }
+ *
+ * class MyScene extends Component {
+ *   static propTypes = {
+ *     title: PropTypes.string.isRequired,
+ *     navigator: PropTypes.object.isRequired,
+ *   }
+ *
+ *   constructor(props, context) {
+ *     super(props, context);
+ *     this._onForward = this._onForward.bind(this);
+ *     this._onBack = this._onBack.bind(this);
+ *   }
+ *
+ *   _onForward() {
+ *     this.props.navigator.push({
+ *       title: 'Scene ' + nextIndex,
+ *     });
+ *   }
+ *
+ *   render() {
+ *     return (
+ *       <View>
+ *         <Text>Current Scene: { this.props.title }</Text>
+ *         <TouchableHighlight onPress={this._onForward}>
+ *           <Text>Tap me to load the next scene</Text>
+ *         </TouchableHighlight>
+ *       </View>
+ *     )
+ *   }
+ * }
+ * ```
+ *
+ * In this code, the navigator renders the component specified in initialRoute,
+ * which in this case is `MyScene`. This component will receive a `route` prop
+ * and a `navigator` prop representing the navigator. The navigator's navigation
+ * bar will render the title for the current scene, "My Initial Scene".
+ *
+ * You can optionally pass in a `passProps` property to your `initialRoute`.
+ * `NavigatorIOS` passes this in as props to the rendered component:
  *
  * ```
- * render: function() {
- *   return (
- *     <NavigatorIOS
- *       initialRoute={{
- *         component: MyView,
- *         title: 'My View Title',
- *         passProps: { myProp: 'foo' },
- *       }}
- *     />
- *   );
- * },
+ * initialRoute={{
+ *   component: MyScene,
+ *   title: 'My Initial Scene',
+ *   passProps: { myProp: 'foo' }
+ * }}
  * ```
  *
- * Now MyView will be rendered by the navigator. It will receive the route
- * object in the `route` prop, a navigator, and all of the props specified in
- * `passProps`.
- *
- * See the initialRoute propType for a complete definition of a route.
+ * You can then access the props passed in via `{this.props.myProp}`.
  *
  * #### Navigator
  *
@@ -163,6 +215,29 @@ type Event = Object;
  * for the navigation bar. Props passed as properties to a route object will set
  * the configuration for that route's navigation bar, overriding any props
  * passed to the NavigatorIOS component.
+ *
+ * ```
+ * _handleNavigationRequest() {
+ *   this.refs.nav.push({
+ *     //...
+ *     passProps: { myProp: 'genius' },
+ *     barTintColor: '#996699',
+ *   });
+ * }
+ *
+ * render() {
+ *   return (
+ *     <NavigatorIOS
+ *       //...
+ *       style={{flex: 1}}
+ *       barTintColor='#ffffcc'
+ *     />
+ *   );
+ * }
+ * ```
+ *
+ * In the example above the navigation bar color is changed when the new route
+ * is pushed.
  *
  */
 var NavigatorIOS = React.createClass({
@@ -708,7 +783,7 @@ var NavigatorIOS = React.createClass({
       this.pop();
     }
   },
-  
+
   render: function() {
     return (
       <View style={this.props.style} onTVNavEvent={(evt) => this._handleTVEvent(evt)}>
