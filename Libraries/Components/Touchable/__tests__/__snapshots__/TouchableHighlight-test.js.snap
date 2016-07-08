@@ -12,6 +12,9 @@ exports[`TouchableHighlight renders correctly 0`] = `
   onResponderTerminate={[Function bound touchableHandleResponderTerminate]}
   onResponderTerminationRequest={[Function bound touchableHandleResponderTerminationRequest]}
   onStartShouldSetResponder={[Function bound touchableHandleStartShouldSetResponder]}
+  onTVBlur={[Function bound _hideUnderlay]}
+  onTVFocus={[Function bound _showUnderlay]}
+  onTVSelect={undefined}
   style={
     Array [
       4,
