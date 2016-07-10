@@ -43,7 +43,7 @@ const ds = new ListView.DataSource({
 });
 
 class UIExplorerExampleList extends React.Component {
-  constuctor(props: {
+  constructor(props: {
     disableTitleRow: ?boolean,
     onNavigate: Function,
     filter: ?string,
@@ -53,7 +53,20 @@ class UIExplorerExampleList extends React.Component {
     },
     style: ?any,
   }) {
-
+    super(props);
+    // Apple TV initially will focus on the ListView example row
+    this.state = {
+      focusedKey: 'ListViewExample'
+    };
+    var c = this;
+    this.componentDidMount = function() {
+      // Apple TV focus will move to Navigator example after 2 seconds
+      setTimeout(function() {
+        c.rows['ListViewExample'].setState({'hasTVPreferredFocus':false});
+        c.rows['NavigatorExample'].setState({'hasTVPreferredFocus' : true});
+      },2000);
+    };
+    this.rows = {};
   }
 
   static makeRenderable(example: any): ReactClass<any> {
@@ -147,7 +160,7 @@ class UIExplorerExampleList extends React.Component {
   _renderRow(title: string, description: string, key: ?string, handler: ?Function): ?ReactElement<any> {
     return (
       <View key={key || title}>
-        <TouchableHighlight onPress={handler}>
+        <TouchableHighlight ref={(row) => this.rows[key] = row} onPress={handler} hasTVPreferredFocus={key === this.state.focusedKey}>
           <View style={styles.row}>
             <Text style={styles.rowTitleText}>
               {title}

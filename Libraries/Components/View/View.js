@@ -259,6 +259,8 @@ const View = React.createClass({
     onTVBlur: PropTypes.func,
     onTVNavEvent: PropTypes.func,
 
+    hasTVPreferredFocus: PropTypes.bool,
+
     /**
      * Used to locate this view in end-to-end tests.
      *

@@ -130,6 +130,15 @@ NSString *const RCTContentDidAppearNotification = @"RCTContentDidAppearNotificat
 RCT_NOT_IMPLEMENTED(- (instancetype)initWithFrame:(CGRect)frame)
 RCT_NOT_IMPLEMENTED(- (instancetype)initWithCoder:(NSCoder *)aDecoder)
 
+#if TARGET_OS_TV
+- (UIView*)preferredFocusedView {
+  if(self.reactPreferredFocusedView) {
+    return self.reactPreferredFocusedView;
+  };
+  return [super preferredFocusedView];
+}
+#endif
+
 - (void)setBackgroundColor:(UIColor *)backgroundColor
 {
   super.backgroundColor = backgroundColor;

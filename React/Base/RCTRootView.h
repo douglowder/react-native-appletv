@@ -118,6 +118,7 @@ extern NSString *const RCTContentDidAppearNotification;
  */
 #if TARGET_OS_TV
 @property (nonatomic, strong, readwrite) RCTTVRemoteHandler *tvRemoteHandler;
+@property (nonatomic, strong, readwrite) UIView *reactPreferredFocusedView;
 #endif
 
 /**

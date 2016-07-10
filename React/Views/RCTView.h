@@ -36,6 +36,12 @@
 @property (nonatomic, copy) RCTDirectEventBlock onTVNavEvent; // Called on any TV remote action other than select (menu, play/pause, swipes or arrow keys);
 
 /**
+ * TV preferred focus
+ */
+
+@property (nonatomic, assign) BOOL hasTVPreferredFocus;
+
+/**
  * Used to control how touch events are processed.
  */
 @property (nonatomic, assign) RCTPointerEvents pointerEvents;

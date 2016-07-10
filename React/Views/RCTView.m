@@ -136,88 +136,6 @@ RCT_NOT_IMPLEMENTED(- (instancetype)initWithCoder:unused)
   }
   return RCTRecursiveAccessibilityLabel(self);
 }
-#if TARGET_OS_TV
-
-- (void)setOnTVSelect:(RCTDirectEventBlock)onTVSelect {
-  _onTVSelect = [onTVSelect copy];
-  if(_onTVSelect) {
-    UITapGestureRecognizer *recognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleSelect:)];
-    recognizer.allowedPressTypes = @[[NSNumber numberWithInteger:UIPressTypeSelect]];
-    _selectRecognizer = recognizer;
-    [self addGestureRecognizer:_selectRecognizer];
-  } else {
-    if(_selectRecognizer) {
-      [self removeGestureRecognizer:_selectRecognizer];
-    }
-  }
-  
-}
-
-- (void)handleSelect:(UIGestureRecognizer*)r {
-  RCTView *v = (RCTView*)r.view;
-  if(v.onTVSelect) {
-    v.onTVSelect(nil);
-  }
-}
-
-- (BOOL)isUserInteractionEnabled {
-  return YES;
-}
-
-- (BOOL)canBecomeFocused {
-  return (self.onTVSelect != nil);
-}
-
-- (void)addParallaxMotionEffectsWithTiltValue:(CGFloat)tiltValue andPanValue:(CGFloat)panValue {
-  UIInterpolatingMotionEffect *xTilt = [[UIInterpolatingMotionEffect alloc] initWithKeyPath:@"layer.transform.rotation.y"
-                                                                                      type:UIInterpolatingMotionEffectTypeTiltAlongHorizontalAxis];
-  UIInterpolatingMotionEffect *yTilt = [[UIInterpolatingMotionEffect alloc] initWithKeyPath:@"layer.transform.rotation.x"
-                                                                                      type:UIInterpolatingMotionEffectTypeTiltAlongVerticalAxis];
-  UIInterpolatingMotionEffect *xPan = [[UIInterpolatingMotionEffect alloc] initWithKeyPath:@"center.x"
-                                                                                     type:UIInterpolatingMotionEffectTypeTiltAlongHorizontalAxis];
-  UIInterpolatingMotionEffect *yPan = [[UIInterpolatingMotionEffect alloc] initWithKeyPath:@"center.y"
-                                                                                     type:UIInterpolatingMotionEffectTypeTiltAlongVerticalAxis];
-  
-  xTilt.minimumRelativeValue = @(-tiltValue);
-  xTilt.maximumRelativeValue = @(tiltValue);
-  
-  yTilt.minimumRelativeValue = @(-tiltValue);
-  yTilt.maximumRelativeValue = @(tiltValue);
-  
-  xPan.minimumRelativeValue = @(-panValue);
-  xPan.maximumRelativeValue = @(tiltValue);
-
-  yPan.minimumRelativeValue = @(-panValue);
-  yPan.maximumRelativeValue = @(tiltValue);
-
-  UIMotionEffectGroup *motionGroup = [UIMotionEffectGroup new];
-  
-  motionGroup.motionEffects = @[xTilt,yTilt,xPan,yPan];
-  [self addMotionEffect:motionGroup];
-  
-}
-
-- (void)didUpdateFocusInContext:(UIFocusUpdateContext *)context withAnimationCoordinator:(UIFocusAnimationCoordinator *)coordinator {
-  if(context.nextFocusedView == self && self.onTVSelect != nil) {
-    [self becomeFirstResponder];
-    [coordinator addCoordinatedAnimations:^(void){
-      [self addParallaxMotionEffectsWithTiltValue:0.25 andPanValue:5.0];
-      if(self.onTVFocus) {
-        self.onTVFocus(nil);
-      }
-    } completion:^(void){}];
-  } else {
-    [coordinator addCoordinatedAnimations:^(void){
-      if(self.onTVBlur) {
-        self.onTVBlur(nil);
-      }
-      self.motionEffects = @[];
-    } completion:^(void){}];
-    [self resignFirstResponder];
-  }
-}
-
-#endif
 
 - (void)setPointerEvents:(RCTPointerEvents)pointerEvents
 {
@@ -309,6 +227,108 @@ RCT_NOT_IMPLEMENTED(- (instancetype)initWithCoder:unused)
   NSString *replacement = [NSString stringWithFormat:@"; reactTag: %@;", self.reactTag];
   return [superDescription stringByReplacingCharactersInRange:semicolonRange withString:replacement];
 }
+
+#pragma mark - Apple TV specific methods
+
+#if TARGET_OS_TV
+
+- (void)setOnTVSelect:(RCTDirectEventBlock)onTVSelect {
+  _onTVSelect = [onTVSelect copy];
+  if(_onTVSelect) {
+    UITapGestureRecognizer *recognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleSelect:)];
+    recognizer.allowedPressTypes = @[[NSNumber numberWithInteger:UIPressTypeSelect]];
+    _selectRecognizer = recognizer;
+    [self addGestureRecognizer:_selectRecognizer];
+  } else {
+    if(_selectRecognizer) {
+      [self removeGestureRecognizer:_selectRecognizer];
+    }
+  }
+  
+}
+
+- (void)handleSelect:(UIGestureRecognizer*)r {
+  RCTView *v = (RCTView*)r.view;
+  if(v.onTVSelect) {
+    v.onTVSelect(nil);
+  }
+}
+
+- (BOOL)isUserInteractionEnabled {
+  return YES;
+}
+
+- (BOOL)canBecomeFocused {
+  return (self.onTVSelect != nil);
+}
+
+- (void)addParallaxMotionEffectsWithTiltValue:(CGFloat)tiltValue andPanValue:(CGFloat)panValue {
+  UIInterpolatingMotionEffect *xTilt = [[UIInterpolatingMotionEffect alloc] initWithKeyPath:@"layer.transform.rotation.y"
+                                                                                       type:UIInterpolatingMotionEffectTypeTiltAlongHorizontalAxis];
+  UIInterpolatingMotionEffect *yTilt = [[UIInterpolatingMotionEffect alloc] initWithKeyPath:@"layer.transform.rotation.x"
+                                                                                       type:UIInterpolatingMotionEffectTypeTiltAlongVerticalAxis];
+  UIInterpolatingMotionEffect *xPan = [[UIInterpolatingMotionEffect alloc] initWithKeyPath:@"center.x"
+                                                                                      type:UIInterpolatingMotionEffectTypeTiltAlongHorizontalAxis];
+  UIInterpolatingMotionEffect *yPan = [[UIInterpolatingMotionEffect alloc] initWithKeyPath:@"center.y"
+                                                                                      type:UIInterpolatingMotionEffectTypeTiltAlongVerticalAxis];
+  
+  xTilt.minimumRelativeValue = @(-tiltValue);
+  xTilt.maximumRelativeValue = @(tiltValue);
+  
+  yTilt.minimumRelativeValue = @(-tiltValue);
+  yTilt.maximumRelativeValue = @(tiltValue);
+  
+  xPan.minimumRelativeValue = @(-panValue);
+  xPan.maximumRelativeValue = @(tiltValue);
+  
+  yPan.minimumRelativeValue = @(-panValue);
+  yPan.maximumRelativeValue = @(tiltValue);
+  
+  UIMotionEffectGroup *motionGroup = [UIMotionEffectGroup new];
+  
+  motionGroup.motionEffects = @[xTilt,yTilt,xPan,yPan];
+  [self addMotionEffect:motionGroup];
+  
+}
+
+- (void)didUpdateFocusInContext:(UIFocusUpdateContext *)context withAnimationCoordinator:(UIFocusAnimationCoordinator *)coordinator {
+  if(context.nextFocusedView == self && self.onTVSelect != nil) {
+    [self becomeFirstResponder];
+    [coordinator addCoordinatedAnimations:^(void){
+      [self addParallaxMotionEffectsWithTiltValue:0.25 andPanValue:5.0];
+      if(self.onTVFocus) {
+        self.onTVFocus(nil);
+      }
+    } completion:^(void){}];
+  } else {
+    [coordinator addCoordinatedAnimations:^(void){
+      if(self.onTVBlur) {
+        self.onTVBlur(nil);
+      }
+      self.motionEffects = @[];
+    } completion:^(void){}];
+    [self resignFirstResponder];
+  }
+}
+
+- (void)setHasTVPreferredFocus:(BOOL)hasTVPreferredFocus {
+  self->_hasTVPreferredFocus = hasTVPreferredFocus;
+  if(hasTVPreferredFocus) {
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+      UIView *rootview = self;
+      while(![rootview isReactRootView]) {
+        rootview = [rootview superview];
+      }
+      rootview = [rootview superview];
+      
+      [rootview performSelector:@selector(setReactPreferredFocusedView:) withObject:self];
+      [rootview setNeedsFocusUpdate];
+      [rootview updateFocusIfNeeded];
+    });
+  }
+}
+
+#endif
 
 #pragma mark - Statics for dealing with layoutGuides
 
