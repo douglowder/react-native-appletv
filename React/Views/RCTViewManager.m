@@ -231,6 +231,7 @@ RCT_EXPORT_VIEW_PROPERTY(onTVSelect, RCTDirectEventBlock)
 RCT_EXPORT_VIEW_PROPERTY(onTVFocus, RCTDirectEventBlock)
 RCT_EXPORT_VIEW_PROPERTY(onTVBlur, RCTDirectEventBlock)
 RCT_EXPORT_VIEW_PROPERTY(onTVNavEvent, RCTDirectEventBlock)
+RCT_EXPORT_VIEW_PROPERTY(hasTVPreferredFocus, BOOL)
 
 #define RCT_VIEW_BORDER_PROPERTY(SIDE)                                  \
 RCT_CUSTOM_VIEW_PROPERTY(border##SIDE##Width, CGFloat, RCTView)         \

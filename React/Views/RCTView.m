@@ -121,7 +121,7 @@ static NSString *RCTRecursiveAccessibilityLabel(UIView *view)
     _hitTestEdgeInsets = UIEdgeInsetsZero;
 
     _backgroundColor = super.backgroundColor;
-    
+
   }
 
   return self;
@@ -136,131 +136,6 @@ RCT_NOT_IMPLEMENTED(- (instancetype)initWithCoder:unused)
   }
   return RCTRecursiveAccessibilityLabel(self);
 }
-#if TARGET_OS_TV
-
-- (void)setOnTVSelect:(RCTDirectEventBlock)onTVSelect {
-  _onTVSelect = [onTVSelect copy];
-  if(_onTVSelect) {
-    UITapGestureRecognizer *recognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleSelect:)];
-    recognizer.allowedPressTypes = @[[NSNumber numberWithInteger:UIPressTypeSelect]];
-    _selectRecognizer = recognizer;
-    [self addGestureRecognizer:_selectRecognizer];
-  } else {
-    if(_selectRecognizer) {
-      [self removeGestureRecognizer:_selectRecognizer];
-    }
-  }
-  
-}
-
-- (void)handleSelect:(UIGestureRecognizer*)r {
-  RCTView *v = (RCTView*)r.view;
-  if(v.onTVSelect) {
-    v.onTVSelect(nil);
-  }
-}
-
-- (BOOL)isUserInteractionEnabled {
-  return YES;
-}
-
-- (BOOL)canBecomeFocused {
-  return (self.onTVSelect != nil);
-}
-
-- (void)addParallaxMotionEffectsWithTiltValue:(CGFloat)tiltValue andPanValue:(CGFloat)panValue {
-    // Size of shift movements
-    CGFloat const shiftDistance = 5.0f;
-    
-    // Make horizontal movements shift the centre left and right
-    UIInterpolatingMotionEffect *xShift = [[UIInterpolatingMotionEffect alloc]
-                                           initWithKeyPath:@"center.x"
-                                           type:UIInterpolatingMotionEffectTypeTiltAlongHorizontalAxis];
-    xShift.minimumRelativeValue = [NSNumber numberWithFloat: shiftDistance * -1.0f];
-    xShift.maximumRelativeValue = [NSNumber numberWithFloat: shiftDistance];
-    
-    // Make vertical movements shift the centre up and down
-    UIInterpolatingMotionEffect *yShift = [[UIInterpolatingMotionEffect alloc]
-                                           initWithKeyPath:@"center.y"
-                                           type:UIInterpolatingMotionEffectTypeTiltAlongVerticalAxis];
-    yShift.minimumRelativeValue = [NSNumber numberWithFloat: shiftDistance * -1.0f];
-    yShift.maximumRelativeValue = [NSNumber numberWithFloat: shiftDistance];
-    
-    // Size of tilt movements
-    CGFloat const tiltAngle = M_PI_4 * 0.125;
-    
-    // Now make horizontal movements effect a rotation about the Y axis for side-to-side rotation.
-    UIInterpolatingMotionEffect *xTilt = [[UIInterpolatingMotionEffect alloc] initWithKeyPath:@"layer.transform" type:UIInterpolatingMotionEffectTypeTiltAlongHorizontalAxis];
-    
-    // CATransform3D value for minimumRelativeValue
-    CATransform3D transMinimumTiltAboutY = CATransform3DIdentity;
-    transMinimumTiltAboutY.m34 = 1.0 / 500;
-    transMinimumTiltAboutY = CATransform3DRotate(transMinimumTiltAboutY, tiltAngle * -1.0, 0, 1, 0);
-    
-    // CATransform3D value for minimumRelativeValue
-    CATransform3D transMaximumTiltAboutY = CATransform3DIdentity;
-    transMaximumTiltAboutY.m34 = 1.0 / 500;
-    transMaximumTiltAboutY = CATransform3DRotate(transMaximumTiltAboutY, tiltAngle, 0, 1, 0);
-    
-    // Set the transform property boundaries for the interpolation
-    xTilt.minimumRelativeValue = [NSValue valueWithCATransform3D: transMinimumTiltAboutY];
-    xTilt.maximumRelativeValue = [NSValue valueWithCATransform3D: transMaximumTiltAboutY];
-    
-    // Now make vertical movements effect a rotation about the X axis for up and down rotation.
-    UIInterpolatingMotionEffect *yTilt = [[UIInterpolatingMotionEffect alloc] initWithKeyPath:@"layer.transform" type:UIInterpolatingMotionEffectTypeTiltAlongVerticalAxis];
-    
-    // CATransform3D value for minimumRelativeValue
-    CATransform3D transMinimumTiltAboutX = CATransform3DIdentity;
-    transMinimumTiltAboutX.m34 = 1.0 / 500;
-    transMinimumTiltAboutX = CATransform3DRotate(transMinimumTiltAboutX, tiltAngle * -1.0, 1, 0, 0);
-    
-    // CATransform3D value for minimumRelativeValue
-    CATransform3D transMaximumTiltAboutX = CATransform3DIdentity;
-    transMaximumTiltAboutX.m34 = 1.0 / 500;
-    transMaximumTiltAboutX = CATransform3DRotate(transMaximumTiltAboutX, tiltAngle, 1, 0, 0);
-    
-    // Set the transform property boundaries for the interpolation
-    yTilt.minimumRelativeValue = [NSValue valueWithCATransform3D: transMinimumTiltAboutX];
-    yTilt.maximumRelativeValue = [NSValue valueWithCATransform3D: transMaximumTiltAboutX];
-    
-    // Add all of the motion effects to this group
-    self.motionEffects = @[xShift, yShift, xTilt, yTilt];
-    
-    [UIView animateWithDuration:0.2 animations:^{
-        self.transform = CGAffineTransformMakeScale(1.1, 1.1);
-    }];
-
-  
-}
-
-- (void)didUpdateFocusInContext:(UIFocusUpdateContext *)context withAnimationCoordinator:(UIFocusAnimationCoordinator *)coordinator {
-  if(context.nextFocusedView == self && self.onTVSelect != nil ) {
-    [self becomeFirstResponder];
-    [coordinator addCoordinatedAnimations:^(void){
-      if(!self.disableParallax)
-        [self addParallaxMotionEffectsWithTiltValue:0.25 andPanValue:5.0];
-      if(self.onTVFocus) {
-        self.onTVFocus(nil);
-      }
-    } completion:^(void){}];
-  } else {
-    [coordinator addCoordinatedAnimations:^(void){
-      if(self.onTVBlur) {
-        self.onTVBlur(nil);
-      }
-        [UIView animateWithDuration:0.2 animations:^{
-            self.transform = CGAffineTransformMakeScale(1, 1);
-        }];
-        
-        for (UIMotionEffect* effect in [self.motionEffects copy]){
-            [self removeMotionEffect:effect];
-        }
-    } completion:^(void){}];
-    [self resignFirstResponder];
-  }
-}
-
-#endif
 
 - (void)setPointerEvents:(RCTPointerEvents)pointerEvents
 {
@@ -352,6 +227,151 @@ RCT_NOT_IMPLEMENTED(- (instancetype)initWithCoder:unused)
   NSString *replacement = [NSString stringWithFormat:@"; reactTag: %@;", self.reactTag];
   return [superDescription stringByReplacingCharactersInRange:semicolonRange withString:replacement];
 }
+
+
+#pragma mark - Apple TV specific methods
+
+#if TARGET_OS_TV
+
+- (void)setOnTVSelect:(RCTDirectEventBlock)onTVSelect {
+  _onTVSelect = [onTVSelect copy];
+  if(_onTVSelect) {
+    UITapGestureRecognizer *recognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleSelect:)];
+    recognizer.allowedPressTypes = @[[NSNumber numberWithInteger:UIPressTypeSelect]];
+    _selectRecognizer = recognizer;
+    [self addGestureRecognizer:_selectRecognizer];
+  } else {
+    if(_selectRecognizer) {
+      [self removeGestureRecognizer:_selectRecognizer];
+    }
+  }
+}
+
+- (void)handleSelect:(UIGestureRecognizer*)r {
+  RCTView *v = (RCTView*)r.view;
+  if(v.onTVSelect) {
+    v.onTVSelect(nil);
+  }
+}
+
+- (BOOL)isUserInteractionEnabled {
+  return YES;
+}
+
+- (BOOL)canBecomeFocused {
+  return (self.onTVSelect != nil);
+}
+
+- (void)addParallaxMotionEffectsWithTiltValue:(CGFloat)tiltValue andPanValue:(CGFloat)panValue {
+    // Size of shift movements
+    CGFloat const shiftDistance = 5.0f;
+
+    // Make horizontal movements shift the centre left and right
+    UIInterpolatingMotionEffect *xShift = [[UIInterpolatingMotionEffect alloc]
+                                           initWithKeyPath:@"center.x"
+                                           type:UIInterpolatingMotionEffectTypeTiltAlongHorizontalAxis];
+    xShift.minimumRelativeValue = [NSNumber numberWithFloat: shiftDistance * -1.0f];
+    xShift.maximumRelativeValue = [NSNumber numberWithFloat: shiftDistance];
+
+    // Make vertical movements shift the centre up and down
+    UIInterpolatingMotionEffect *yShift = [[UIInterpolatingMotionEffect alloc]
+                                           initWithKeyPath:@"center.y"
+                                           type:UIInterpolatingMotionEffectTypeTiltAlongVerticalAxis];
+    yShift.minimumRelativeValue = [NSNumber numberWithFloat: shiftDistance * -1.0f];
+    yShift.maximumRelativeValue = [NSNumber numberWithFloat: shiftDistance];
+
+    // Size of tilt movements
+    CGFloat const tiltAngle = M_PI_4 * 0.125;
+
+    // Now make horizontal movements effect a rotation about the Y axis for side-to-side rotation.
+    UIInterpolatingMotionEffect *xTilt = [[UIInterpolatingMotionEffect alloc] initWithKeyPath:@"layer.transform" type:UIInterpolatingMotionEffectTypeTiltAlongHorizontalAxis];
+
+    // CATransform3D value for minimumRelativeValue
+    CATransform3D transMinimumTiltAboutY = CATransform3DIdentity;
+    transMinimumTiltAboutY.m34 = 1.0 / 500;
+    transMinimumTiltAboutY = CATransform3DRotate(transMinimumTiltAboutY, tiltAngle * -1.0, 0, 1, 0);
+
+    // CATransform3D value for minimumRelativeValue
+    CATransform3D transMaximumTiltAboutY = CATransform3DIdentity;
+    transMaximumTiltAboutY.m34 = 1.0 / 500;
+    transMaximumTiltAboutY = CATransform3DRotate(transMaximumTiltAboutY, tiltAngle, 0, 1, 0);
+
+    // Set the transform property boundaries for the interpolation
+    xTilt.minimumRelativeValue = [NSValue valueWithCATransform3D: transMinimumTiltAboutY];
+    xTilt.maximumRelativeValue = [NSValue valueWithCATransform3D: transMaximumTiltAboutY];
+
+    // Now make vertical movements effect a rotation about the X axis for up and down rotation.
+    UIInterpolatingMotionEffect *yTilt = [[UIInterpolatingMotionEffect alloc] initWithKeyPath:@"layer.transform" type:UIInterpolatingMotionEffectTypeTiltAlongVerticalAxis];
+
+    // CATransform3D value for minimumRelativeValue
+    CATransform3D transMinimumTiltAboutX = CATransform3DIdentity;
+    transMinimumTiltAboutX.m34 = 1.0 / 500;
+    transMinimumTiltAboutX = CATransform3DRotate(transMinimumTiltAboutX, tiltAngle * -1.0, 1, 0, 0);
+
+    // CATransform3D value for minimumRelativeValue
+    CATransform3D transMaximumTiltAboutX = CATransform3DIdentity;
+    transMaximumTiltAboutX.m34 = 1.0 / 500;
+    transMaximumTiltAboutX = CATransform3DRotate(transMaximumTiltAboutX, tiltAngle, 1, 0, 0);
+
+    // Set the transform property boundaries for the interpolation
+    yTilt.minimumRelativeValue = [NSValue valueWithCATransform3D: transMinimumTiltAboutX];
+    yTilt.maximumRelativeValue = [NSValue valueWithCATransform3D: transMaximumTiltAboutX];
+
+    // Add all of the motion effects to this group
+    self.motionEffects = @[xShift, yShift, xTilt, yTilt];
+
+    [UIView animateWithDuration:0.2 animations:^{
+        self.transform = CGAffineTransformMakeScale(1.1, 1.1);
+    }];
+
+
+}
+
+- (void)didUpdateFocusInContext:(UIFocusUpdateContext *)context withAnimationCoordinator:(UIFocusAnimationCoordinator *)coordinator {
+  if(context.nextFocusedView == self && self.onTVSelect != nil ) {
+    [self becomeFirstResponder];
+    [coordinator addCoordinatedAnimations:^(void){
+      if(!self.disableParallax)
+        [self addParallaxMotionEffectsWithTiltValue:0.25 andPanValue:5.0];
+      if(self.onTVFocus) {
+        self.onTVFocus(nil);
+      }
+    } completion:^(void){}];
+  } else {
+    [coordinator addCoordinatedAnimations:^(void){
+      if(self.onTVBlur) {
+        self.onTVBlur(nil);
+      }
+        [UIView animateWithDuration:0.2 animations:^{
+            self.transform = CGAffineTransformMakeScale(1, 1);
+        }];
+
+        for (UIMotionEffect* effect in [self.motionEffects copy]){
+            [self removeMotionEffect:effect];
+        }
+    } completion:^(void){}];
+    [self resignFirstResponder];
+  }
+}
+
+- (void)setHasTVPreferredFocus:(BOOL)hasTVPreferredFocus {
+  self->_hasTVPreferredFocus = hasTVPreferredFocus;
+  if(hasTVPreferredFocus) {
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+      UIView *rootview = self;
+      while(![rootview isReactRootView]) {
+        rootview = [rootview superview];
+      }
+      rootview = [rootview superview];
+
+      [rootview performSelector:@selector(setReactPreferredFocusedView:) withObject:self];
+      [rootview setNeedsFocusUpdate];
+      [rootview updateFocusIfNeeded];
+    });
+  }
+}
+
+#endif
 
 #pragma mark - Statics for dealing with layoutGuides
 

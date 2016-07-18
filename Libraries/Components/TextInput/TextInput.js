@@ -27,6 +27,7 @@ const TimerMixin = require('react-timer-mixin');
 const TouchableWithoutFeedback = require('TouchableWithoutFeedback');
 const UIManager = require('UIManager');
 const View = require('View');
+const warning = require('fbjs/lib/warning');
 
 const emptyFunction = require('fbjs/lib/emptyFunction');
 const invariant = require('fbjs/lib/invariant');
@@ -478,9 +479,10 @@ var TextInput = React.createClass({
       if (__DEV__) {
         for (var propKey in onlyMultiline) {
           if (props[propKey]) {
-            throw new Error(
+            const error = new Error(
               'TextInput prop `' + propKey + '` is only supported with multiline.'
             );
+            warning(false, '%s', error.stack);
           }
         }
       }

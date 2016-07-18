@@ -54,7 +54,7 @@ var PRESS_RETENTION_OFFSET = {top: 20, left: 20, right: 20, bottom: 30};
  *     <TouchableHighlight onPress={this._onPressButton}>
  *       <Image
  *         style={styles.button}
- *         source={require('image!myButton')}
+ *         source={require('./myButton.png')}
  *       />
  *     </TouchableHighlight>
  *   );
@@ -87,6 +87,10 @@ var TouchableHighlight = React.createClass({
      * Called immediately after the underlay is hidden
      */
     onHideUnderlay: React.PropTypes.func,
+    /**
+     * TV preferred focus
+     */
+    onTVPreferredFocus: React.PropTypes.bool,
   },
 
   mixins: [NativeMethodsMixin, TimerMixin, Touchable.Mixin],
@@ -109,7 +113,8 @@ var TouchableHighlight = React.createClass({
       underlayStyle: [
         INACTIVE_UNDERLAY_PROPS.style,
         props.style,
-      ]
+      ],
+      hasTVPreferredFocus: props.hasTVPreferredFocus
     };
   },
 
@@ -241,6 +246,7 @@ var TouchableHighlight = React.createClass({
         onTVSelect={this.props.onPress}
         onTVFocus={this._showUnderlay}
         onTVBlur={this._hideUnderlay}
+        hasTVPreferredFocus={this.state.hasTVPreferredFocus}
         onStartShouldSetResponder={this.touchableHandleStartShouldSetResponder}
         onResponderTerminationRequest={this.touchableHandleResponderTerminationRequest}
         onResponderGrant={this.touchableHandleResponderGrant}

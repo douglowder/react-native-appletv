@@ -78,6 +78,7 @@ static NSDictionary *RCTFormatLocalNotification(UILocalNotification *notificatio
   formattedLocalNotification[@"category"] = RCTNullIfNil(notification.category);
   formattedLocalNotification[@"soundName"] = RCTNullIfNil(notification.soundName);
   formattedLocalNotification[@"userInfo"] = RCTNullIfNil(RCTJSONClean(notification.userInfo));
+  formattedLocalNotification[@"remote"] = @NO;
   return formattedLocalNotification;
 }
 
@@ -127,25 +128,6 @@ static NSDictionary *RCTFormatLocalNotification(UILocalNotification *notificatio
 
 #if !TARGET_OS_TV
 
-// TODO: Once all JS call sites for popInitialNotification have
-// been removed we can get rid of this
-- (NSDictionary<NSString *, id> *)constantsToExport
-{
-  NSDictionary<NSString *, id> *initialNotification =
-    self.bridge.launchOptions[UIApplicationLaunchOptionsRemoteNotificationKey];
-
-  UILocalNotification *initialLocalNotification =
-    self.bridge.launchOptions[UIApplicationLaunchOptionsLocalNotificationKey];
-
-  if (initialNotification) {
-    return @{@"initialNotification": [initialNotification copy]};
-  } else if (initialLocalNotification) {
-    return @{@"initialNotification": RCTFormatLocalNotification(initialLocalNotification)};
-  } else {
-    return @{@"initialNotification": (id)kCFNull};
-  }
-}
-
 + (void)didRegisterUserNotificationSettings:(__unused UIUserNotificationSettings *)notificationSettings
 {
   if ([UIApplication instancesRespondToSelector:@selector(registerForRemoteNotifications)]) {
@@ -190,7 +172,9 @@ static NSDictionary *RCTFormatLocalNotification(UILocalNotification *notificatio
 
 - (void)handleRemoteNotificationReceived:(NSNotification *)notification
 {
-  [self sendEventWithName:@"remoteNotificationReceived" body:notification.userInfo];
+  NSMutableDictionary *userInfo = [notification.userInfo mutableCopy];
+  userInfo[@"remote"] = @YES;
+  [self sendEventWithName:@"remoteNotificationReceived" body:userInfo];
 }
 
 - (void)handleRemoteNotificationsRegistered:(NSNotification *)notification
@@ -343,14 +327,15 @@ RCT_EXPORT_METHOD(cancelLocalNotifications:(NSDictionary<NSString *, id> *)userI
 RCT_EXPORT_METHOD(getInitialNotification:(RCTPromiseResolveBlock)resolve
                   reject:(__unused RCTPromiseRejectBlock)reject)
 {
-  NSDictionary<NSString *, id> *initialNotification =
-    self.bridge.launchOptions[UIApplicationLaunchOptionsRemoteNotificationKey];
+  NSMutableDictionary<NSString *, id> *initialNotification =
+    [self.bridge.launchOptions[UIApplicationLaunchOptionsRemoteNotificationKey] mutableCopy];
 
   UILocalNotification *initialLocalNotification =
     self.bridge.launchOptions[UIApplicationLaunchOptionsLocalNotificationKey];
 
   if (initialNotification) {
-    resolve([initialNotification copy]);
+    initialNotification[@"remote"] = @YES;
+    resolve(initialNotification);
   } else if (initialLocalNotification) {
     resolve(RCTFormatLocalNotification(initialLocalNotification));
   } else {

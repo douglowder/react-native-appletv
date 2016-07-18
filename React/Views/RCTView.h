@@ -41,6 +41,11 @@
 @property (nonatomic, assign) BOOL disableParallax;
 
 /**
+ * TV preferred focus
+ */
+@property (nonatomic, assign) BOOL hasTVPreferredFocus;
+
+/**
  * Used to control how touch events are processed.
  */
 @property (nonatomic, assign) RCTPointerEvents pointerEvents;
