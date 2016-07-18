@@ -319,6 +319,7 @@ RCT_ENUM_CONVERTER(UIKeyboardType, (@{
   @"numeric": @(UIKeyboardTypeDecimalPad),
 }), UIKeyboardTypeDefault, integerValue)
 
+#if !TARGET_OS_TV
 RCT_MULTI_ENUM_CONVERTER(UIDataDetectorTypes, (@{
   @"phoneNumber": @(UIDataDetectorTypePhoneNumber),
   @"link": @(UIDataDetectorTypeLink),
@@ -327,6 +328,7 @@ RCT_MULTI_ENUM_CONVERTER(UIDataDetectorTypes, (@{
   @"none": @(UIDataDetectorTypeNone),
   @"all": @(UIDataDetectorTypeAll),
 }), UIDataDetectorTypePhoneNumber, unsignedLongLongValue)
+#endif
 
 RCT_ENUM_CONVERTER(UIKeyboardAppearance, (@{
   @"default": @(UIKeyboardAppearanceDefault),

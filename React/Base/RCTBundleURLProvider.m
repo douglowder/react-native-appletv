@@ -128,7 +128,11 @@ static NSString *serverRootWithHost(NSString *host)
     if ([fullBundlePath hasPrefix:@"http"]) {
       NSString *dev = [self enableDev] ? @"true" : @"false";
       NSString *min = [self enableMinification] ? @"true": @"false";
+#if TARGET_OS_TV
+      fullBundlePath = [fullBundlePath stringByAppendingFormat:@"?platform=ios&appletv=true&dev=%@&minify=%@", dev, min];
+#else
       fullBundlePath = [fullBundlePath stringByAppendingFormat:@"?platform=ios&dev=%@&minify=%@", dev, min];
+#endif
     }
     return [NSURL URLWithString:fullBundlePath];
   }
