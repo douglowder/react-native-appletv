@@ -11,7 +11,7 @@
 
 #import <AVFoundation/AVFoundation.h>
 
-#import "Layout.h"
+#import <CSSLayout/CSSLayout.h>
 #import "RCTAccessibilityManager.h"
 #import "RCTAnimationType.h"
 #import "RCTAssert.h"
@@ -210,7 +210,7 @@ static UIViewAnimationOptions UIViewAnimationOptionsFromRCTAnimationType(RCTAnim
 {
   // Root views are only mutated on the shadow queue
   NSMutableSet<NSNumber *> *_rootViewTags;
-  NSMutableArray<dispatch_block_t> *_pendingUIBlocks;
+  NSMutableArray<RCTViewManagerUIBlock> *_pendingUIBlocks;
 
   // Animation
   RCTLayoutAnimation *_layoutAnimation; // Main thread only
@@ -234,14 +234,10 @@ RCT_EXPORT_MODULE()
 
 - (void)didReceiveNewContentSizeMultiplier
 {
-  __weak RCTUIManager *weakSelf = self;
   dispatch_async(RCTGetUIManagerQueue(), ^{
-    RCTUIManager *strongSelf = weakSelf;
-    if (strongSelf) {
-      [[NSNotificationCenter defaultCenter] postNotificationName:RCTUIManagerWillUpdateViewsDueToContentSizeMultiplierChangeNotification
-                                                          object:strongSelf];
-      [strongSelf batchDidComplete];
-    }
+    [[NSNotificationCenter defaultCenter] postNotificationName:RCTUIManagerWillUpdateViewsDueToContentSizeMultiplierChangeNotification
+                                                        object:self];
+    [self batchDidComplete];
   });
 }
 
@@ -392,20 +388,19 @@ dispatch_queue_t RCTGetUIManagerQueue(void)
   CGRect frame = rootView.frame;
 
   // Register shadow view
-  __weak RCTUIManager *weakSelf = self;
   dispatch_async(RCTGetUIManagerQueue(), ^{
-    RCTUIManager *strongSelf = weakSelf;
     if (!self->_viewRegistry) {
       return;
     }
+
     RCTRootShadowView *shadowView = [RCTRootShadowView new];
     shadowView.reactTag = reactTag;
     shadowView.frame = frame;
     shadowView.backgroundColor = rootView.backgroundColor;
     shadowView.viewName = NSStringFromClass([rootView class]);
     shadowView.sizeFlexibility = sizeFlexibility;
-    strongSelf->_shadowViewRegistry[shadowView.reactTag] = shadowView;
-    [strongSelf->_rootViewTags addObject:reactTag];
+    self->_shadowViewRegistry[shadowView.reactTag] = shadowView;
+    [self->_rootViewTags addObject:reactTag];
   });
 
   [[NSNotificationCenter defaultCenter] postNotificationName:RCTUIManagerDidRegisterRootViewNotification
@@ -482,14 +477,12 @@ dispatch_queue_t RCTGetUIManagerQueue(void)
   RCTAssertMainQueue();
 
   NSNumber *reactTag = view.reactTag;
-
-  __weak RCTUIManager *weakSelf = self;
   dispatch_async(RCTGetUIManagerQueue(), ^{
-    RCTUIManager *strongSelf = weakSelf;
     if (!self->_viewRegistry) {
       return;
     }
-    RCTShadowView *shadowView = strongSelf->_shadowViewRegistry[reactTag];
+
+    RCTShadowView *shadowView = self->_shadowViewRegistry[reactTag];
     RCTAssert(shadowView != nil, @"Could not locate root view with tag #%@", reactTag);
     shadowView.backgroundColor = color;
     [self _amendPendingUIBlocksWithStylePropagationUpdateForShadowView:shadowView];
@@ -524,23 +517,11 @@ dispatch_queue_t RCTGetUIManagerQueue(void)
                   @"-[RCTUIManager addUIBlock:] should only be called from the "
                   "UIManager's queue (get this using `RCTGetUIManagerQueue()`)");
 
-  if (!block) {
+  if (!block || !_viewRegistry) {
     return;
   }
 
-  if (!_viewRegistry) {
-    return;
-  }
-
-  __weak RCTUIManager *weakViewManager = self;
-  dispatch_block_t outerBlock = ^{
-    RCTUIManager *strongViewManager = weakViewManager;
-    if (strongViewManager && strongViewManager->_viewRegistry) {
-      block(strongViewManager, strongViewManager->_viewRegistry);
-    }
-  };
-
-  [_pendingUIBlocks addObject:outerBlock];
+  [_pendingUIBlocks addObject:block];
 }
 
 - (RCTViewManagerUIBlock)uiBlockWithLayoutUpdateForRootView:(RCTRootShadowView *)rootShadowView
@@ -1172,7 +1153,7 @@ RCT_EXPORT_METHOD(dispatchViewManagerCommand:(nonnull NSNumber *)reactTag
   // First copy the previous blocks into a temporary variable, then reset the
   // pending blocks to a new array. This guards against mutation while
   // processing the pending blocks in another thread.
-  NSArray<dispatch_block_t> *previousPendingUIBlocks = _pendingUIBlocks;
+  NSArray<RCTViewManagerUIBlock> *previousPendingUIBlocks = _pendingUIBlocks;
   _pendingUIBlocks = [NSMutableArray new];
 
   if (previousPendingUIBlocks.count) {
@@ -1182,8 +1163,8 @@ RCT_EXPORT_METHOD(dispatchViewManagerCommand:(nonnull NSNumber *)reactTag
       RCTProfileEndFlowEvent();
       RCT_PROFILE_BEGIN_EVENT(RCTProfileTagAlways, @"-[UIManager flushUIBlocks]", nil);
       @try {
-        for (dispatch_block_t block in previousPendingUIBlocks) {
-          block();
+        for (RCTViewManagerUIBlock block in previousPendingUIBlocks) {
+          block(self, self->_viewRegistry);
         }
       }
       @catch (NSException *exception) {

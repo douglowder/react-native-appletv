@@ -43,6 +43,13 @@ const ds = new ListView.DataSource({
 });
 
 class UIExplorerExampleList extends React.Component {
+
+  // Apple TV initially will focus on the ListView example row
+  state = {
+    filter: '',
+    focusedKey: 'ListViewExample'
+  };
+
   constructor(props: {
     disableTitleRow: ?boolean,
     onNavigate: Function,
@@ -54,10 +61,6 @@ class UIExplorerExampleList extends React.Component {
     style: ?any,
   }) {
     super(props);
-    // Apple TV initially will focus on the ListView example row
-    this.state = {
-      focusedKey: 'ListViewExample'
-    };
     var c = this;
     this.componentDidMount = function() {
       // Apple TV focus will move to Navigator example after 2 seconds
@@ -76,7 +79,7 @@ class UIExplorerExampleList extends React.Component {
   }
 
   render(): ?ReactElement<any> {
-    const filterText = this.props.filter || '';
+    const filterText = this.state.filter || '';
     const filterRegex = new RegExp(String(filterText), 'i');
     const filter = (example) => (filterRegex.test(example.module.title) && (example.tvosSupported || !__APPLETV__));
 
@@ -129,12 +132,12 @@ class UIExplorerExampleList extends React.Component {
           autoCorrect={false}
           clearButtonMode="always"
           onChangeText={text => {
-            this.props.onNavigate(UIExplorerActions.ExampleListWithFilter(text));
+            this.setState({filter: text});
           }}
           placeholder="Search..."
           style={[styles.searchTextInput, this.props.searchTextInputStyle]}
           testID="explorer_search"
-          value={this.props.filter}
+          value={this.state.filter}
         />
       </View>
     );

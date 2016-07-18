@@ -10,7 +10,7 @@
 #import <QuartzCore/QuartzCore.h>
 #import <UIKit/UIKit.h>
 
-#import "Layout.h"
+#import <CSSLayout/CSSLayout.h>
 #import "RCTAnimationType.h"
 #import "RCTBorderStyle.h"
 #import "RCTTextDecorationLineType.h"
@@ -71,6 +71,7 @@ typedef NSURL RCTFileURL;
 + (UIKeyboardType)UIKeyboardType:(id)json;
 + (UIKeyboardAppearance)UIKeyboardAppearance:(id)json;
 + (UIReturnKeyType)UIReturnKeyType:(id)json;
++ (UIDataDetectorTypes)UIDataDetectorTypes:(id)json;
 
 + (UIViewContentMode)UIViewContentMode:(id)json;
 + (RCTBarStyle)UIBarStyle:(id)json;
