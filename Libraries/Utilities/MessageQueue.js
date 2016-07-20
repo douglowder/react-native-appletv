@@ -67,6 +67,7 @@ class MessageQueue {
     [
       'invokeCallbackAndReturnFlushedQueue',
       'callFunctionReturnFlushedQueue',
+      'callFunction',
       'flushedQueue',
     ].forEach((fn) => (this[fn] = this[fn].bind(this)));
 
@@ -95,6 +96,16 @@ class MessageQueue {
     });
 
     return this.flushedQueue();
+  }
+
+  callFunction(module, method, args) {
+    let result;
+    guard(() => {
+      result = this.__callFunction(module, method, args);
+      this.__callImmediates();
+    });
+
+    return result;
   }
 
   invokeCallbackAndReturnFlushedQueue(cbID, args) {
@@ -186,8 +197,9 @@ class MessageQueue {
       'Module %s is not a registered callable module.',
       module
     );
-    moduleMethods[method].apply(moduleMethods, args);
+    const result = moduleMethods[method].apply(moduleMethods, args);
     Systrace.endEvent();
+    return result;
   }
 
   __invokeCallback(cbID, args) {

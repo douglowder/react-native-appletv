@@ -127,7 +127,7 @@ const Image = React.createClass({
      * 'stretch': Scale width and height independently, This may change the
      * aspect ratio of the src.
      */
-    resizeMode: PropTypes.oneOf(['cover', 'contain', 'stretch']),
+    resizeMode: PropTypes.oneOf(['cover', 'contain', 'stretch', 'repeat', 'center']),
     /**
      * A unique identifier for this element to be used in UI Automation
      * testing scripts.

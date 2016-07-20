@@ -30,6 +30,16 @@ Pod::Spec.new do |s|
 
   s.subspec 'Core' do |ss|
     ss.source_files        = "React/**/*.{c,h,m,mm,S}"
+    ss.exclude_files       = "**/__tests__/*", "IntegrationTests/*","React/CSSLayout/*"
+    ss.frameworks          = "JavaScriptCore"
+    ss.libraries           = "stdc++"
+    ss.pod_target_xcconfig = { "CLANG_CXX_LANGUAGE_STANDARD" => "c++14" }
+  end
+
+  s.subspec 'CSSLayout' do |ss|
+    ss.dependency       'ReactTV/Core'
+    ss.source_files        = "React/CSSLayout/*.{c,h,m,mm,S}"
+    ss.header_dir          = "CSSLayout"
     ss.exclude_files       = "**/__tests__/*", "IntegrationTests/*"
     ss.frameworks          = "JavaScriptCore"
     ss.libraries           = "stdc++"

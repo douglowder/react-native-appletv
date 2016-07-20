@@ -11,20 +11,35 @@
 
 @implementation RCTRootShadowView
 
+/**
+ * Init the RCTRootShadowView with RTL status.
+ * Returns a RTL CSS layout if isRTL is true (Default is LTR CSS layout).
+ */
+- (instancetype)init
+{
+  self = [super init];
+  if (self) {
+    if ([[RCTI18nUtil sharedInstance] isRTL]) {
+      self.cssNode->style.direction = CSSDirectionRTL;
+    }
+  }
+  return self;
+}
+
 - (void)applySizeConstraints
 {
   switch (_sizeFlexibility) {
     case RCTRootViewSizeFlexibilityNone:
       break;
     case RCTRootViewSizeFlexibilityWidth:
-      self.cssNode->style.dimensions[CSS_WIDTH] = CSS_UNDEFINED;
+      self.cssNode->style.dimensions[CSSDimensionWidth] = CSSUndefined;
       break;
     case RCTRootViewSizeFlexibilityHeight:
-      self.cssNode->style.dimensions[CSS_HEIGHT] = CSS_UNDEFINED;
+      self.cssNode->style.dimensions[CSSDimensionHeight] = CSSUndefined;
       break;
     case RCTRootViewSizeFlexibilityWidthAndHeight:
-      self.cssNode->style.dimensions[CSS_WIDTH] = CSS_UNDEFINED;
-      self.cssNode->style.dimensions[CSS_HEIGHT] = CSS_UNDEFINED;
+      self.cssNode->style.dimensions[CSSDimensionWidth] = CSSUndefined;
+      self.cssNode->style.dimensions[CSSDimensionHeight] = CSSUndefined;
       break;
   }
 }
@@ -33,8 +48,7 @@
 {
   [self applySizeConstraints];
 
-  [self fillCSSNode:self.cssNode];
-  layoutNode(self.cssNode, CSS_UNDEFINED, CSS_UNDEFINED, CSS_DIRECTION_INHERIT);
+  layoutNode(self.cssNode, CSSUndefined, CSSUndefined, CSSDirectionInherit);
 
   NSMutableSet<RCTShadowView *> *viewsWithNewFrame = [NSMutableSet set];
   [self applyLayoutNode:self.cssNode viewsWithNewFrame:viewsWithNewFrame absolutePosition:CGPointZero];
