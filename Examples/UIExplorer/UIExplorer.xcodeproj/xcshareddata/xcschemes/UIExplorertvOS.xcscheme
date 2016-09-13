@@ -14,7 +14,7 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "2DC39A7E1D7648FD00014B71"
+               BlueprintIdentifier = "2D35C4241D889B95001B0D86"
                BuildableName = "UIExplorertvOS.app"
                BlueprintName = "UIExplorertvOS"
                ReferencedContainer = "container:UIExplorer.xcodeproj">
@@ -48,11 +48,31 @@
                ReferencedContainer = "container:UIExplorer.xcodeproj">
             </BuildableReference>
          </TestableReference>
+         <TestableReference
+            skipped = "NO">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "2D35C4391D889B95001B0D86"
+               BuildableName = "UIExplorertvOSTests.xctest"
+               BlueprintName = "UIExplorertvOSTests"
+               ReferencedContainer = "container:UIExplorer.xcodeproj">
+            </BuildableReference>
+         </TestableReference>
+         <TestableReference
+            skipped = "NO">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "2D35C4441D889B95001B0D86"
+               BuildableName = "UIExplorertvOSUITests.xctest"
+               BlueprintName = "UIExplorertvOSUITests"
+               ReferencedContainer = "container:UIExplorer.xcodeproj">
+            </BuildableReference>
+         </TestableReference>
       </Testables>
       <MacroExpansion>
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "2DC39A7E1D7648FD00014B71"
+            BlueprintIdentifier = "2D35C4241D889B95001B0D86"
             BuildableName = "UIExplorertvOS.app"
             BlueprintName = "UIExplorertvOS"
             ReferencedContainer = "container:UIExplorer.xcodeproj">
@@ -75,7 +95,7 @@
          runnableDebuggingMode = "0">
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "2DC39A7E1D7648FD00014B71"
+            BlueprintIdentifier = "2D35C4241D889B95001B0D86"
             BuildableName = "UIExplorertvOS.app"
             BlueprintName = "UIExplorertvOS"
             ReferencedContainer = "container:UIExplorer.xcodeproj">
@@ -101,7 +121,7 @@
          runnableDebuggingMode = "0">
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "2DC39A7E1D7648FD00014B71"
+            BlueprintIdentifier = "2D35C4241D889B95001B0D86"
             BuildableName = "UIExplorertvOS.app"
             BlueprintName = "UIExplorertvOS"
             ReferencedContainer = "container:UIExplorer.xcodeproj">

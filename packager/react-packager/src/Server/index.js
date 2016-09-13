@@ -487,7 +487,7 @@ class Server {
   }
 
   _processAssetsRequest(req, res) {
-    const urlObj = url.parse(req.url, true);
+    const urlObj = url.parse(decodeURI(req.url), true);
     const assetPath = urlObj.pathname.match(/^\/assets\/(.+)$/);
     const assetEvent = Activity.startEvent('Processing asset request', {asset: assetPath[1]});
     this._assetServer.get(assetPath[1], urlObj.query.platform)
@@ -514,6 +514,16 @@ class Server {
         const deps = bundleDeps.get(bundle);
         const {dependencyPairs, files, idToIndex, outdated} = deps;
         if (outdated.size) {
+          const updateExistingBundleEventId =
+            Activity.startEvent(
+              'Updating existing bundle',
+              {
+                outdatedModules: outdated.size,
+              },
+              {
+                telemetric: true,
+              },
+            );
           debug('Attempt to update existing bundle');
           const changedModules =
             Array.from(outdated, this.getModuleForPath, this);
@@ -569,6 +579,7 @@ class Server {
 
                 bundle.invalidateSource();
                 debug('Successfully updated existing bundle');
+                Activity.endEvent(updateExistingBundleEventId);
                 return bundle;
             });
           }).catch(e => {

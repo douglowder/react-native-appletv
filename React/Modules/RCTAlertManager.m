@@ -25,19 +25,12 @@ RCT_ENUM_CONVERTER(RCTAlertViewStyle, (@{
 
 @end
 
-#if TARGET_OS_TV
 @interface RCTAlertManager()
-#else
-@interface RCTAlertManager() <UIAlertViewDelegate>
-#endif
 
 @end
 
 @implementation RCTAlertManager
 {
-#if !TARGET_OS_TV
-  NSMutableArray<UIAlertView *> *_alerts;
-#endif
   NSMutableArray<UIAlertController *> *_alertControllers;
   NSMutableArray<RCTResponseSenderBlock> *_alertCallbacks;
   NSMutableArray<NSArray<NSString *> *> *_alertButtonKeys;
@@ -52,11 +45,6 @@ RCT_EXPORT_MODULE()
 
 - (void)invalidate
 {
-#if !TARGET_OS_TV
-  for (UIAlertView *alert in _alerts) {
-    [alert dismissWithClickedButtonIndex:0 animated:YES];
-  }
-#endif
   for (UIAlertController *alertController in _alertControllers) {
     [alertController.presentingViewController dismissViewControllerAnimated:YES completion:nil];
   }
@@ -108,181 +96,91 @@ RCT_EXPORT_METHOD(alertWithArgs:(NSDictionary *)args
     }
   }
 
-#if __IPHONE_OS_VERSION_MIN_REQUIRED < __IPHONE_8_0
+  UIViewController *presentingController = RCTPresentedViewController();
+  if (presentingController == nil) {
+    RCTLogError(@"Tried to display alert view but there is no application window. args: %@", args);
+    return;
+  }
 
-  // TODO: we've encountered some bug when presenting alerts on top of a window
-  // that is subsequently dismissed. As a temporary solution to this, we'll use
-  // UIAlertView preferentially if it's available and supports our use case.
-  BOOL preferAlertView = (!RCTRunningInAppExtension() &&
-                          !destructiveButtonKey &&
-                          UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPhone);
-
-  if (preferAlertView || [UIAlertController class] == nil) {
-
-    UIAlertView *alertView = RCTAlertView(title, nil, self, nil, nil);
-    alertView.alertViewStyle = type;
-    alertView.message = message;
-
-    if (type != UIAlertViewStyleDefault) {
-      [alertView textFieldAtIndex:0].text = defaultValue;
+  UIAlertController *alertController = [UIAlertController
+                                        alertControllerWithTitle:title
+                                        message:nil
+                                        preferredStyle:UIAlertControllerStyleAlert];
+  switch (type) {
+    case RCTAlertViewStylePlainTextInput: {
+      [alertController addTextFieldWithConfigurationHandler:^(UITextField *textField) {
+        textField.secureTextEntry = NO;
+        textField.text = defaultValue;
+      }];
+      break;
     }
-
-    NSMutableArray<NSString *> *buttonKeys =
-      [[NSMutableArray alloc] initWithCapacity:buttons.count];
-
-    NSInteger index = 0;
-    for (NSDictionary<NSString *, id> *button in buttons) {
-      if (button.count != 1) {
-        RCTLogError(@"Button definitions should have exactly one key.");
-      }
-      NSString *buttonKey = button.allKeys.firstObject;
-      NSString *buttonTitle = [RCTConvert NSString:button[buttonKey]];
-      [alertView addButtonWithTitle:buttonTitle];
-      if ([buttonKey isEqualToString:cancelButtonKey]) {
-        alertView.cancelButtonIndex = buttonKeys.count;
-      }
-      [buttonKeys addObject:buttonKey];
-      index ++;
+    case RCTAlertViewStyleSecureTextInput: {
+      [alertController addTextFieldWithConfigurationHandler:^(UITextField *textField) {
+        textField.placeholder = RCTUIKitLocalizedString(@"Password");
+        textField.secureTextEntry = YES;
+        textField.text = defaultValue;
+      }];
+      break;
     }
-
-    if (!_alerts) {
-      _alerts = [NSMutableArray new];
-      _alertCallbacks = [NSMutableArray new];
-      _alertButtonKeys = [NSMutableArray new];
+    case RCTAlertViewStyleLoginAndPasswordInput: {
+      [alertController addTextFieldWithConfigurationHandler:^(UITextField *textField) {
+        textField.placeholder = RCTUIKitLocalizedString(@"Login");
+        textField.text = defaultValue;
+      }];
+      [alertController addTextFieldWithConfigurationHandler:^(UITextField *textField) {
+        textField.placeholder = RCTUIKitLocalizedString(@"Password");
+        textField.secureTextEntry = YES;
+      }];
+      break;
     }
-    [_alerts addObject:alertView];
-    [_alertCallbacks addObject:callback ?: ^(__unused id unused) {}];
-    [_alertButtonKeys addObject:buttonKeys];
+    case RCTAlertViewStyleDefault:
+      break;
+  }
 
-    [alertView show];
+  alertController.message = message;
 
-  } else
-
-#endif
-
-  {
-    UIViewController *presentingController = RCTPresentedViewController();
-    if (presentingController == nil) {
-      RCTLogError(@"Tried to display alert view but there is no application window. args: %@", args);
-      return;
+  for (NSDictionary<NSString *, id> *button in buttons) {
+    if (button.count != 1) {
+      RCTLogError(@"Button definitions should have exactly one key.");
     }
-
-    UIAlertController *alertController =
-      [UIAlertController alertControllerWithTitle:title
-                                          message:nil
-                                   preferredStyle:UIAlertControllerStyleAlert];
-    switch (type) {
-      case RCTAlertViewStylePlainTextInput: {
-        [alertController addTextFieldWithConfigurationHandler:^(UITextField *textField) {
-          textField.secureTextEntry = NO;
-          textField.text = defaultValue;
-        }];
-        break;
-      }
-      case RCTAlertViewStyleSecureTextInput: {
-        [alertController addTextFieldWithConfigurationHandler:^(UITextField *textField) {
-          textField.placeholder = RCTUIKitLocalizedString(@"Password");
-          textField.secureTextEntry = YES;
-          textField.text = defaultValue;
-        }];
-        break;
-      }
-      case RCTAlertViewStyleLoginAndPasswordInput: {
-        [alertController addTextFieldWithConfigurationHandler:^(UITextField *textField) {
-          textField.placeholder = RCTUIKitLocalizedString(@"Login");
-          textField.text = defaultValue;
-        }];
-        [alertController addTextFieldWithConfigurationHandler:^(UITextField *textField) {
-          textField.placeholder = RCTUIKitLocalizedString(@"Password");
-          textField.secureTextEntry = YES;
-        }];
-        break;
-      }
-      case RCTAlertViewStyleDefault:
-        break;
+    NSString *buttonKey = button.allKeys.firstObject;
+    NSString *buttonTitle = [RCTConvert NSString:button[buttonKey]];
+    UIAlertActionStyle buttonStyle = UIAlertActionStyleDefault;
+    if ([buttonKey isEqualToString:cancelButtonKey]) {
+      buttonStyle = UIAlertActionStyleCancel;
+    } else if ([buttonKey isEqualToString:destructiveButtonKey]) {
+      buttonStyle = UIAlertActionStyleDestructive;
     }
-
-    alertController.message = message;
-
-    for (NSDictionary<NSString *, id> *button in buttons) {
-      if (button.count != 1) {
-        RCTLogError(@"Button definitions should have exactly one key.");
-      }
-      NSString *buttonKey = button.allKeys.firstObject;
-      NSString *buttonTitle = [RCTConvert NSString:button[buttonKey]];
-      UIAlertActionStyle buttonStyle = UIAlertActionStyleDefault;
-      if ([buttonKey isEqualToString:cancelButtonKey]) {
-        buttonStyle = UIAlertActionStyleCancel;
-      } else if ([buttonKey isEqualToString:destructiveButtonKey]) {
-        buttonStyle = UIAlertActionStyleDestructive;
-      }
-      [alertController addAction:[UIAlertAction actionWithTitle:buttonTitle
-                                                          style:buttonStyle
-                                                        handler:^(__unused UIAlertAction *action) {
-        switch (type) {
-          case RCTAlertViewStylePlainTextInput:
-          case RCTAlertViewStyleSecureTextInput:
-            callback(@[buttonKey, [alertController.textFields.firstObject text]]);
-            break;
-          case RCTAlertViewStyleLoginAndPasswordInput: {
-            NSDictionary<NSString *, NSString *> *loginCredentials = @{
-              @"login": [alertController.textFields.firstObject text],
-              @"password": [alertController.textFields.lastObject text]
-            };
-            callback(@[buttonKey, loginCredentials]);
-            break;
-          }
-          case RCTAlertViewStyleDefault:
-            callback(@[buttonKey]);
-            break;
+    [alertController addAction:[UIAlertAction actionWithTitle:buttonTitle
+                                                        style:buttonStyle
+                                                      handler:^(__unused UIAlertAction *action) {
+      switch (type) {
+        case RCTAlertViewStylePlainTextInput:
+        case RCTAlertViewStyleSecureTextInput:
+          callback(@[buttonKey, [alertController.textFields.firstObject text]]);
+          break;
+        case RCTAlertViewStyleLoginAndPasswordInput: {
+          NSDictionary<NSString *, NSString *> *loginCredentials = @{
+            @"login": [alertController.textFields.firstObject text],
+            @"password": [alertController.textFields.lastObject text]
+          };
+          callback(@[buttonKey, loginCredentials]);
+          break;
         }
-      }]];
-    }
-
-    if (!_alertControllers) {
-      _alertControllers = [NSMutableArray new];
-    }
-    [_alertControllers addObject:alertController];
-
-    [presentingController presentViewController:alertController animated:YES completion:nil];
-  }
-}
-
-#if !TARGET_OS_TV
-
-#pragma mark - UIAlertViewDelegate
-
-- (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
-{
-  NSUInteger index = [_alerts indexOfObject:alertView];
-  RCTAssert(index != NSNotFound, @"Dismissed alert was not recognised");
-
-  RCTResponseSenderBlock callback = _alertCallbacks[index];
-  NSArray<NSString *> *buttonKeys = _alertButtonKeys[index];
-
-  switch (alertView.alertViewStyle) {
-    case UIAlertViewStylePlainTextInput:
-    case UIAlertViewStyleSecureTextInput:
-      callback(@[buttonKeys[buttonIndex], [alertView textFieldAtIndex:0].text]);
-      break;
-    case UIAlertViewStyleLoginAndPasswordInput: {
-      NSDictionary<NSString *, NSString *> *loginCredentials = @{
-        @"login": [alertView textFieldAtIndex:0].text,
-        @"password": [alertView textFieldAtIndex:1].text,
-      };
-      callback(@[buttonKeys[buttonIndex], loginCredentials]);
-      break;
-    }
-    case UIAlertViewStyleDefault:
-      callback(@[buttonKeys[buttonIndex]]);
-      break;
+        case RCTAlertViewStyleDefault:
+          callback(@[buttonKey]);
+          break;
+      }
+    }]];
   }
 
-  [_alerts removeObjectAtIndex:index];
-  [_alertCallbacks removeObjectAtIndex:index];
-  [_alertButtonKeys removeObjectAtIndex:index];
+  if (!_alertControllers) {
+    _alertControllers = [NSMutableArray new];
+  }
+  [_alertControllers addObject:alertController];
+
+  [presentingController presentViewController:alertController animated:YES completion:nil];
 }
-#endif
 
 @end
 

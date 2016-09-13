@@ -290,6 +290,10 @@ const APIExamples: Array<UIExplorerExample> = [
     tvosSupported: true
   },
   {
+    key: 'OrientationChangeExample',
+    module: require('./OrientationChangeExample'),
+  },
+  {
     key: 'PanResponderExample',
     module: require('./PanResponderExample'),
     tvosSupported: false
