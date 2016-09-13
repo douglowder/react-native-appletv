@@ -173,7 +173,6 @@ RCT_EXPORT_METHOD(alertWithArgs:(NSDictionary *)args
       }
     }]];
   }
-
   if (!_alertControllers) {
     _alertControllers = [NSMutableArray new];
   }

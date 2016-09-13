@@ -25,9 +25,9 @@
 const ReactNative = require('react-native');
 
 export type UIExplorerExample = {
-  key: string;
-  module: Object;
-  tvosSupported: boolean;
+  key: string,
+  module: Object,
+  tvosSupported: boolean,
 };
 
 const ComponentExamples: Array<UIExplorerExample> = [
@@ -288,6 +288,10 @@ const APIExamples: Array<UIExplorerExample> = [
     key: 'NetInfoExample',
     module: require('./NetInfoExample'),
     tvosSupported: true
+  },
+  {
+    key: 'OrientationChangeExample',
+    module: require('./OrientationChangeExample'),
   },
   {
     key: 'OrientationChangeExample',
