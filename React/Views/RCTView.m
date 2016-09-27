@@ -121,7 +121,7 @@ static NSString *RCTRecursiveAccessibilityLabel(UIView *view)
     _hitTestEdgeInsets = UIEdgeInsetsZero;
 
     _backgroundColor = super.backgroundColor;
-    
+
     _tvParallaxDisable = false;
     _tvParallaxShiftDistanceX = 2.0f;
     _tvParallaxShiftDistanceY = 2.0f;
@@ -328,7 +328,7 @@ RCT_NOT_IMPLEMENTED(- (instancetype)initWithCoder:unused)
     self.motionEffects = @[xShift, yShift, xTilt, yTilt];
 
     float magnification = self.tvParallaxMagnification;
-  
+
     [UIView animateWithDuration:0.2 animations:^{
         self.transform = CGAffineTransformMakeScale(magnification, magnification);
     }];
@@ -368,15 +368,16 @@ RCT_NOT_IMPLEMENTED(- (instancetype)initWithCoder:unused)
   if(hasTVPreferredFocus) {
     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
       UIView *rootview = self;
-      while(![rootview isReactRootView]) {
+      while(![rootview isReactRootView] && rootview != nil) {
         rootview = [rootview superview];
       }
-      rootview = [rootview superview];
+      if(rootview == nil) return;
 
+      rootview = [rootview superview];
       [rootview performSelector:@selector(setReactPreferredFocusedView:) withObject:self];
       [rootview setNeedsFocusUpdate];
       [rootview updateFocusIfNeeded];
-    });
+   });
   }
 }
 
