@@ -19,6 +19,8 @@ RCT_EXPORT_MODULE()
 
 - (void)startObserving
 {
+#if !TARGET_OS_TV
+
   NSNotificationCenter *nc = [NSNotificationCenter defaultCenter];
 
 #define ADD_KEYBOARD_HANDLER(NAME, SELECTOR) \
@@ -34,6 +36,8 @@ RCT_EXPORT_MODULE()
 #endif
 
 #undef ADD_KEYBOARD_HANDLER
+
+#endif
 
 }
 

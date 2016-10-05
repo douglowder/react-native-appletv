@@ -47,6 +47,7 @@ RCT_ENUM_CONVERTER(RCTStatusBarAnimation, (@{
 RCT_ENUM_CONVERTER(UIStatusBarStyle, (@{
   @"default": @(UIStatusBarStyleDefault),
   @"light-content": @(UIStatusBarStyleLightContent),
+  @"dark-content": @(UIStatusBarStyleDefault),
 }), UIStatusBarStyleDefault, integerValue);
 
 RCT_ENUM_CONVERTER(UIStatusBarAnimation, (@{

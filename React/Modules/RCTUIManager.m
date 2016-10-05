@@ -1518,7 +1518,7 @@ RCT_EXPORT_METHOD(clearJSResponder)
 
      allJSConstants[name] = constantsNamespace;
   }];
-  
+
 #if !TARGET_OS_TV
   _currentInterfaceOrientation = [RCTSharedApplication() statusBarOrientation];
 #endif

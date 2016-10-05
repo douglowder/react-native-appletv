@@ -21,18 +21,17 @@ function cleanup {
 }
 trap cleanup EXIT
 
-# Support for environments without xcpretty installed
-set +e
-OUTPUT_TOOL=$(which xcpretty)
-set -e
-
-# iOS environment
 XCODE_PROJECT="Examples/UIExplorer/UIExplorer.xcodeproj"
 XCODE_SCHEME="UIExplorer"
 XCODE_SDK="iphonesimulator"
 if [ -z "$XCODE_DESTINATION" ]; then
   XCODE_DESTINATION="platform=iOS Simulator,name=iPhone 5s,OS=9.3"
 fi
+
+# Support for environments without xcpretty installed
+set +e
+OUTPUT_TOOL=$(which xcpretty)
+set -e
 
 # TODO: We use xcodebuild because xctool would stall when collecting info about
 # the tests before running them. Switch back when this issue with xctool has
@@ -50,31 +49,35 @@ else
     -scheme $XCODE_SCHEME \
     -sdk $XCODE_SDK \
     -destination "$XCODE_DESTINATION" \
-    test | $OUTPUT_TOOL
+    test | $OUTPUT_TOOL 
 fi
 
-## Apple TV environment
-#XCODE_PROJECT="Examples/UIExplorer/UIExplorer.xcodeproj"
-#XCODE_SCHEME="UIExplorertvOS"
-#XCODE_SDK="appletvsimulator"
-#XCODE_DESTINATION="platform=tvOS Simulator,name=Apple TV 1080p,OS=9.2"
-#
-## TODO: We use xcodebuild because xctool would stall when collecting info about
-## the tests before running them. Switch back when this issue with xctool has
-## been resolved.
-#if [ -z "$OUTPUT_TOOL" ]; then
-#  xcodebuild \
-#    -project $XCODE_PROJECT \
-#    -scheme $XCODE_SCHEME \
-#    -sdk $XCODE_SDK \
-#    -destination "$XCODE_DESTINATION" \
-#    test
-#else
-#  xcodebuild \
-#    -project $XCODE_PROJECT \
-#    -scheme $XCODE_SCHEME \
-#    -sdk $XCODE_SDK \
-#    -destination "$XCODE_DESTINATION" \
-#    test | $OUTPUT_TOOL && exit ${PIPESTATUS[0]}
-#fi
-#
+XCODE_PROJECT="Examples/UIExplorer/UIExplorer.xcodeproj"
+XCODE_SCHEME="UIExplorer-tvOS"
+XCODE_SDK="appletvsimulator"
+XCODE_DESTINATION="platform=tvOS Simulator,name=Apple TV 1080p,OS=9.2"
+
+# Support for environments without xcpretty installed
+set +e
+OUTPUT_TOOL=$(which xcpretty)
+set -e
+
+# TODO: We use xcodebuild because xctool would stall when collecting info about
+# the tests before running them. Switch back when this issue with xctool has
+# been resolved.
+if [ -z "$OUTPUT_TOOL" ]; then
+  xcodebuild \
+    -project $XCODE_PROJECT \
+    -scheme $XCODE_SCHEME \
+    -sdk $XCODE_SDK \
+    -destination "$XCODE_DESTINATION" \
+    test
+else
+  xcodebuild \
+    -project $XCODE_PROJECT \
+    -scheme $XCODE_SCHEME \
+    -sdk $XCODE_SDK \
+    -destination "$XCODE_DESTINATION" \
+    test | $OUTPUT_TOOL && exit ${PIPESTATUS[0]}
+fi
+

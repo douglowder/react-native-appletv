@@ -103,11 +103,11 @@ $ sudo gem install cocoapods
 
 <block class="objc" />
 
-Assume the [app for integration](https://github.com/JoelMarcey/iOS-2048) is a [2048](https://en.wikipedia.org/wiki/2048_(video_game)) game. Here is what the main menu of the native application looks like without React Native.
+Assume the [app for integration](https://github.com/JoelMarcey/iOS-2048) is a <a href="https://en.wikipedia.org/wiki/2048_(video_game)">2048</a> game. Here is what the main menu of the native application looks like without React Native.
 
 <block class="swift" />
 
-Assume the [app for integration](https://github.com/JoelMarcey/swift-2048) is a [2048](https://en.wikipedia.org/wiki/2048_(video_game) game. Here is what the main menu of the native application looks like without React Native.
+Assume the [app for integration](https://github.com/JoelMarcey/swift-2048) is a <a href="https://en.wikipedia.org/wiki/2048_(video_game)">2048</a> game. Here is what the main menu of the native application looks like without React Native.
 
 <block class="objc swift" />
 
@@ -126,7 +126,7 @@ We will add the package dependencies to a `package.json` file. Create this file 
 
 Below is an example of what your `package.json` file should minimally contain.
 
-> Version numbers will vary according to your needs. Normally the latest versions for both [React](https://github.com/facebook/react/releases) and [React Native](https://github.com/facebook/react/releases) will be sufficient.
+> Version numbers will vary according to your needs. Normally the latest versions for both [React](https://github.com/facebook/react/releases) and [React Native](https://github.com/facebook/react-native/releases) will be sufficient.
 
 <block class="objc" />
 

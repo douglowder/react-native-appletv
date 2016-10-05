@@ -9,16 +9,16 @@
 /* Begin PBXBuildFile section */
 		1338BBE01B04ACC80064A9C9 /* RCTSRWebSocket.m in Sources */ = {isa = PBXBuildFile; fileRef = 1338BBDD1B04ACC80064A9C9 /* RCTSRWebSocket.m */; };
 		1338BBE11B04ACC80064A9C9 /* RCTWebSocketExecutor.m in Sources */ = {isa = PBXBuildFile; fileRef = 1338BBDF1B04ACC80064A9C9 /* RCTWebSocketExecutor.m */; };
-		2DD2E5A61D74FDC90098839E /* RCTSRWebSocket.m in Sources */ = {isa = PBXBuildFile; fileRef = 1338BBDD1B04ACC80064A9C9 /* RCTSRWebSocket.m */; };
-		2DD2E5A71D74FDC90098839E /* RCTWebSocketExecutor.m in Sources */ = {isa = PBXBuildFile; fileRef = 1338BBDF1B04ACC80064A9C9 /* RCTWebSocketExecutor.m */; };
-		2DD2E5A81D74FDC90098839E /* RCTWebSocketManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 3DB9106E1C74B1ED00838BBE /* RCTWebSocketManager.m */; };
-		2DD2E5A91D74FDC90098839E /* RCTWebSocketModule.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C86DF7B1ADF695F0047B81A /* RCTWebSocketModule.m */; };
+		2D3B5F3D1D9B165B00451313 /* RCTSRWebSocket.m in Sources */ = {isa = PBXBuildFile; fileRef = 1338BBDD1B04ACC80064A9C9 /* RCTSRWebSocket.m */; };
+		2D3B5F3E1D9B165B00451313 /* RCTWebSocketExecutor.m in Sources */ = {isa = PBXBuildFile; fileRef = 1338BBDF1B04ACC80064A9C9 /* RCTWebSocketExecutor.m */; };
+		2D3B5F3F1D9B165B00451313 /* RCTWebSocketManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 3DB9106E1C74B1ED00838BBE /* RCTWebSocketManager.m */; };
+		2D3B5F401D9B165B00451313 /* RCTWebSocketModule.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C86DF7B1ADF695F0047B81A /* RCTWebSocketModule.m */; };
 		3C86DF7C1ADF695F0047B81A /* RCTWebSocketModule.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C86DF7B1ADF695F0047B81A /* RCTWebSocketModule.m */; };
 		3DB9106F1C74B1ED00838BBE /* RCTWebSocketManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 3DB9106E1C74B1ED00838BBE /* RCTWebSocketManager.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
-		2DD2E59B1D74FDBC0098839E /* CopyFiles */ = {
+		2D2A28861D9B049200D4039D /* CopyFiles */ = {
 			isa = PBXCopyFilesBuildPhase;
 			buildActionMask = 2147483647;
 			dstPath = "include/$(PRODUCT_NAME)";
@@ -34,7 +34,7 @@
 		1338BBDD1B04ACC80064A9C9 /* RCTSRWebSocket.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RCTSRWebSocket.m; sourceTree = "<group>"; };
 		1338BBDE1B04ACC80064A9C9 /* RCTWebSocketExecutor.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RCTWebSocketExecutor.h; sourceTree = "<group>"; };
 		1338BBDF1B04ACC80064A9C9 /* RCTWebSocketExecutor.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RCTWebSocketExecutor.m; sourceTree = "<group>"; };
-		2DD2E59D1D74FDBC0098839E /* libRCTWebSocket tvOS.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libRCTWebSocket tvOS.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		2D2A28881D9B049200D4039D /* libRCTWebSocket-tvOS.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libRCTWebSocket-tvOS.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		3C86DF461ADF2C930047B81A /* libRCTWebSocket.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libRCTWebSocket.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		3C86DF7A1ADF695F0047B81A /* RCTWebSocketModule.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RCTWebSocketModule.h; sourceTree = "<group>"; };
 		3C86DF7B1ADF695F0047B81A /* RCTWebSocketModule.m */ = {isa = PBXFileReference; fileEncoding = 4; indentWidth = 2; lastKnownFileType = sourcecode.c.objc; path = RCTWebSocketModule.m; sourceTree = "<group>"; tabWidth = 2; };
@@ -43,7 +43,7 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
-		2DD2E59A1D74FDBC0098839E /* Frameworks */ = {
+		2D2A28851D9B049200D4039D /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -81,7 +81,7 @@
 			isa = PBXGroup;
 			children = (
 				3C86DF461ADF2C930047B81A /* libRCTWebSocket.a */,
-				2DD2E59D1D74FDBC0098839E /* libRCTWebSocket tvOS.a */,
+				2D2A28881D9B049200D4039D /* libRCTWebSocket-tvOS.a */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -89,21 +89,21 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		2DD2E59C1D74FDBC0098839E /* RCTWebSocket tvOS */ = {
+		2D2A28871D9B049200D4039D /* RCTWebSocket-tvOS */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 2DD2E5A51D74FDBC0098839E /* Build configuration list for PBXNativeTarget "RCTWebSocket tvOS" */;
+			buildConfigurationList = 2D2A28901D9B049200D4039D /* Build configuration list for PBXNativeTarget "RCTWebSocket-tvOS" */;
 			buildPhases = (
-				2DD2E5991D74FDBC0098839E /* Sources */,
-				2DD2E59A1D74FDBC0098839E /* Frameworks */,
-				2DD2E59B1D74FDBC0098839E /* CopyFiles */,
+				2D2A28841D9B049200D4039D /* Sources */,
+				2D2A28851D9B049200D4039D /* Frameworks */,
+				2D2A28861D9B049200D4039D /* CopyFiles */,
 			);
 			buildRules = (
 			);
 			dependencies = (
 			);
-			name = "RCTWebSocket tvOS";
-			productName = "RCTWebSocket tvOS";
-			productReference = 2DD2E59D1D74FDBC0098839E /* libRCTWebSocket tvOS.a */;
+			name = "RCTWebSocket-tvOS";
+			productName = "RCTWebSocket-tvOS";
+			productReference = 2D2A28881D9B049200D4039D /* libRCTWebSocket-tvOS.a */;
 			productType = "com.apple.product-type.library.static";
 		};
 		3C86DF451ADF2C930047B81A /* RCTWebSocket */ = {
@@ -131,8 +131,9 @@
 				LastUpgradeCheck = 0630;
 				ORGANIZATIONNAME = Facebook;
 				TargetAttributes = {
-					2DD2E59C1D74FDBC0098839E = {
-						CreatedOnToolsVersion = 7.3.1;
+					2D2A28871D9B049200D4039D = {
+						CreatedOnToolsVersion = 8.0;
+						ProvisioningStyle = Automatic;
 					};
 					3C86DF451ADF2C930047B81A = {
 						CreatedOnToolsVersion = 6.3;
@@ -152,20 +153,20 @@
 			projectRoot = "";
 			targets = (
 				3C86DF451ADF2C930047B81A /* RCTWebSocket */,
-				2DD2E59C1D74FDBC0098839E /* RCTWebSocket tvOS */,
+				2D2A28871D9B049200D4039D /* RCTWebSocket-tvOS */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXSourcesBuildPhase section */
-		2DD2E5991D74FDBC0098839E /* Sources */ = {
+		2D2A28841D9B049200D4039D /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				2DD2E5A71D74FDC90098839E /* RCTWebSocketExecutor.m in Sources */,
-				2DD2E5A91D74FDC90098839E /* RCTWebSocketModule.m in Sources */,
-				2DD2E5A61D74FDC90098839E /* RCTSRWebSocket.m in Sources */,
-				2DD2E5A81D74FDC90098839E /* RCTWebSocketManager.m in Sources */,
+				2D3B5F3E1D9B165B00451313 /* RCTWebSocketExecutor.m in Sources */,
+				2D3B5F401D9B165B00451313 /* RCTWebSocketModule.m in Sources */,
+				2D3B5F3D1D9B165B00451313 /* RCTSRWebSocket.m in Sources */,
+				2D3B5F3F1D9B165B00451313 /* RCTWebSocketManager.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -183,17 +184,20 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin XCBuildConfiguration section */
-		2DD2E5A31D74FDBC0098839E /* Debug */ = {
+		2D2A288E1D9B049200D4039D /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_SUSPICIOUS_MOVES = YES;
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				ENABLE_TESTABILITY = YES;
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
 					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
 					"$(SRCROOT)/../../React/**",
-					"$(SRCROOT)/../SRWebSocket/",
+					"$(SRCROOT)/../SRWebSocket",
 				);
 				OTHER_LDFLAGS = "-ObjC";
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -203,15 +207,18 @@
 			};
 			name = Debug;
 		};
-		2DD2E5A41D74FDBC0098839E /* Release */ = {
+		2D2A288F1D9B049200D4039D /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_SUSPICIOUS_MOVES = YES;
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
 					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
 					"$(SRCROOT)/../../React/**",
-					"$(SRCROOT)/../SRWebSocket/",
+					"$(SRCROOT)/../SRWebSocket",
 				);
 				OTHER_LDFLAGS = "-ObjC";
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -348,13 +355,14 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		2DD2E5A51D74FDBC0098839E /* Build configuration list for PBXNativeTarget "RCTWebSocket tvOS" */ = {
+		2D2A28901D9B049200D4039D /* Build configuration list for PBXNativeTarget "RCTWebSocket-tvOS" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				2DD2E5A31D74FDBC0098839E /* Debug */,
-				2DD2E5A41D74FDBC0098839E /* Release */,
+				2D2A288E1D9B049200D4039D /* Debug */,
+				2D2A288F1D9B049200D4039D /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		3C86DF411ADF2C930047B81A /* Build configuration list for PBXProject "RCTWebSocket" */ = {
 			isa = XCConfigurationList;

@@ -69,16 +69,11 @@ RCT_EXPORT_MODULE()
   _injectedObjects = [NSMutableDictionary new];
   [_socket setDelegateDispatchQueue:_jsQueue];
 
-  NSURL *startDevToolsURL = [NSURL URLWithString:@"/launch-chrome-devtools" relativeToURL:_url];
+  NSURL *startDevToolsURL = [NSURL URLWithString:@"/launch-js-devtools" relativeToURL:_url];
 
-  //[NSURLConnection connectionWithRequest:[NSURLRequest requestWithURL:startDevToolsURL] delegate:nil];
-  NSURLRequest *request = [NSURLRequest requestWithURL:startDevToolsURL];
   NSURLSession *session = [NSURLSession sharedSession];
-  NSURLSessionDataTask *dataTask = [session dataTaskWithRequest:request
-                                              completionHandler:^(NSData *data, NSURLResponse *response, NSError *error)
-                                    {
-                                      // do something with the data
-                                    }];
+  NSURLSessionDataTask *dataTask = [session dataTaskWithRequest:[NSURLRequest requestWithURL:startDevToolsURL]
+                                              completionHandler:^(NSData *data, NSURLResponse *response, NSError *error){}];
   [dataTask resume];
   if (![self connectToProxy]) {
     RCTLogError(@"Connection to %@ timed out. Are you running node proxy? If "

@@ -12,10 +12,10 @@
 'use strict';
 
 const NativeEventEmitter = require('NativeEventEmitter');
-const RCTPushNotificationManager = require('NativeModules').PushNotificationManager;
+const RCTPushNotificationManager = __APPLETV__ ? null : require('NativeModules').PushNotificationManager;
 const invariant = require('fbjs/lib/invariant');
 
-const PushNotificationEmitter = new NativeEventEmitter(RCTPushNotificationManager);
+const PushNotificationEmitter = __APPLETV__ ? null : new NativeEventEmitter(RCTPushNotificationManager);
 
 const _notifHandlers = new Map();
 
@@ -120,6 +120,9 @@ class PushNotificationIOS {
    * - `applicationIconBadgeNumber` (optional) : The number to display as the app's icon badge. The default value of this property is 0, which means that no badge is displayed.
    */
   static presentLocalNotification(details: Object) {
+    if(__APPLETV__) {
+        return;
+    }
     RCTPushNotificationManager.presentLocalNotification(details);
   }
 
@@ -137,6 +140,9 @@ class PushNotificationIOS {
    * - `applicationIconBadgeNumber` (optional) : The number to display as the app's icon badge. Setting the number to 0 removes the icon badge.
    */
   static scheduleLocalNotification(details: Object) {
+    if(__APPLETV__) {
+        return;
+    }
     RCTPushNotificationManager.scheduleLocalNotification(details);
   }
 
@@ -144,6 +150,9 @@ class PushNotificationIOS {
    * Cancels all scheduled localNotifications
    */
   static cancelAllLocalNotifications() {
+    if(__APPLETV__) {
+        return;
+    }
     RCTPushNotificationManager.cancelAllLocalNotifications();
   }
 
@@ -151,6 +160,9 @@ class PushNotificationIOS {
    * Sets the badge number for the app icon on the home screen
    */
   static setApplicationIconBadgeNumber(number: number) {
+    if(__APPLETV__) {
+        return;
+    }
     RCTPushNotificationManager.setApplicationIconBadgeNumber(number);
   }
 
@@ -158,6 +170,9 @@ class PushNotificationIOS {
    * Gets the current badge number for the app icon on the home screen
    */
   static getApplicationIconBadgeNumber(callback: Function) {
+    if(__APPLETV__) {
+        return;
+    }
     RCTPushNotificationManager.getApplicationIconBadgeNumber(callback);
   }
 
@@ -169,6 +184,9 @@ class PushNotificationIOS {
    * in the `userInfo` argument.
    */
   static cancelLocalNotifications(userInfo: Object) {
+    if(__APPLETV__) {
+        return;
+    }
     RCTPushNotificationManager.cancelLocalNotifications(userInfo);
   }
 
@@ -176,6 +194,9 @@ class PushNotificationIOS {
    * Gets the local notifications that are currently scheduled.
    */
   static getScheduledLocalNotifications(callback: Function) {
+    if(__APPLETV__) {
+        return;
+    }
     RCTPushNotificationManager.getScheduledLocalNotifications(callback);
   }
 
@@ -197,6 +218,9 @@ class PushNotificationIOS {
    *   {message: string, code: number, details: any}.
    */
   static addEventListener(type: PushNotificationEventName, handler: Function) {
+    if(__APPLETV__) {
+        return;
+    }
     invariant(
       type === 'notification' || type === 'register' || type === 'registrationError' || type === 'localNotification',
       'PushNotificationIOS only supports `notification`, `register`, `registrationError`, and `localNotification` events'
@@ -239,6 +263,9 @@ class PushNotificationIOS {
    * memory leaks
    */
   static removeEventListener(type: PushNotificationEventName, handler: Function) {
+    if(__APPLETV__) {
+        return;
+    }
     invariant(
       type === 'notification' || type === 'register' || type === 'registrationError' || type === 'localNotification',
       'PushNotificationIOS only supports `notification`, `register`, `registrationError`, and `localNotification` events'
@@ -278,6 +305,9 @@ class PushNotificationIOS {
     badge: boolean,
     sound: boolean
   }> {
+    if(__APPLETV__) {
+        return {};
+    }
     var requestedPermissions = {};
     if (permissions) {
       requestedPermissions = {
@@ -304,6 +334,9 @@ class PushNotificationIOS {
    * the Settings app. Apps unregistered through this method can always re-register.
    */
   static abandonPermissions() {
+    if(__APPLETV__) {
+        return;
+    }
     RCTPushNotificationManager.abandonPermissions();
   }
 
@@ -316,6 +349,9 @@ class PushNotificationIOS {
    *  - `sound` :boolean
    */
   static checkPermissions(callback: Function) {
+    if(__APPLETV__) {
+        callback();
+    }
     invariant(
       typeof callback === 'function',
       'Must provide a valid callback'
@@ -340,7 +376,13 @@ class PushNotificationIOS {
    */
   constructor(nativeNotif: Object) {
     this._data = {};
-
+    if(__APPLETV__) {
+        this._badgeCount = 0;
+        this._sound = "";
+        this._alert = "";
+        this._data = {};
+        return;
+    }
     if (nativeNotif.remote) {
       // Extract data from Apple's `aps` dict as defined:
       // https://developer.apple.com/library/ios/documentation/NetworkingInternet/Conceptual/RemoteNotificationsPG/Chapters/ApplePushService.html

@@ -8,19 +8,9 @@
 
 /* Begin PBXBuildFile section */
 		14C644C41AB0DFC900DE3C65 /* RCTActionSheetManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 14C644C21AB0DFC900DE3C65 /* RCTActionSheetManager.m */; };
-		2DC1A51E1D74E6DB00E39E61 /* RCTActionSheetManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 14C644C21AB0DFC900DE3C65 /* RCTActionSheetManager.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
-		2DC1A5131D74E6CC00E39E61 /* CopyFiles */ = {
-			isa = PBXCopyFilesBuildPhase;
-			buildActionMask = 2147483647;
-			dstPath = "include/$(PRODUCT_NAME)";
-			dstSubfolderSpec = 16;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 		58B511D91A9E6C8500147676 /* CopyFiles */ = {
 			isa = PBXCopyFilesBuildPhase;
 			buildActionMask = 2147483647;
@@ -36,17 +26,9 @@
 		134814201AA4EA6300B7C361 /* libRCTActionSheet.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libRCTActionSheet.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		14C644C11AB0DFC900DE3C65 /* RCTActionSheetManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RCTActionSheetManager.h; sourceTree = "<group>"; };
 		14C644C21AB0DFC900DE3C65 /* RCTActionSheetManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RCTActionSheetManager.m; sourceTree = "<group>"; };
-		2DC1A5151D74E6CC00E39E61 /* libRCTActionSheet tvOS.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libRCTActionSheet tvOS.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
-		2DC1A5121D74E6CC00E39E61 /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 		58B511D81A9E6C8500147676 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -71,7 +53,6 @@
 				14C644C11AB0DFC900DE3C65 /* RCTActionSheetManager.h */,
 				14C644C21AB0DFC900DE3C65 /* RCTActionSheetManager.m */,
 				134814211AA4EA7D00B7C361 /* Products */,
-				2DC1A5151D74E6CC00E39E61 /* libRCTActionSheet tvOS.a */,
 			);
 			indentWidth = 2;
 			sourceTree = "<group>";
@@ -80,23 +61,6 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		2DC1A5141D74E6CC00E39E61 /* RCTActionSheet tvOS */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = 2DC1A51D1D74E6CC00E39E61 /* Build configuration list for PBXNativeTarget "RCTActionSheet tvOS" */;
-			buildPhases = (
-				2DC1A5111D74E6CC00E39E61 /* Sources */,
-				2DC1A5121D74E6CC00E39E61 /* Frameworks */,
-				2DC1A5131D74E6CC00E39E61 /* CopyFiles */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-			);
-			name = "RCTActionSheet tvOS";
-			productName = "RCTActionSheet tvOS";
-			productReference = 2DC1A5151D74E6CC00E39E61 /* libRCTActionSheet tvOS.a */;
-			productType = "com.apple.product-type.library.static";
-		};
 		58B511DA1A9E6C8500147676 /* RCTActionSheet */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = 58B511EF1A9E6C8500147676 /* Build configuration list for PBXNativeTarget "RCTActionSheet" */;
@@ -123,9 +87,6 @@
 				LastUpgradeCheck = 0610;
 				ORGANIZATIONNAME = Facebook;
 				TargetAttributes = {
-					2DC1A5141D74E6CC00E39E61 = {
-						CreatedOnToolsVersion = 7.3.1;
-					};
 					58B511DA1A9E6C8500147676 = {
 						CreatedOnToolsVersion = 6.1.1;
 					};
@@ -144,20 +105,11 @@
 			projectRoot = "";
 			targets = (
 				58B511DA1A9E6C8500147676 /* RCTActionSheet */,
-				2DC1A5141D74E6CC00E39E61 /* RCTActionSheet tvOS */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXSourcesBuildPhase section */
-		2DC1A5111D74E6CC00E39E61 /* Sources */ = {
-			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				2DC1A51E1D74E6DB00E39E61 /* RCTActionSheetManager.m in Sources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 		58B511D71A9E6C8500147676 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -169,46 +121,6 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin XCBuildConfiguration section */
-		2DC1A51B1D74E6CC00E39E61 /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				CLANG_ANALYZER_NONNULL = YES;
-				DEBUG_INFORMATION_FORMAT = dwarf;
-				ENABLE_TESTABILITY = YES;
-				GCC_NO_COMMON_BLOCKS = YES;
-				HEADER_SEARCH_PATHS = (
-					"$(inherited)",
-					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
-					"$(SRCROOT)/../../React/**",
-				);
-				OTHER_LDFLAGS = "-ObjC";
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SDKROOT = appletvos;
-				SKIP_INSTALL = YES;
-				TVOS_DEPLOYMENT_TARGET = 9.2;
-			};
-			name = Debug;
-		};
-		2DC1A51C1D74E6CC00E39E61 /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				CLANG_ANALYZER_NONNULL = YES;
-				COPY_PHASE_STRIP = NO;
-				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
-				GCC_NO_COMMON_BLOCKS = YES;
-				HEADER_SEARCH_PATHS = (
-					"$(inherited)",
-					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
-					"$(SRCROOT)/../../React/**",
-				);
-				OTHER_LDFLAGS = "-ObjC";
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SDKROOT = appletvos;
-				SKIP_INSTALL = YES;
-				TVOS_DEPLOYMENT_TARGET = 9.2;
-			};
-			name = Release;
-		};
 		58B511ED1A9E6C8500147676 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -332,14 +244,6 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		2DC1A51D1D74E6CC00E39E61 /* Build configuration list for PBXNativeTarget "RCTActionSheet tvOS" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				2DC1A51B1D74E6CC00E39E61 /* Debug */,
-				2DC1A51C1D74E6CC00E39E61 /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-		};
 		58B511D61A9E6C8500147676 /* Build configuration list for PBXProject "RCTActionSheet" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (

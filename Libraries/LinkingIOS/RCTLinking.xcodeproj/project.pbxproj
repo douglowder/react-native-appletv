@@ -8,11 +8,11 @@
 
 /* Begin PBXBuildFile section */
 		148699CF1ABD045300480536 /* RCTLinkingManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 148699CE1ABD045300480536 /* RCTLinkingManager.m */; };
-		2DD2E50D1D74EB140098839E /* RCTLinkingManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 148699CE1ABD045300480536 /* RCTLinkingManager.m */; };
+		2D3B5F251D9B0DE600451313 /* RCTLinkingManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 148699CE1ABD045300480536 /* RCTLinkingManager.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
-		2DD2E5021D74EAF20098839E /* CopyFiles */ = {
+		2D2A28451D9B043800D4039D /* CopyFiles */ = {
 			isa = PBXCopyFilesBuildPhase;
 			buildActionMask = 2147483647;
 			dstPath = "include/$(PRODUCT_NAME)";
@@ -36,11 +36,11 @@
 		134814201AA4EA6300B7C361 /* libRCTLinking.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libRCTLinking.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		148699CD1ABD045300480536 /* RCTLinkingManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RCTLinkingManager.h; sourceTree = "<group>"; };
 		148699CE1ABD045300480536 /* RCTLinkingManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RCTLinkingManager.m; sourceTree = "<group>"; };
-		2DD2E5041D74EAF20098839E /* libRCTLinking tvOS.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libRCTLinking tvOS.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		2D2A28471D9B043800D4039D /* libRCTLinking-tvOS.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libRCTLinking-tvOS.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
-		2DD2E5011D74EAF20098839E /* Frameworks */ = {
+		2D2A28441D9B043800D4039D /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -71,28 +71,28 @@
 				148699CD1ABD045300480536 /* RCTLinkingManager.h */,
 				148699CE1ABD045300480536 /* RCTLinkingManager.m */,
 				134814211AA4EA7D00B7C361 /* Products */,
-				2DD2E5041D74EAF20098839E /* libRCTLinking tvOS.a */,
+				2D2A28471D9B043800D4039D /* libRCTLinking-tvOS.a */,
 			);
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		2DD2E5031D74EAF20098839E /* RCTLinking tvOS */ = {
+		2D2A28461D9B043800D4039D /* RCTLinking-tvOS */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 2DD2E50C1D74EAF20098839E /* Build configuration list for PBXNativeTarget "RCTLinking tvOS" */;
+			buildConfigurationList = 2D2A284F1D9B043800D4039D /* Build configuration list for PBXNativeTarget "RCTLinking-tvOS" */;
 			buildPhases = (
-				2DD2E5001D74EAF20098839E /* Sources */,
-				2DD2E5011D74EAF20098839E /* Frameworks */,
-				2DD2E5021D74EAF20098839E /* CopyFiles */,
+				2D2A28431D9B043800D4039D /* Sources */,
+				2D2A28441D9B043800D4039D /* Frameworks */,
+				2D2A28451D9B043800D4039D /* CopyFiles */,
 			);
 			buildRules = (
 			);
 			dependencies = (
 			);
-			name = "RCTLinking tvOS";
-			productName = "RCTLinking tvOS";
-			productReference = 2DD2E5041D74EAF20098839E /* libRCTLinking tvOS.a */;
+			name = "RCTLinking-tvOS";
+			productName = "RCTLinking-tvOS";
+			productReference = 2D2A28471D9B043800D4039D /* libRCTLinking-tvOS.a */;
 			productType = "com.apple.product-type.library.static";
 		};
 		58B511DA1A9E6C8500147676 /* RCTLinking */ = {
@@ -121,8 +121,9 @@
 				LastUpgradeCheck = 0610;
 				ORGANIZATIONNAME = Facebook;
 				TargetAttributes = {
-					2DD2E5031D74EAF20098839E = {
-						CreatedOnToolsVersion = 7.3.1;
+					2D2A28461D9B043800D4039D = {
+						CreatedOnToolsVersion = 8.0;
+						ProvisioningStyle = Automatic;
 					};
 					58B511DA1A9E6C8500147676 = {
 						CreatedOnToolsVersion = 6.1.1;
@@ -142,17 +143,17 @@
 			projectRoot = "";
 			targets = (
 				58B511DA1A9E6C8500147676 /* RCTLinking */,
-				2DD2E5031D74EAF20098839E /* RCTLinking tvOS */,
+				2D2A28461D9B043800D4039D /* RCTLinking-tvOS */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXSourcesBuildPhase section */
-		2DD2E5001D74EAF20098839E /* Sources */ = {
+		2D2A28431D9B043800D4039D /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				2DD2E50D1D74EB140098839E /* RCTLinkingManager.m in Sources */,
+				2D3B5F251D9B0DE600451313 /* RCTLinkingManager.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -167,10 +168,13 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin XCBuildConfiguration section */
-		2DD2E50A1D74EAF20098839E /* Debug */ = {
+		2D2A284D1D9B043800D4039D /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_SUSPICIOUS_MOVES = YES;
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				ENABLE_TESTABILITY = YES;
 				GCC_NO_COMMON_BLOCKS = YES;
@@ -187,10 +191,13 @@
 			};
 			name = Debug;
 		};
-		2DD2E50B1D74EAF20098839E /* Release */ = {
+		2D2A284E1D9B043800D4039D /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_SUSPICIOUS_MOVES = YES;
 				COPY_PHASE_STRIP = NO;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				GCC_NO_COMMON_BLOCKS = YES;
@@ -324,13 +331,14 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		2DD2E50C1D74EAF20098839E /* Build configuration list for PBXNativeTarget "RCTLinking tvOS" */ = {
+		2D2A284F1D9B043800D4039D /* Build configuration list for PBXNativeTarget "RCTLinking-tvOS" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				2DD2E50A1D74EAF20098839E /* Debug */,
-				2DD2E50B1D74EAF20098839E /* Release */,
+				2D2A284D1D9B043800D4039D /* Debug */,
+				2D2A284E1D9B043800D4039D /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		58B511D61A9E6C8500147676 /* Build configuration list for PBXProject "RCTLinking" */ = {
 			isa = XCConfigurationList;

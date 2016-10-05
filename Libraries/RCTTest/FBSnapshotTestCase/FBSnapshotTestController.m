@@ -248,7 +248,7 @@ typedef NS_ENUM(NSUInteger, FBTestSnapshotFileNameType) {
     fileName = [fileName stringByAppendingFormat:@"@%.fx", [[UIScreen mainScreen] scale]];
   }
 #if TARGET_OS_TV
-  fileName = [fileName stringByAppendingString:@"_TV"];
+  fileName = [fileName stringByAppendingString:@"_tvOS"];
 #endif
   fileName = [fileName stringByAppendingPathExtension:@"png"];
   return fileName;

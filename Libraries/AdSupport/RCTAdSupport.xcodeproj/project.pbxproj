@@ -7,20 +7,10 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		2DB35AEA1D74E8AC00FFDB3E /* RCTAdSupport.m in Sources */ = {isa = PBXBuildFile; fileRef = 832C819B1AAF6E1A007FA2F7 /* RCTAdSupport.m */; };
 		832C819C1AAF6E1A007FA2F7 /* RCTAdSupport.m in Sources */ = {isa = PBXBuildFile; fileRef = 832C819B1AAF6E1A007FA2F7 /* RCTAdSupport.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
-		2DB35ADF1D74E89500FFDB3E /* CopyFiles */ = {
-			isa = PBXCopyFilesBuildPhase;
-			buildActionMask = 2147483647;
-			dstPath = "include/$(PRODUCT_NAME)";
-			dstSubfolderSpec = 16;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 		832C817E1AAF6DEF007FA2F7 /* CopyFiles */ = {
 			isa = PBXCopyFilesBuildPhase;
 			buildActionMask = 2147483647;
@@ -33,20 +23,12 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		2DB35AE11D74E89500FFDB3E /* libRCTAdSupport tvOS.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libRCTAdSupport tvOS.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		832C81801AAF6DEF007FA2F7 /* libRCTAdSupport.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libRCTAdSupport.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		832C819A1AAF6E1A007FA2F7 /* RCTAdSupport.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RCTAdSupport.h; sourceTree = "<group>"; };
 		832C819B1AAF6E1A007FA2F7 /* RCTAdSupport.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RCTAdSupport.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
-		2DB35ADE1D74E89500FFDB3E /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 		832C817D1AAF6DEF007FA2F7 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -72,7 +54,6 @@
 			isa = PBXGroup;
 			children = (
 				832C81801AAF6DEF007FA2F7 /* libRCTAdSupport.a */,
-				2DB35AE11D74E89500FFDB3E /* libRCTAdSupport tvOS.a */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -80,23 +61,6 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		2DB35AE01D74E89500FFDB3E /* RCTAdSupport tvOS */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = 2DB35AE91D74E89500FFDB3E /* Build configuration list for PBXNativeTarget "RCTAdSupport tvOS" */;
-			buildPhases = (
-				2DB35ADD1D74E89500FFDB3E /* Sources */,
-				2DB35ADE1D74E89500FFDB3E /* Frameworks */,
-				2DB35ADF1D74E89500FFDB3E /* CopyFiles */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-			);
-			name = "RCTAdSupport tvOS";
-			productName = "RCTAdSupport tvOS";
-			productReference = 2DB35AE11D74E89500FFDB3E /* libRCTAdSupport tvOS.a */;
-			productType = "com.apple.product-type.library.static";
-		};
 		832C817F1AAF6DEF007FA2F7 /* RCTAdSupport */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = 832C81941AAF6DF0007FA2F7 /* Build configuration list for PBXNativeTarget "RCTAdSupport" */;
@@ -123,9 +87,6 @@
 				LastUpgradeCheck = 0620;
 				ORGANIZATIONNAME = Facebook;
 				TargetAttributes = {
-					2DB35AE01D74E89500FFDB3E = {
-						CreatedOnToolsVersion = 7.3.1;
-					};
 					832C817F1AAF6DEF007FA2F7 = {
 						CreatedOnToolsVersion = 6.2;
 					};
@@ -144,20 +105,11 @@
 			projectRoot = "";
 			targets = (
 				832C817F1AAF6DEF007FA2F7 /* RCTAdSupport */,
-				2DB35AE01D74E89500FFDB3E /* RCTAdSupport tvOS */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXSourcesBuildPhase section */
-		2DB35ADD1D74E89500FFDB3E /* Sources */ = {
-			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				2DB35AEA1D74E8AC00FFDB3E /* RCTAdSupport.m in Sources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 		832C817C1AAF6DEF007FA2F7 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -169,35 +121,6 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin XCBuildConfiguration section */
-		2DB35AE71D74E89500FFDB3E /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				CLANG_ANALYZER_NONNULL = YES;
-				DEBUG_INFORMATION_FORMAT = dwarf;
-				ENABLE_TESTABILITY = YES;
-				GCC_NO_COMMON_BLOCKS = YES;
-				OTHER_LDFLAGS = "-ObjC";
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SDKROOT = appletvos;
-				SKIP_INSTALL = YES;
-				TVOS_DEPLOYMENT_TARGET = 9.2;
-			};
-			name = Debug;
-		};
-		2DB35AE81D74E89500FFDB3E /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				CLANG_ANALYZER_NONNULL = YES;
-				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
-				GCC_NO_COMMON_BLOCKS = YES;
-				OTHER_LDFLAGS = "-ObjC";
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SDKROOT = appletvos;
-				SKIP_INSTALL = YES;
-				TVOS_DEPLOYMENT_TARGET = 9.2;
-			};
-			name = Release;
-		};
 		832C81921AAF6DF0007FA2F7 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -328,14 +251,6 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		2DB35AE91D74E89500FFDB3E /* Build configuration list for PBXNativeTarget "RCTAdSupport tvOS" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				2DB35AE71D74E89500FFDB3E /* Debug */,
-				2DB35AE81D74E89500FFDB3E /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-		};
 		832C817B1AAF6DEF007FA2F7 /* Build configuration list for PBXProject "RCTAdSupport" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (

@@ -285,7 +285,7 @@ RCT_CUSTOM_VIEW_PROPERTY(region, MKCoordinateRegion, RCTMap)
 #if !TARGET_OS_TV
   annotationView.draggable = annotation.draggable;
 #endif
-  
+
   return annotationView;
 }
 

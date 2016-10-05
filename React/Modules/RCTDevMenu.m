@@ -458,9 +458,11 @@ RCT_EXPORT_MODULE()
   Class jsDebuggingExecutorClass = objc_lookUpClass("RCTWebSocketExecutor");
   if (!jsDebuggingExecutorClass) {
     [items addObject:[RCTDevMenuItem buttonItemWithTitle:[NSString stringWithFormat:@"%@ Debugger Unavailable", _webSocketExecutorName] handler:^{
-      UIAlertController *alertController = [UIAlertController alertControllerWithTitle:[NSString stringWithFormat:@"%@ Debugger Unavailable", _webSocketExecutorName] message:[NSString stringWithFormat:@"You need to include the RCTWebSocket library to enable %@ debugging", _webSocketExecutorName] preferredStyle:UIAlertControllerStyleAlert];
-      
-      [RCTPresentedViewController() presentViewController:alertController animated:YES completion:^(void){}];
+      UIAlertController *alertController = [UIAlertController alertControllerWithTitle:[NSString stringWithFormat:@"%@ Debugger Unavailable", self->_webSocketExecutorName]
+                                                                               message:[NSString stringWithFormat:@"You need to include the RCTWebSocket library to enable %@ debugging", self->_webSocketExecutorName]
+                                                                        preferredStyle:UIAlertControllerStyleAlert];
+
+      [RCTPresentedViewController() presentViewController:alertController animated:YES completion:NULL];
     }]];
   } else {
     BOOL isDebuggingJS = _executorClass && _executorClass == jsDebuggingExecutorClass;
@@ -510,7 +512,8 @@ RCT_EXPORT_METHOD(show)
     return;
   }
 
-  _actionSheet = [UIAlertController alertControllerWithTitle:@"React Native: Development"
+  NSString *title = [NSString stringWithFormat:@"React Native: Development (%@)", [_bridge class]];
+  _actionSheet = [UIAlertController alertControllerWithTitle:title
                                                      message:@""
                                               preferredStyle:UIAlertControllerStyleActionSheet];
   NSArray<RCTDevMenuItem *> *items = [self menuItems];
@@ -520,7 +523,6 @@ RCT_EXPORT_METHOD(show)
         [_actionSheet addAction:[UIAlertAction actionWithTitle:item.title
                                                          style:UIAlertActionStyleDefault
                                                        handler:^(UIAlertAction *action) {
-                                                         
                                                          // Cancel button tappped.
                                                          [item callHandler];
                                                        }]];
@@ -531,11 +533,10 @@ RCT_EXPORT_METHOD(show)
         [_actionSheet addAction:[UIAlertAction actionWithTitle:(selected? item.selectedTitle : item.title)
                                                          style:UIAlertActionStyleDefault
                                                        handler:^(UIAlertAction *action) {
-                                                         
-                                                         BOOL value = [_settings[item.key] boolValue];
+                                                         BOOL value = [self->_settings[item.key] boolValue];
                                                          [self updateSetting:item.key value:@(!value)]; // will call handler
                                                        }]];
-        
+
         break;
       }
     }
@@ -544,7 +545,6 @@ RCT_EXPORT_METHOD(show)
                                                    style:UIAlertActionStyleCancel
                                                  handler:^(UIAlertAction *action) {
                                                  }]];
-  
 
   _presentedItems = items;
   [RCTPresentedViewController() presentViewController:_actionSheet animated:YES completion:^(void){}];

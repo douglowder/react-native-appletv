@@ -8,19 +8,9 @@
 
 /* Begin PBXBuildFile section */
 		13BE3DEE1AC21097009241FE /* Sample.m in Sources */ = {isa = PBXBuildFile; fileRef = 13BE3DED1AC21097009241FE /* Sample.m */; };
-		2DD2E5651D74EE5C0098839E /* Sample.m in Sources */ = {isa = PBXBuildFile; fileRef = 13BE3DED1AC21097009241FE /* Sample.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
-		2DD2E55A1D74EE4D0098839E /* CopyFiles */ = {
-			isa = PBXCopyFilesBuildPhase;
-			buildActionMask = 2147483647;
-			dstPath = "include/$(PRODUCT_NAME)";
-			dstSubfolderSpec = 16;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 		58B511D91A9E6C8500147676 /* CopyFiles */ = {
 			isa = PBXCopyFilesBuildPhase;
 			buildActionMask = 2147483647;
@@ -36,17 +26,9 @@
 		134814201AA4EA6300B7C361 /* libSample.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libSample.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		13BE3DEC1AC21097009241FE /* Sample.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Sample.h; sourceTree = "<group>"; };
 		13BE3DED1AC21097009241FE /* Sample.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Sample.m; sourceTree = "<group>"; };
-		2DD2E55C1D74EE4D0098839E /* libSample tvOS.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libSample tvOS.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
-		2DD2E5591D74EE4D0098839E /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 		58B511D81A9E6C8500147676 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -71,30 +53,12 @@
 				13BE3DEC1AC21097009241FE /* Sample.h */,
 				13BE3DED1AC21097009241FE /* Sample.m */,
 				134814211AA4EA7D00B7C361 /* Products */,
-				2DD2E55C1D74EE4D0098839E /* libSample tvOS.a */,
 			);
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		2DD2E55B1D74EE4D0098839E /* Sample tvOS */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = 2DD2E5641D74EE4D0098839E /* Build configuration list for PBXNativeTarget "Sample tvOS" */;
-			buildPhases = (
-				2DD2E5581D74EE4D0098839E /* Sources */,
-				2DD2E5591D74EE4D0098839E /* Frameworks */,
-				2DD2E55A1D74EE4D0098839E /* CopyFiles */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-			);
-			name = "Sample tvOS";
-			productName = "Sample tvOS";
-			productReference = 2DD2E55C1D74EE4D0098839E /* libSample tvOS.a */;
-			productType = "com.apple.product-type.library.static";
-		};
 		58B511DA1A9E6C8500147676 /* Sample */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = 58B511EF1A9E6C8500147676 /* Build configuration list for PBXNativeTarget "Sample" */;
@@ -121,9 +85,6 @@
 				LastUpgradeCheck = 0610;
 				ORGANIZATIONNAME = Facebook;
 				TargetAttributes = {
-					2DD2E55B1D74EE4D0098839E = {
-						CreatedOnToolsVersion = 7.3.1;
-					};
 					58B511DA1A9E6C8500147676 = {
 						CreatedOnToolsVersion = 6.1.1;
 					};
@@ -142,20 +103,11 @@
 			projectRoot = "";
 			targets = (
 				58B511DA1A9E6C8500147676 /* Sample */,
-				2DD2E55B1D74EE4D0098839E /* Sample tvOS */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXSourcesBuildPhase section */
-		2DD2E5581D74EE4D0098839E /* Sources */ = {
-			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				2DD2E5651D74EE5C0098839E /* Sample.m in Sources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 		58B511D71A9E6C8500147676 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -167,48 +119,6 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin XCBuildConfiguration section */
-		2DD2E5621D74EE4D0098839E /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				CLANG_ANALYZER_NONNULL = YES;
-				DEBUG_INFORMATION_FORMAT = dwarf;
-				ENABLE_TESTABILITY = YES;
-				GCC_NO_COMMON_BLOCKS = YES;
-				HEADER_SEARCH_PATHS = (
-					"$(inherited)",
-					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
-					"$(SRCROOT)/../../React/**",
-					"$(SRCROOT)/../../node_modules/react-native/React/**",
-				);
-				OTHER_LDFLAGS = "-ObjC";
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SDKROOT = appletvos;
-				SKIP_INSTALL = YES;
-				TVOS_DEPLOYMENT_TARGET = 9.2;
-			};
-			name = Debug;
-		};
-		2DD2E5631D74EE4D0098839E /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				CLANG_ANALYZER_NONNULL = YES;
-				COPY_PHASE_STRIP = NO;
-				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
-				GCC_NO_COMMON_BLOCKS = YES;
-				HEADER_SEARCH_PATHS = (
-					"$(inherited)",
-					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
-					"$(SRCROOT)/../../React/**",
-					"$(SRCROOT)/../../node_modules/react-native/React/**",
-				);
-				OTHER_LDFLAGS = "-ObjC";
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SDKROOT = appletvos;
-				SKIP_INSTALL = YES;
-				TVOS_DEPLOYMENT_TARGET = 9.2;
-			};
-			name = Release;
-		};
 		58B511ED1A9E6C8500147676 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -317,14 +227,6 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		2DD2E5641D74EE4D0098839E /* Build configuration list for PBXNativeTarget "Sample tvOS" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				2DD2E5621D74EE4D0098839E /* Debug */,
-				2DD2E5631D74EE4D0098839E /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-		};
 		58B511D61A9E6C8500147676 /* Build configuration list for PBXProject "Sample" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (

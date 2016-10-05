@@ -14,7 +14,9 @@
 #import "RCTConvert.h"
 #import "RCTEventDispatcher.h"
 #import "RCTLog.h"
+#if !TARGET_OS_TV
 #import "RCTRefreshControl.h"
+#endif
 #import "RCTUIManager.h"
 #import "RCTUtils.h"
 #import "UIView+Private.h"
@@ -282,7 +284,7 @@ RCT_NOT_IMPLEMENTED(- (instancetype)init)
     scrollTop -= _rctRefreshControl.frame.size.height;
   }
 #endif
-  
+
   // Find the section headers that need to be docked
   __block UIView *previousHeader = nil;
   __block UIView *currentHeader = nil;
@@ -387,6 +389,10 @@ RCT_NOT_IMPLEMENTED(- (instancetype)init)
   uint16_t _coalescingKey;
   NSString *_lastEmittedEventName;
   NSHashTable *_scrollListeners;
+  // The last non-zero value of translationAlongAxis from scrollViewWillEndDragging.
+  // Tells if user was scrolling forward or backward and is used to determine a correct
+  // snap index when the user stops scrolling with a tap on the scroll view.
+  CGFloat _lastNonZeroTranslationAlongAxis;
 }
 
 - (instancetype)initWithEventDispatcher:(RCTEventDispatcher *)eventDispatcher
@@ -428,14 +434,13 @@ RCT_NOT_IMPLEMENTED(- (instancetype)initWithCoder:(NSCoder *)aDecoder)
 #if !TARGET_OS_TV
   if ([view isKindOfClass:[RCTRefreshControl class]]) {
     [_scrollView setRctRefreshControl:(RCTRefreshControl *)view];
-  } else {
+  } else
 #endif
+  {
     RCTAssert(_contentView == nil, @"RCTScrollView may only contain a single subview");
     _contentView = view;
     [_scrollView addSubview:view];
-#if !TARGET_OS_TV
   }
-#endif
 }
 
 - (void)removeReactSubview:(UIView *)subview
@@ -444,13 +449,12 @@ RCT_NOT_IMPLEMENTED(- (instancetype)initWithCoder:(NSCoder *)aDecoder)
 #if !TARGET_OS_TV
   if ([subview isKindOfClass:[RCTRefreshControl class]]) {
     [_scrollView setRctRefreshControl:nil];
-  } else {
+  } else
 #endif
+  {
     RCTAssert(_contentView == subview, @"Attempted to remove non-existent subview");
     _contentView = nil;
-#if !TARGET_OS_TV
   }
-#endif
 }
 
 - (void)didUpdateReactSubviews
@@ -508,7 +512,7 @@ RCT_NOT_IMPLEMENTED(- (instancetype)initWithCoder:(NSCoder *)aDecoder)
     refreshControl.frame = (CGRect){_scrollView.contentOffset, {_scrollView.frame.size.width, refreshControl.frame.size.height}};
   }
 #endif
-  
+
   [self updateClippedSubviews];
 }
 
@@ -715,7 +719,14 @@ RCT_SCROLL_EVENT_HANDLER(scrollViewDidZoom, onScroll)
 
     // Pick snap point based on direction and proximity
     NSInteger snapIndex = floor((targetContentOffsetAlongAxis + alignmentOffset) / snapToIntervalF);
-    snapIndex = (translationAlongAxis < 0) ? snapIndex + 1 : snapIndex;
+    BOOL isScrollingForward = translationAlongAxis < 0;
+    BOOL wasScrollingForward = translationAlongAxis == 0 && _lastNonZeroTranslationAlongAxis < 0;
+    if (isScrollingForward || wasScrollingForward) {
+      snapIndex = snapIndex + 1;
+    }
+    if (translationAlongAxis != 0) {
+      _lastNonZeroTranslationAlongAxis = translationAlongAxis;
+    }
     CGFloat newTargetContentOffset = ( snapIndex * snapToIntervalF ) - alignmentOffset;
 
     // Set new targetContentOffset

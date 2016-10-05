@@ -81,12 +81,10 @@ RCT_EXPORT_METHOD(alertWithArgs:(NSDictionary *)args
   }
 
   if (buttons.count == 0) {
-#if !TARGET_OS_TV
-    if (type == UIAlertViewStyleDefault) {
+    if (type == RCTAlertViewStyleDefault) {
       buttons = @[@{@"0": RCTUIKitLocalizedString(@"OK")}];
       cancelButtonKey = @"0";
     } else
-#endif
     {
       buttons = @[
         @{@"0": RCTUIKitLocalizedString(@"OK")},

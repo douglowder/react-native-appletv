@@ -25,26 +25,10 @@
 		0CF68B141AF0549300FF9E5C /* ARTShapeManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 0CF68B001AF0549300FF9E5C /* ARTShapeManager.m */; };
 		0CF68B151AF0549300FF9E5C /* ARTSurfaceViewManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 0CF68B021AF0549300FF9E5C /* ARTSurfaceViewManager.m */; };
 		0CF68B161AF0549300FF9E5C /* ARTTextManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 0CF68B041AF0549300FF9E5C /* ARTTextManager.m */; };
-		2DB35AF81D74E90600FFDB3E /* ARTGroup.m in Sources */ = {isa = PBXBuildFile; fileRef = 0CF68ADE1AF0549300FF9E5C /* ARTGroup.m */; };
-		2DB35AF91D74E90600FFDB3E /* ARTNode.m in Sources */ = {isa = PBXBuildFile; fileRef = 0CF68AE01AF0549300FF9E5C /* ARTNode.m */; };
-		2DB35AFA1D74E90600FFDB3E /* ARTRenderable.m in Sources */ = {isa = PBXBuildFile; fileRef = 0CF68AE21AF0549300FF9E5C /* ARTRenderable.m */; };
-		2DB35AFB1D74E90600FFDB3E /* ARTShape.m in Sources */ = {isa = PBXBuildFile; fileRef = 0CF68AE41AF0549300FF9E5C /* ARTShape.m */; };
-		2DB35AFC1D74E90600FFDB3E /* ARTSurfaceView.m in Sources */ = {isa = PBXBuildFile; fileRef = 0CF68AE61AF0549300FF9E5C /* ARTSurfaceView.m */; };
-		2DB35AFD1D74E90600FFDB3E /* ARTText.m in Sources */ = {isa = PBXBuildFile; fileRef = 0CF68AE81AF0549300FF9E5C /* ARTText.m */; };
-		2DB35AFE1D74E90600FFDB3E /* RCTConvert+ART.m in Sources */ = {isa = PBXBuildFile; fileRef = 0CF68AF71AF0549300FF9E5C /* RCTConvert+ART.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
 		0CF68ABF1AF0540F00FF9E5C /* CopyFiles */ = {
-			isa = PBXCopyFilesBuildPhase;
-			buildActionMask = 2147483647;
-			dstPath = "include/$(PRODUCT_NAME)";
-			dstSubfolderSpec = 16;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		2DB35AED1D74E8EF00FFDB3E /* CopyFiles */ = {
 			isa = PBXCopyFilesBuildPhase;
 			buildActionMask = 2147483647;
 			dstPath = "include/$(PRODUCT_NAME)";
@@ -96,18 +80,10 @@
 		0CF68B021AF0549300FF9E5C /* ARTSurfaceViewManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ARTSurfaceViewManager.m; sourceTree = "<group>"; };
 		0CF68B031AF0549300FF9E5C /* ARTTextManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ARTTextManager.h; sourceTree = "<group>"; };
 		0CF68B041AF0549300FF9E5C /* ARTTextManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ARTTextManager.m; sourceTree = "<group>"; };
-		2DB35AEF1D74E8EF00FFDB3E /* libART tvOS.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libART tvOS.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
 		0CF68ABE1AF0540F00FF9E5C /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		2DB35AEC1D74E8EF00FFDB3E /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -147,7 +123,6 @@
 			isa = PBXGroup;
 			children = (
 				0CF68AC11AF0540F00FF9E5C /* libART.a */,
-				2DB35AEF1D74E8EF00FFDB3E /* libART tvOS.a */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -208,23 +183,6 @@
 			productReference = 0CF68AC11AF0540F00FF9E5C /* libART.a */;
 			productType = "com.apple.product-type.library.static";
 		};
-		2DB35AEE1D74E8EF00FFDB3E /* ART tvOS */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = 2DB35AF71D74E8EF00FFDB3E /* Build configuration list for PBXNativeTarget "ART tvOS" */;
-			buildPhases = (
-				2DB35AEB1D74E8EF00FFDB3E /* Sources */,
-				2DB35AEC1D74E8EF00FFDB3E /* Frameworks */,
-				2DB35AED1D74E8EF00FFDB3E /* CopyFiles */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-			);
-			name = "ART tvOS";
-			productName = "ART tvOS";
-			productReference = 2DB35AEF1D74E8EF00FFDB3E /* libART tvOS.a */;
-			productType = "com.apple.product-type.library.static";
-		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -235,9 +193,6 @@
 				TargetAttributes = {
 					0CF68AC01AF0540F00FF9E5C = {
 						CreatedOnToolsVersion = 6.2;
-					};
-					2DB35AEE1D74E8EF00FFDB3E = {
-						CreatedOnToolsVersion = 7.3.1;
 					};
 				};
 			};
@@ -254,7 +209,6 @@
 			projectRoot = "";
 			targets = (
 				0CF68AC01AF0540F00FF9E5C /* ART */,
-				2DB35AEE1D74E8EF00FFDB3E /* ART tvOS */,
 			);
 		};
 /* End PBXProject section */
@@ -282,20 +236,6 @@
 				0CF68B0C1AF0549300FF9E5C /* ARTLinearGradient.m in Sources */,
 				0CF68B0B1AF0549300FF9E5C /* ARTBrush.m in Sources */,
 				0CF68B141AF0549300FF9E5C /* ARTShapeManager.m in Sources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		2DB35AEB1D74E8EF00FFDB3E /* Sources */ = {
-			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				2DB35AFD1D74E90600FFDB3E /* ARTText.m in Sources */,
-				2DB35AF81D74E90600FFDB3E /* ARTGroup.m in Sources */,
-				2DB35AFC1D74E90600FFDB3E /* ARTSurfaceView.m in Sources */,
-				2DB35AFB1D74E90600FFDB3E /* ARTShape.m in Sources */,
-				2DB35AFE1D74E90600FFDB3E /* RCTConvert+ART.m in Sources */,
-				2DB35AFA1D74E90600FFDB3E /* ARTRenderable.m in Sources */,
-				2DB35AF91D74E90600FFDB3E /* ARTNode.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -404,35 +344,6 @@
 			};
 			name = Release;
 		};
-		2DB35AF51D74E8EF00FFDB3E /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				CLANG_ANALYZER_NONNULL = YES;
-				DEBUG_INFORMATION_FORMAT = dwarf;
-				ENABLE_TESTABILITY = YES;
-				GCC_NO_COMMON_BLOCKS = YES;
-				OTHER_LDFLAGS = "-ObjC";
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SDKROOT = appletvos;
-				SKIP_INSTALL = YES;
-				TVOS_DEPLOYMENT_TARGET = 9.2;
-			};
-			name = Debug;
-		};
-		2DB35AF61D74E8EF00FFDB3E /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				CLANG_ANALYZER_NONNULL = YES;
-				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
-				GCC_NO_COMMON_BLOCKS = YES;
-				OTHER_LDFLAGS = "-ObjC";
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SDKROOT = appletvos;
-				SKIP_INSTALL = YES;
-				TVOS_DEPLOYMENT_TARGET = 9.2;
-			};
-			name = Release;
-		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -453,14 +364,6 @@
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
-		};
-		2DB35AF71D74E8EF00FFDB3E /* Build configuration list for PBXNativeTarget "ART tvOS" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				2DB35AF51D74E8EF00FFDB3E /* Debug */,
-				2DB35AF61D74E8EF00FFDB3E /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
 		};
 /* End XCConfigurationList section */
 	};
