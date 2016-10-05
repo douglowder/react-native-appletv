@@ -165,6 +165,7 @@
 		2D401F7D1DA57C160018FC1E /* RCTTVRemoteHandler.m in Sources */ = {isa = PBXBuildFile; fileRef = 2D401F7C1DA57C160018FC1E /* RCTTVRemoteHandler.m */; };
 		2D401F7E1DA57C3A0018FC1E /* RCTTVRemoteHandler.m in Sources */ = {isa = PBXBuildFile; fileRef = 2D401F7C1DA57C160018FC1E /* RCTTVRemoteHandler.m */; };
 		2D401F7F1DA587CD0018FC1E /* RCTStatusBarManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 13723B4F1A82FD3C00F88898 /* RCTStatusBarManager.m */; };
+		2D537FD21DA4809D000F876C /* RCTMultipartDataTask.m in Sources */ = {isa = PBXBuildFile; fileRef = 006FC4131D9B20820057AAAD /* RCTMultipartDataTask.m */; };
 		2D8C2E331DA40441000EE098 /* RCTMultipartStreamReader.m in Sources */ = {isa = PBXBuildFile; fileRef = 001BFCCF1D8381DE008E587E /* RCTMultipartStreamReader.m */; };
 		352DCFF01D19F4C20056D623 /* RCTI18nUtil.m in Sources */ = {isa = PBXBuildFile; fileRef = 352DCFEF1D19F4C20056D623 /* RCTI18nUtil.m */; };
 		391E86A41C623EC800009732 /* RCTTouchEvent.m in Sources */ = {isa = PBXBuildFile; fileRef = 391E86A21C623EC800009732 /* RCTTouchEvent.m */; };
@@ -914,6 +915,7 @@
 				2D3B5ED11D9B097500451313 /* RCTMapAnnotation.m in Sources */,
 				2D3B5EAB1D9B08EC00451313 /* RCTJSCErrorHandling.m in Sources */,
 				2D3B5EAF1D9B08FB00451313 /* RCTAccessibilityManager.m in Sources */,
+				2D537FD21DA4809D000F876C /* RCTMultipartDataTask.m in Sources */,
 				2D3B5EF11D9B09E700451313 /* UIView+React.m in Sources */,
 				2D3B5E931D9B087300451313 /* RCTErrorInfo.m in Sources */,
 				2D3B5EE01D9B09AD00451313 /* RCTRootShadowView.m in Sources */,

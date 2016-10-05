@@ -153,8 +153,6 @@ class Bundler {
       transformCode:
         (module, code, options) =>
           this._transformer.transformFile(module.path, code, options),
-      extraNodeModules: opts.extraNodeModules,
-      minifyCode: this._transformer.minify,
       appletv: opts.appletv,
     });
 
