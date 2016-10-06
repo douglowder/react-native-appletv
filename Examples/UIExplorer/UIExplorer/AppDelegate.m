@@ -82,8 +82,6 @@
 #if !TARGET_OS_TV
 # pragma mark - Push Notifications
 
-#if !TARGET_OS_TV
-
 // Required to register for notifications
 - (void)application:(__unused UIApplication *)application didRegisterUserNotificationSettings:(UIUserNotificationSettings *)notificationSettings
 {
@@ -113,10 +111,6 @@
 {
   [RCTPushNotificationManager didReceiveLocalNotification:notification];
 }
-#endif
-
-#endif
-
 #endif
 
 @end
