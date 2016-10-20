@@ -12,11 +12,13 @@
 @interface RCTPushNotificationManager : RCTEventEmitter
 #if !TARGET_OS_TV
 
+#if !TARGET_OS_TV
 + (void)didRegisterUserNotificationSettings:(UIUserNotificationSettings *)notificationSettings;
 + (void)didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken;
 + (void)didReceiveRemoteNotification:(NSDictionary *)notification;
 + (void)didReceiveLocalNotification:(UILocalNotification *)notification;
 + (void)didFailToRegisterForRemoteNotificationsWithError:(NSError *)error;
+#endif
 
 #endif
 

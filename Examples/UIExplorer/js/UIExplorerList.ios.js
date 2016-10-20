@@ -37,6 +37,10 @@ const ComponentExamples: Array<UIExplorerExample> = [
     tvosSupported: true
   },
   {
+    key: 'ButtonExample',
+    module: require('./ButtonExample'),
+  },
+  {
     key: 'DatePickerIOSExample',
     module: require('./DatePickerIOSExample'),
     tvosSupported: false

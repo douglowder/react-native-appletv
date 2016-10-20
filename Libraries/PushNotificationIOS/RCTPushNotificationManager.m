@@ -22,9 +22,24 @@ NSString *const RCTRegisterUserNotificationSettings = @"RegisterUserNotification
 NSString *const RCTErrorUnableToRequestPermissions = @"E_UNABLE_TO_REQUEST_PERMISSIONS";
 NSString *const RCTErrorRemoteNotificationRegistrationFailed = @"E_FAILED_TO_REGISTER_FOR_REMOTE_NOTIFICATIONS";
 
-@implementation RCTConvert (UILocalNotification)
-
 #if !TARGET_OS_TV
+@implementation RCTConvert (NSCalendarUnit)
+
+RCT_ENUM_CONVERTER(NSCalendarUnit,
+                   (@{
+                      @"year": @(NSCalendarUnitYear),
+                      @"month": @(NSCalendarUnitMonth),
+                      @"week": @(NSCalendarUnitWeekOfYear),
+                      @"day": @(NSCalendarUnitDay),
+                      @"hour": @(NSCalendarUnitHour),
+                      @"minute": @(NSCalendarUnitMinute)
+                      }),
+                   0,
+                   integerValue)
+
+@end
+
+@implementation RCTConvert (UILocalNotification)
 
 + (UILocalNotification *)UILocalNotification:(id)json
 {
@@ -36,21 +51,20 @@ NSString *const RCTErrorRemoteNotificationRegistrationFailed = @"E_FAILED_TO_REG
   notification.soundName = [RCTConvert NSString:details[@"soundName"]] ?: UILocalNotificationDefaultSoundName;
   notification.userInfo = [RCTConvert NSDictionary:details[@"userInfo"]];
   notification.category = [RCTConvert NSString:details[@"category"]];
+  notification.repeatInterval = [RCTConvert NSCalendarUnit:details[@"repeatInterval"]];
   if (details[@"applicationIconBadgeNumber"]) {
     notification.applicationIconBadgeNumber = [RCTConvert NSInteger:details[@"applicationIconBadgeNumber"]];
   }
   return notification;
 }
-#endif //TARGET_OS_TV
 
 @end
+#endif //TARGET_OS_TV
 
 @implementation RCTPushNotificationManager
 {
   RCTPromiseResolveBlock _requestPermissionsResolveBlock;
 }
-
-RCT_EXPORT_MODULE()
 
 #if !TARGET_OS_TV
 
@@ -72,6 +86,10 @@ static NSDictionary *RCTFormatLocalNotification(UILocalNotification *notificatio
   formattedLocalNotification[@"remote"] = @NO;
   return formattedLocalNotification;
 }
+
+#endif //TARGET_OS_TV
+
+RCT_EXPORT_MODULE()
 
 - (dispatch_queue_t)methodQueue
 {
@@ -107,19 +125,12 @@ static NSDictionary *RCTFormatLocalNotification(UILocalNotification *notificatio
   [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 
-#endif //TARGET_OS_TV
-
-
 - (NSArray<NSString *> *)supportedEvents
 {
-#if TARGET_OS_TV
-  return @[];
-#else
   return @[@"localNotificationReceived",
            @"remoteNotificationReceived",
            @"remoteNotificationsRegistered",
            @"remoteNotificationRegistrationError"];
-#endif
 }
 
 #if !TARGET_OS_TV

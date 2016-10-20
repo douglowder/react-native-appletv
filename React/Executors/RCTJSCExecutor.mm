@@ -108,6 +108,7 @@ struct RCTJSContextData {
 {
   if ((self = [super init])) {
     _context = context;
+    _context.name = @"RCTJSContext";
     _javaScriptThread = javaScriptThread;
 
     /**
@@ -346,7 +347,6 @@ static NSThread *newJavaScriptThread(void)
       [[NSNotificationCenter defaultCenter] postNotificationName:RCTJavaScriptContextCreatedNotification
                                                           object:context];
 
-      configureCacheOnContext(context, self->_jscWrapper);
       installBasicSynchronousHooksOnContext(context);
     }
 
@@ -436,22 +436,9 @@ static NSThread *newJavaScriptThread(void)
   }];
 }
 
-/** If configureJSContextForIOS is available on jscWrapper, calls it with the correct parameters. */
-static void configureCacheOnContext(JSContext *context, RCTJSCWrapper *jscWrapper)
-{
-  if (jscWrapper->configureJSContextForIOS != NULL) {
-    NSString *cachesPath = [NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES) firstObject];
-    RCTAssert(cachesPath != nil, @"cachesPath should not be nil");
-    if (cachesPath) {
-      jscWrapper->configureJSContextForIOS(context.JSGlobalContextRef, [cachesPath UTF8String]);
-    }
-  }
-}
-
 /** Installs synchronous hooks that don't require a weak reference back to the RCTJSCExecutor. */
 static void installBasicSynchronousHooksOnContext(JSContext *context)
 {
-  context[@"noop"] = ^{};
   context[@"nativeLoggingHook"] = ^(NSString *message, NSNumber *logLevel) {
     RCTLogLevel level = RCTLogLevelInfo;
     if (logLevel) {
@@ -515,9 +502,19 @@ static void installBasicSynchronousHooksOnContext(JSContext *context)
 
   _valid = NO;
 
-#if RCT_DEV
+#if RCT_PROFILE
   [[NSNotificationCenter defaultCenter] removeObserver:self];
 #endif
+}
+
+- (NSString *)contextName
+{
+  return [_context.context name];
+}
+
+RCT_EXPORT_METHOD(setContextName:(nonnull NSString *)contextName)
+{
+  [_context.context setName:contextName];
 }
 
 - (void)dealloc
@@ -932,21 +929,11 @@ static NSData *loadRAMBundle(NSURL *sourceURL, NSError **error, RandomAccessBund
   return [NSData dataWithBytesNoCopy:startupCode.code.release() length:startupCode.size freeWhenDone:YES];
 }
 
-RCT_EXPORT_METHOD(setContextName:(nonnull NSString *)name)
-{
-  if (_jscWrapper->JSGlobalContextSetName != NULL) {
-    JSStringRef JSName = _jscWrapper->JSStringCreateWithCFString((__bridge CFStringRef)name);
-    _jscWrapper->JSGlobalContextSetName(_context.context.JSGlobalContextRef, JSName);
-    _jscWrapper->JSStringRelease(JSName);
-  }
-}
-
 @end
 
 @implementation RCTJSContextProvider
 {
   dispatch_semaphore_t _semaphore;
-  BOOL _useCustomJSCLibrary;
   NSThread *_javaScriptThread;
   JSContext *_context;
   RCTJSCWrapper *_jscWrapper;
@@ -967,7 +954,6 @@ RCT_EXPORT_METHOD(setContextName:(nonnull NSString *)name)
 {
   _jscWrapper = RCTJSCWrapperCreate(_useCustomJSCLibrary);
   _context = [_jscWrapper->JSContext new];
-  configureCacheOnContext(_context, _jscWrapper);
   installBasicSynchronousHooksOnContext(_context);
   dispatch_semaphore_signal(_semaphore);
 }

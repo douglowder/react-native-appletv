@@ -11,6 +11,7 @@
 
 #include <assert.h>
 #include <math.h>
+#include <stdarg.h>
 #include <stdint.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -121,12 +122,18 @@ typedef CSSSize (*CSSMeasureFunc)(void *context,
                                   float height,
                                   CSSMeasureMode heightMode);
 typedef void (*CSSPrintFunc)(void *context);
+typedef int (*CSSLogger)(const char *format, ...);
+
+#ifdef CSS_ASSERT_FAIL_ENABLED
+typedef void (*CSSAssertFailFunc)(const char *message);
+#endif
 
 // CSSNode
-WIN_EXPORT CSSNodeRef CSSNodeNew();
+WIN_EXPORT CSSNodeRef CSSNodeNew(void);
 WIN_EXPORT void CSSNodeInit(const CSSNodeRef node);
 WIN_EXPORT void CSSNodeFree(const CSSNodeRef node);
 WIN_EXPORT void CSSNodeFreeRecursive(const CSSNodeRef node);
+WIN_EXPORT int32_t CSSNodeGetInstanceCount(void);
 
 WIN_EXPORT void CSSNodeInsertChild(const CSSNodeRef node, const CSSNodeRef child, const uint32_t index);
 WIN_EXPORT void CSSNodeRemoveChild(const CSSNodeRef node, const CSSNodeRef child);
@@ -204,5 +211,13 @@ CSS_NODE_LAYOUT_PROPERTY(float, Bottom);
 CSS_NODE_LAYOUT_PROPERTY(float, Width);
 CSS_NODE_LAYOUT_PROPERTY(float, Height);
 CSS_NODE_LAYOUT_PROPERTY(CSSDirection, Direction);
+
+WIN_EXPORT void CSSLayoutSetLogger(CSSLogger logger);
+
+#ifdef CSS_ASSERT_FAIL_ENABLED
+// Assert
+WIN_EXPORT void CSSAssertSetFailFunc(CSSAssertFailFunc func);
+WIN_EXPORT void CSSAssertFail(const char *message);
+#endif
 
 CSS_EXTERN_C_END

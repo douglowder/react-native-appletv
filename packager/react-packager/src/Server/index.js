@@ -134,7 +134,7 @@ const bundleOpts = declareOpts({
     type: 'array',
     default: [
       // Ensures essential globals are available and are patched correctly.
-      'InitializeJavaScriptAppEngine'
+      'InitializeCore'
     ],
   },
   unbundle: {
@@ -503,7 +503,15 @@ class Server {
   _processAssetsRequest(req, res) {
     const urlObj = url.parse(decodeURI(req.url), true);
     const assetPath = urlObj.pathname.match(/^\/assets\/(.+)$/);
-    const assetEvent = Activity.startEvent('Processing asset request', {asset: assetPath[1]});
+    const assetEvent = Activity.startEvent(
+      'Processing asset request',
+      {
+        asset: assetPath[1],
+      },
+      {
+        displayFields: true,
+      },
+    );
     this._assetServer.get(assetPath[1], urlObj.query.platform)
       .then(
         data => {
@@ -542,10 +550,11 @@ class Server {
             Activity.startEvent(
               'Updating existing bundle',
               {
-                outdatedModules: outdated.size,
+                outdated_modules: outdated.size,
               },
               {
                 telemetric: true,
+                displayFields: true,
               },
             );
           debug('Attempt to update existing bundle');
@@ -654,11 +663,11 @@ class Server {
       'Requesting bundle',
       {
         url: req.url,
+        entry_point: options.entryFile,
       },
       {
         telemetric: true,
-        entryPoint: options.entryFile,
-        details: req.url,
+        displayFields: ['url'],
       },
     );
 

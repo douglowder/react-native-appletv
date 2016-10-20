@@ -56,7 +56,7 @@ type SubViewProps = NavigationSceneRendererProps & {
   onNavigateBack: ?Function,
 };
 
-type SubViewRenderer = (subViewProps: SubViewProps) => ?ReactElement<any>;
+type SubViewRenderer = (subViewProps: SubViewProps) => ?React.Element<any>;
 
 type DefaultProps = {
   renderLeftComponent: SubViewRenderer,
@@ -134,7 +134,7 @@ class NavigationHeader extends React.Component<DefaultProps, Props, any> {
     }
   }
 
-  render(): ReactElement<any> {
+  render(): React.Element<any> {
     const { scenes, style, viewProps } = this.props;
 
     const scenesProps = scenes.map(scene => {
@@ -163,7 +163,7 @@ class NavigationHeader extends React.Component<DefaultProps, Props, any> {
     );
   }
 
-  _renderLeft(props: NavigationSceneRendererProps): ?ReactElement<any> {
+  _renderLeft(props: NavigationSceneRendererProps): ?React.Element<any> {
     return this._renderSubView(
       props,
       'left',
@@ -172,7 +172,7 @@ class NavigationHeader extends React.Component<DefaultProps, Props, any> {
     );
   }
 
-  _renderTitle(props: NavigationSceneRendererProps): ?ReactElement<any> {
+  _renderTitle(props: NavigationSceneRendererProps): ?React.Element<any> {
     return this._renderSubView(
       props,
       'title',
@@ -181,7 +181,7 @@ class NavigationHeader extends React.Component<DefaultProps, Props, any> {
     );
   }
 
-  _renderRight(props: NavigationSceneRendererProps): ?ReactElement<any> {
+  _renderRight(props: NavigationSceneRendererProps): ?React.Element<any> {
     return this._renderSubView(
       props,
       'right',
@@ -195,7 +195,7 @@ class NavigationHeader extends React.Component<DefaultProps, Props, any> {
     name: SubViewName,
     renderer: SubViewRenderer,
     styleInterpolator: NavigationStyleInterpolator,
-  ): ?ReactElement<any> {
+  ): ?React.Element<any> {
     const {
       scene,
       navigationState,
