@@ -166,10 +166,10 @@ class Resolver {
         : pathJoin(__dirname, 'polyfills/prelude.js');
 
     const tvos_prelude = opts.appletv
-        ? path.join(__dirname, 'polyfills/appletv_true.js')
-        : path.join(__dirname, 'polyfills/appletv_false.js');
+        ? pathJoin(__dirname, 'polyfills/appletv_true.js')
+        : pathJoin(__dirname, 'polyfills/appletv_false.js');
 
-    const moduleSystem = path.join(__dirname, 'polyfills/require.js');
+    const moduleSystem = pathJoin(__dirname, 'polyfills/require.js');
 
     return [
       prelude,

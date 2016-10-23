@@ -52,7 +52,7 @@ import type  {
   NavigationStyleInterpolator,
 } from 'NavigationTypeDefinition';
 
-type SubViewProps = NavigationSceneRendererProps & {
+type SubViewProps = Props & {
   onNavigateBack: ?Function,
 };
 

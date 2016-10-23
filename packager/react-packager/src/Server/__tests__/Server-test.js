@@ -210,6 +210,7 @@ describe('processRequest', () => {
         runModule: true,
         sourceMapUrl: 'index.map?assetPlugin=assetPlugin1&assetPlugin=assetPlugin2',
         dev: true,
+        appletv: false,
         platform: undefined,
         onProgress: jasmine.any(Function),
         runBeforeMainModule: ['InitializeCore'],
