@@ -19,7 +19,7 @@ const Promise = require('promise');
 const SourceMapConsumer = require('source-map').SourceMapConsumer;
 
 const declareOpts = require('../lib/declareOpts');
-const defaultAssetExts = require('../../../defaultAssetExts');
+const defaults = require('../../../defaults');
 const mime = require('mime-types');
 const path = require('path');
 const url = require('url');
@@ -81,7 +81,7 @@ const validateOpts = declareOpts({
   },
   assetExts: {
     type: 'array',
-    default: defaultAssetExts,
+    default: defaults.assetExts,
   },
   transformTimeoutInterval: {
     type: 'number',
@@ -132,10 +132,7 @@ const bundleOpts = declareOpts({
   },
   runBeforeMainModule: {
     type: 'array',
-    default: [
-      // Ensures essential globals are available and are patched correctly.
-      'InitializeCore'
-    ],
+    default: defaults.runBeforeMainModule,
   },
   unbundle: {
     type: 'boolean',
@@ -151,7 +148,7 @@ const bundleOpts = declareOpts({
   },
   isolateModuleIDs: {
     type: 'boolean',
-    default: false
+    default: false,
   },
   resolutionResponse: {
     type: 'object',
@@ -491,7 +488,7 @@ class Server {
         'Accept-Ranges': 'bytes',
         'Content-Length': chunksize,
         'Content-Range': `bytes ${dataStart}-${dataEnd}/${data.length}`,
-        'Content-Type': mime.lookup(path.basename(assetPath[1]))
+        'Content-Type': mime.lookup(path.basename(assetPath[1])),
       });
 
       return data.slice(dataStart, dataEnd + 1);
@@ -589,7 +586,7 @@ class Server {
                 ...options,
                 resolutionResponse: response.copy({
                   dependencies: changedModules,
-                })
+                }),
               }).then(updateBundle => {
                 const oldModules = bundle.getModules();
                 const newModules = updateBundle.getModules();
