@@ -143,7 +143,7 @@ public class ReactContext extends ContextWrapper {
   }
 
   public boolean hasActiveCatalystInstance() {
-    return mCatalystInstance != null && !mCatalystInstance.isDestroyed();
+    return mCatalystInstance != null && mCatalystInstance.isAcceptingCalls();
   }
 
   public LifecycleState getLifecycleState() {
@@ -338,5 +338,12 @@ public class ReactContext extends ContextWrapper {
       return null;
     }
     return mCurrentActivity.get();
+  }
+
+  /**
+   * Get the C pointer (as a long) to the JavaScriptCore context associated with this instance.
+   */
+  public long getJavaScriptContext() {
+    return mCatalystInstance.getJavaScriptContext();
   }
 }
