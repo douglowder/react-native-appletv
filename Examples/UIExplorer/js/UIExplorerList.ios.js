@@ -27,7 +27,7 @@ const ReactNative = require('react-native');
 export type UIExplorerExample = {
   key: string,
   module: Object,
-  tvosSupported: boolean,
+  tvosSupported?: boolean,
 };
 
 const ComponentExamples: Array<UIExplorerExample> = [
