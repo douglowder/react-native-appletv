@@ -13,8 +13,7 @@
 #import <Photos/Photos.h>
 #endif
 
-#import "RCTImageUtils.h"
-#import "RCTUtils.h"
+#import <React/RCTUtils.h>
 
 @implementation RCTPhotoLibraryImageLoader
 

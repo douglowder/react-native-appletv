@@ -3,6 +3,8 @@
 #include "CxxNativeModule.h"
 #include "Instance.h"
 
+#include <iterator>
+
 #include <folly/json.h>
 
 #include <cxxreact/JsArgumentHelpers.h>
@@ -24,6 +26,24 @@ std::function<void(folly::dynamic)> makeCallback(
       instance->callJSCallback(token, id, std::move(args));
     }
   };
+}
+
+namespace {
+
+/**
+ * CxxModule::Callback accepts a vector<dynamic>, makeCallback returns
+ * a callback that accepts a dynamic, adapt the second into the first.
+ * TODO: Callback types should be made equal (preferably
+ * function<void(dynamic)>) to avoid the extra copy and indirect call.
+ */
+CxxModule::Callback convertCallback(
+    std::function<void(folly::dynamic)> callback) {
+  return [callback = std::move(callback)](std::vector<folly::dynamic> args) {
+    callback(folly::dynamic(std::make_move_iterator(args.begin()),
+                            std::make_move_iterator(args.end())));
+  };
+}
+
 }
 
 CxxNativeModule::CxxNativeModule(std::weak_ptr<Instance> instance,
@@ -86,10 +106,13 @@ void CxxNativeModule::invoke(ExecutorToken token, unsigned int reactMethodId, fo
   }
 
   if (method.callbacks == 1) {
-    first = makeCallback(instance_, token, params[params.size() - 1]);
+    first = convertCallback(
+        makeCallback(instance_, token, params[params.size() - 1]));
   } else if (method.callbacks == 2) {
-    first = makeCallback(instance_, token, params[params.size() - 2]);
-    second = makeCallback(instance_, token, params[params.size() - 1]);
+    first = convertCallback(
+        makeCallback(instance_, token, params[params.size() - 2]));
+    second = convertCallback(
+        makeCallback(instance_, token, params[params.size() - 1]));
   }
 
   params.resize(params.size() - method.callbacks);
@@ -140,22 +163,8 @@ MethodCallResult CxxNativeModule::callSerializableNativeHook(
                              " is asynchronous but invoked synchronously"));
   }
 
-  if (!args.isString()) {
-    throw std::invalid_argument(
-      folly::to<std::string>("method parameters should be string, but are ", args.typeName()));
-  }
-
-  folly::dynamic params = folly::parseJson(args.stringPiece());
-
-  if (!params.isArray()) {
-    throw std::invalid_argument(
-      folly::to<std::string>("parsed method parameters should be array, but are ",
-                             args.typeName()));
-  }
-
-  return { method.syncFunc(std::move(params)), false };
+  return { method.syncFunc(std::move(args)), false };
 }
 
 }
 }
-

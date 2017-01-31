@@ -8,8 +8,9 @@
  */
 
 #import "RCTBundleURLProvider.h"
-#import "RCTDefines.h"
+
 #import "RCTConvert.h"
+#import "RCTDefines.h"
 
 NSString *const RCTBundleURLProviderUpdatedNotification = @"RCTBundleURLProviderUpdatedNotification";
 
@@ -125,18 +126,53 @@ static NSString *serverRootWithHost(NSString *host)
   if (!serverRoot) {
     return [[NSBundle mainBundle] URLForResource:resourceName withExtension:@"jsbundle"];
   } else {
-    NSString *fullBundlePath = [serverRoot stringByAppendingFormat:@"%@.bundle", bundleRoot];
-    if ([fullBundlePath hasPrefix:@"http"]) {
-      NSString *dev = [self enableDev] ? @"true" : @"false";
-      NSString *min = [self enableMinification] ? @"true": @"false";
-#if TARGET_OS_TV
-      fullBundlePath = [fullBundlePath stringByAppendingFormat:@"?platform=ios&appletv=true&dev=%@&minify=%@", dev, min];
-#else
-      fullBundlePath = [fullBundlePath stringByAppendingFormat:@"?platform=ios&dev=%@&minify=%@", dev, min];
-#endif
-    }
-    return [NSURL URLWithString:fullBundlePath];
+    NSString *path = [NSString stringWithFormat:@"/%@.bundle", bundleRoot];
+    // When we support only iOS 8 and above, use queryItems for a better API.
+    NSString *query = [NSString stringWithFormat:@"platform=ios&dev=%@&minify=%@",
+                       [self enableDev] ? @"true" : @"false",
+                       [self enableMinification] ? @"true": @"false"];
+    return [[self class] resourceURLForResourcePath:path packagerHost:packagerServerHost query:query];
   }
+}
+
+- (NSURL *)resourceURLForResourceRoot:(NSString *)root
+                         resourceName:(NSString *)name
+                    resourceExtension:(NSString *)extension
+                        offlineBundle:(NSBundle *)offlineBundle
+{
+  NSString *packagerServerHost = [self packagerServerHost];
+  if (!packagerServerHost) {
+    // Serve offline bundle (local file)
+    NSBundle *bundle = offlineBundle ?: [NSBundle mainBundle];
+    return [bundle URLForResource:name withExtension:extension];
+  }
+  NSString *path = [NSString stringWithFormat:@"/%@/%@.%@", root, name, extension];
+  return [[self class] resourceURLForResourcePath:path packagerHost:packagerServerHost query:nil];
+}
+
++ (NSURL *)jsBundleURLForBundleRoot:(NSString *)bundleRoot
+                       packagerHost:(NSString *)packagerHost
+                          enableDev:(BOOL)enableDev
+                 enableMinification:(BOOL)enableMinification
+{
+  NSString *path = [NSString stringWithFormat:@"/%@.bundle", bundleRoot];
+  // When we support only iOS 8 and above, use queryItems for a better API.
+  NSString *query = [NSString stringWithFormat:@"platform=ios&dev=%@&minify=%@",
+                      enableDev ? @"true" : @"false",
+                      enableMinification ? @"true": @"false"];
+  return [[self class] resourceURLForResourcePath:path packagerHost:packagerHost query:query];
+}
+
++ (NSURL *)resourceURLForResourcePath:(NSString *)path
+                         packagerHost:(NSString *)packagerHost
+                                query:(NSString *)query
+{
+  NSURLComponents *components = [NSURLComponents componentsWithURL:serverRootWithHost(packagerHost) resolvingAgainstBaseURL:NO];
+  components.path = path;
+  if (query != nil) {
+    components.query = query;
+  }
+  return components.URL;
 }
 
 - (void)updateValue:(id)object forKey:(NSString *)key

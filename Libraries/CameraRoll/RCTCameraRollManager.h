@@ -7,8 +7,10 @@
  * of patent rights can be found in the PATENTS file in the same directory.
  */
 
-#import "RCTBridgeModule.h"
-#import "RCTConvert.h"
+#import <AssetsLibrary/AssetsLibrary.h>
+
+#import <React/RCTBridgeModule.h>
+#import <React/RCTConvert.h>
 
 #if !TARGET_OS_TV
 #import <AssetsLibrary/AssetsLibrary.h>

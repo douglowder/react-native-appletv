@@ -16,7 +16,7 @@ const EdgeInsetsPropType = require('EdgeInsetsPropType');
 const Platform = require('Platform');
 const PointPropType = require('PointPropType');
 const React = require('React');
-const ReactNative = require('react/lib/ReactNative');
+const ReactNative = require('ReactNative');
 const ScrollResponder = require('ScrollResponder');
 const StyleSheet = require('StyleSheet');
 const StyleSheetPropType = require('StyleSheetPropType');
@@ -44,6 +44,21 @@ const requireNativeComponent = require('requireNativeComponent');
  *
  * Doesn't yet support other contained responders from blocking this scroll
  * view from becoming the responder.
+ *
+ *
+ * `<ScrollView>` vs `<ListView>` - which one to use?
+ * ScrollView simply renders all its react child components at once. That
+ * makes it very easy to understand and use.
+ * On the other hand, this has a performance downside. Imagine you have a very
+ * long list of items you want to display, worth of couple of your ScrollView’s
+ * heights. Creating JS components and native views upfront for all its items,
+ * which may not even be shown, will contribute to slow rendering of your
+ * screen and increased memory usage.
+ *
+ * This is where ListView comes into play. ListView renders items lazily,
+ * just when they are about to appear. This laziness comes at cost of a more
+ * complicated API, which is worth it unless you are rendering a small fixed
+ * set of items.
  */
 const ScrollView = React.createClass({
   propTypes: {
@@ -177,12 +192,18 @@ const ScrollView = React.createClass({
       'on-drag',
     ]),
     /**
-     * When false, tapping outside of the focused text input when the keyboard
-     * is up dismisses the keyboard. When true, the keyboard will not dismiss
-     * automatically, and the scroll view will not catch taps, but children of
-     * the scroll view can catch taps. The default value is false.
+     * Determines when the keyboard should stay visible after a tap.
+     *
+     *   - 'never' (the default), tapping outside of the focused text input when the keyboard
+     *     is up dismisses the keyboard. When this happens, children won't receive the tap.
+     *   - 'always', the keyboard will not dismiss automatically, and the scroll view will not
+     *     catch taps, but children of the scroll view can catch taps.
+     *   - 'handled', the keyboard will not dismiss automatically when the tap was handled by
+     *     a children, (or captured by an ancestor).
+     *   - false, deprecated, use 'never' instead
+     *   - true, deprecated, use 'always' instead
      */
-    keyboardShouldPersistTaps: PropTypes.bool,
+    keyboardShouldPersistTaps: PropTypes.oneOf(['always', 'never', 'handled', false, true]),
     /**
      * The maximum allowed zoom scale. The default value is 1.0.
      * @platform ios
@@ -361,11 +382,11 @@ const ScrollView = React.createClass({
   /**
    * Scrolls to a given x, y offset, either immediately or with a smooth animation.
    *
-   * Syntax:
+   * Example:
    *
-   * `scrollTo(options: {x: number = 0; y: number = 0; animated: boolean = true})`
+   * `scrollTo({x: 0; y: 0; animated: true})`
    *
-   * Note: The weird argument signature is due to the fact that, for historical reasons,
+   * Note: The weird function signature is due to the fact that, for historical reasons,
    * the function also accepts separate arguments as as alternative to the options object.
    * This is deprecated due to ambiguity (y before x), and SHOULD NOT BE USED.
    */
@@ -383,7 +404,25 @@ const ScrollView = React.createClass({
   },
 
   /**
-   * Deprecated, do not use.
+   * If this is a vertical ScrollView scrolls to the bottom.
+   * If this is a horizontal ScrollView scrolls to the right.
+   *
+   * Use `scrollToEnd({animated: true})` for smooth animated scrolling,
+   * `scrollToEnd({animated: false})` for immediate scrolling.
+   * If no options are passed, `animated` defaults to true.
+   */
+  scrollToEnd: function(
+    options?: { animated?: boolean },
+  ) {
+    // Default to true
+    const animated = (options && options.animated) !== false;
+    this.getScrollResponder().scrollResponderScrollToEnd({
+      animated: animated,
+    });
+  },
+
+  /**
+   * Deprecated, use `scrollTo` instead.
    */
   scrollWithoutAnimationTo: function(y: number = 0, x: number = 0) {
     console.warn('`scrollWithoutAnimationTo` is deprecated. Use `scrollTo` instead');
@@ -475,6 +514,9 @@ const ScrollView = React.createClass({
       alwaysBounceHorizontal,
       alwaysBounceVertical,
       style: ([baseStyle, this.props.style]: ?Array<any>),
+      // Override the onContentSizeChange from props, since this event can
+      // bubble up from TextInputs
+      onContentSizeChange: null,
       onTouchStart: this.scrollResponderHandleTouchStart,
       onTouchMove: this.scrollResponderHandleTouchMove,
       onTouchEnd: this.scrollResponderHandleTouchEnd,
@@ -528,10 +570,13 @@ const ScrollView = React.createClass({
         // On Android wrap the ScrollView with a AndroidSwipeRefreshLayout.
         // Since the ScrollView is wrapped add the style props to the
         // AndroidSwipeRefreshLayout and use flex: 1 for the ScrollView.
+        // Note: we should only apply props.style on the wrapper
+        // however, the ScrollView still needs the baseStyle to be scrollable
+
         return React.cloneElement(
           refreshControl,
           {style: props.style},
-          <ScrollViewClass {...props} ref={this._setScrollViewRef}>
+          <ScrollViewClass {...props} style={baseStyle} ref={this._setScrollViewRef}>
             {contentContainer}
           </ScrollViewClass>
         );

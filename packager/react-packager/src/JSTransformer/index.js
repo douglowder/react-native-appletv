@@ -5,16 +5,24 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree. An additional grant
  * of patent rights can be found in the PATENTS file in the same directory.
+ *
+ * @flow
  */
+
 'use strict';
 
-const Activity = require('../Activity');
-const Promise = require('promise');
-const declareOpts = require('../lib/declareOpts');
+const Logger = require('../Logger');
+
+const debug = require('debug')('RNP:JStransformer');
+const denodeify = require('denodeify');
+const invariant = require('fbjs/lib/invariant');
 const os = require('os');
+const path = require('path');
 const util = require('util');
 const workerFarm = require('worker-farm');
-const debug = require('debug')('ReactNativePackager:JStransformer');
+
+import type {Data as TransformData, Options as TransformOptions} from './worker/worker';
+import type {SourceMap} from '../lib/SourceMap';
 
 // Avoid memory leaks caused in workers. This number seems to be a good enough number
 // to avoid any memory leak while not slowing down initial builds.
@@ -22,28 +30,10 @@ const debug = require('debug')('ReactNativePackager:JStransformer');
 const MAX_CALLS_PER_WORKER = 600;
 
 // Worker will timeout if one of the callers timeout.
-const DEFAULT_MAX_CALL_TIME = 301000;
+const TRANSFORM_TIMEOUT_INTERVAL = 301000;
 
 // How may times can we tolerate failures from the worker.
 const MAX_RETRIES = 2;
-
-const validateOpts = declareOpts({
-  transformModulePath: {
-    type:'string',
-    required: false,
-  },
-  transformTimeoutInterval: {
-    type: 'number',
-    default: DEFAULT_MAX_CALL_TIME,
-  },
-  worker: {
-    type: 'string',
-  },
-  methods: {
-    type: 'array',
-    default: [],
-  },
-});
 
 const maxConcurrentWorkers = ((cores, override) => {
   if (override) {
@@ -60,7 +50,7 @@ const maxConcurrentWorkers = ((cores, override) => {
     return Math.floor(3 / 8 * cores + 3); // between cores *.75 and cores / 2
   }
   return cores / 2;
-})(os.cpus().length, process.env.REACT_NATIVE_MAX_WORKERS);
+})(os.cpus().length, parseInt(process.env.REACT_NATIVE_MAX_WORKERS, 10));
 
 function makeFarm(worker, methods, timeout) {
   return workerFarm(
@@ -78,69 +68,67 @@ function makeFarm(worker, methods, timeout) {
 }
 
 class Transformer {
-  constructor(options) {
-    const opts = this._opts = validateOpts(options);
 
-    const {transformModulePath} = opts;
+  _workers: {[name: string]: mixed};
+  _transformModulePath: string;
+  _transform: (
+    transform: string,
+    filename: string,
+    sourceCode: string,
+    options: ?TransformOptions,
+  ) => Promise<TransformData>;
+  minify: (
+    filename: string,
+    code: string,
+    sourceMap: SourceMap,
+  ) => Promise<{code: string, map: SourceMap}>;
 
-    if (opts.worker) {
-      this._workers =
-        makeFarm(opts.worker, opts.methods, opts.transformTimeoutInterval);
-      opts.methods.forEach(name => {
-        this[name] = this._workers[name];
-      });
-    }
-    else if (transformModulePath) {
-      this._transformModulePath = require.resolve(transformModulePath);
+  constructor(transformModulePath: string) {
+    invariant(path.isAbsolute(transformModulePath), 'transform module path should be absolute');
+    this._transformModulePath = transformModulePath;
 
-      this._workers = makeFarm(
-        require.resolve('./worker'),
-        ['minify', 'transformAndExtractDependencies'],
-        opts.transformTimeoutInterval,
-      );
-      this._transform = Promise.denodeify(this._workers.transformAndExtractDependencies);
-      this.minify = Promise.denodeify(this._workers.minify);
-    }
+    this._workers = makeFarm(
+      require.resolve('./worker'),
+      ['minify', 'transformAndExtractDependencies'],
+      TRANSFORM_TIMEOUT_INTERVAL,
+    );
+    this._transform = denodeify(this._workers.transformAndExtractDependencies);
+    this.minify = denodeify(this._workers.minify);
   }
 
   kill() {
     this._workers && workerFarm.end(this._workers);
   }
 
-  transformFile(fileName, code, options) {
+  transformFile(fileName: string, code: string, options: TransformOptions) {
     if (!this._transform) {
       return Promise.reject(new Error('No transform module'));
     }
     debug('transforming file', fileName);
-    const transformEventId = Activity.startEvent(
-      'Transforming file',
-      fileName,
-      {
-        telemetric: true,
-        silent: true,
-      },
-    );
     return this
       ._transform(this._transformModulePath, fileName, code, options)
-      .then(result => {
+      .then(data => {
+        Logger.log(data.transformFileStartLogEntry);
+        Logger.log(data.transformFileEndLogEntry);
         debug('done transforming file', fileName);
-        Activity.endEvent(transformEventId);
-        return result;
+        return data.result;
       })
       .catch(error => {
         if (error.type === 'TimeoutError') {
           const timeoutErr = new Error(
             `TimeoutError: transforming ${fileName} took longer than ` +
-            `${this._opts.transformTimeoutInterval / 1000} seconds.\n` +
+            `${TRANSFORM_TIMEOUT_INTERVAL / 1000} seconds.\n` +
             'You can adjust timeout via the \'transformTimeoutInterval\' option'
           );
+          /* $FlowFixMe: monkey-patch Error */
           timeoutErr.type = 'TimeoutError';
           throw timeoutErr;
         } else if (error.type === 'ProcessTerminatedError') {
           const uncaughtError = new Error(
             'Uncaught error in the transformer worker: ' +
-            this._opts.transformModulePath
+            this._transformModulePath
           );
+          /* $FlowFixMe: monkey-patch Error */
           uncaughtError.type = 'ProcessTerminatedError';
           throw uncaughtError;
         }
@@ -148,6 +136,8 @@ class Transformer {
         throw formatError(error, fileName);
       });
   }
+
+  static TransformError;
 }
 
 module.exports = Transformer;

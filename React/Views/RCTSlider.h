@@ -9,7 +9,7 @@
 
 #import <UIKit/UIKit.h>
 
-#import "RCTComponent.h"
+#import <React/RCTComponent.h>
 
 #if !TARGET_OS_TV
 

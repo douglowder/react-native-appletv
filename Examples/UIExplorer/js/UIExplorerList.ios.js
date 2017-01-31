@@ -27,159 +27,164 @@ const ReactNative = require('react-native');
 export type UIExplorerExample = {
   key: string,
   module: Object,
-  tvosSupported: boolean,
+  supportsTVOS: boolean
 };
 
 const ComponentExamples: Array<UIExplorerExample> = [
   {
     key: 'ActivityIndicatorExample',
     module: require('./ActivityIndicatorExample'),
-    tvosSupported: true
+    supportsTVOS: true,
+  },
+  {
+    key: 'ButtonExample',
+    module: require('./ButtonExample'),
+    supportsTVOS: true,
   },
   {
     key: 'DatePickerIOSExample',
     module: require('./DatePickerIOSExample'),
-    tvosSupported: false
+    supportsTVOS: false,
   },
   {
     key: 'ImageExample',
     module: require('./ImageExample'),
-    tvosSupported: true
+    supportsTVOS: true,
   },
   {
     key: 'KeyboardAvoidingViewExample',
     module: require('./KeyboardAvoidingViewExample'),
-    tvosSupported: false
+    supportsTVOS: false,
   },
   {
     key: 'LayoutEventsExample',
     module: require('./LayoutEventsExample'),
-    tvosSupported: true
+    supportsTVOS: true,
   },
   {
     key: 'ListViewExample',
     module: require('./ListViewExample'),
-    tvosSupported: true
+    supportsTVOS: true,
   },
   {
     key: 'ListViewGridLayoutExample',
     module: require('./ListViewGridLayoutExample'),
-    tvosSupported: true
+    supportsTVOS: true,
   },
   {
     key: 'ListViewPagingExample',
     module: require('./ListViewPagingExample'),
-    tvosSupported: true
+    supportsTVOS: true,
   },
   {
      key: 'MapViewExample',
      module: require('./MapViewExample'),
-    tvosSupported: true
+    supportsTVOS: true,
   },
   {
     key: 'ModalExample',
     module: require('./ModalExample'),
-    tvosSupported: true
+    supportsTVOS: true,
   },
   {
     key: 'NavigatorExample',
     module: require('./Navigator/NavigatorExample'),
-    tvosSupported: true
+    supportsTVOS: true,
   },
   {
     key: 'NavigatorIOSColorsExample',
     module: require('./NavigatorIOSColorsExample'),
-    tvosSupported: true
+    supportsTVOS: false,
   },
   {
     key: 'NavigatorIOSExample',
     module: require('./NavigatorIOSExample'),
-    tvosSupported: true
+    supportsTVOS: true,
   },
   {
     key: 'PickerExample',
     module: require('./PickerExample'),
-    tvosSupported: false
+    supportsTVOS: false,
   },
   {
     key: 'PickerIOSExample',
     module: require('./PickerIOSExample'),
-    tvosSupported: false
+    supportsTVOS: false,
   },
   {
     key: 'ProgressViewIOSExample',
     module: require('./ProgressViewIOSExample'),
-    tvosSupported: true
+    supportsTVOS: true,
   },
   {
     key: 'RefreshControlExample',
     module: require('./RefreshControlExample'),
-    tvosSupported: false
+    supportsTVOS: false,
   },
   {
     key: 'ScrollViewExample',
     module: require('./ScrollViewExample'),
-    tvosSupported: false
+    supportsTVOS: true,
   },
   {
     key: 'SegmentedControlIOSExample',
     module: require('./SegmentedControlIOSExample'),
-    tvosSupported: true
+    supportsTVOS: false,
   },
   {
     key: 'SliderExample',
     module: require('./SliderExample'),
-    tvosSupported: false
+    supportsTVOS: false,
   },
   {
     key: 'StatusBarExample',
     module: require('./StatusBarExample'),
-    tvosSupported: false
+    supportsTVOS: false,
   },
   {
     key: 'SwipeableListViewExample',
     module: require('./SwipeableListViewExample'),
-    tvosSupported: false
+    supportsTVOS: false,
   },
   {
     key: 'SwitchExample',
     module: require('./SwitchExample'),
-    tvosSupported: false
+    supportsTVOS: false,
   },
   {
     key: 'TabBarIOSExample',
     module: require('./TabBarIOSExample'),
-    tvosSupported: true
+    supportsTVOS: true,
   },
   {
     key: 'TextExample',
     module: require('./TextExample.ios'),
-    tvosSupported: true
+    supportsTVOS: true,
   },
   {
     key: 'TextInputExample',
     module: require('./TextInputExample.ios'),
-    tvosSupported: true
+    supportsTVOS: true,
   },
   {
     key: 'TouchableExample',
     module: require('./TouchableExample'),
-    tvosSupported: false
+    supportsTVOS: false,
   },
   {
     key: 'TransparentHitTestExample',
     module: require('./TransparentHitTestExample'),
-    tvosSupported: false
+    supportsTVOS: false,
   },
   {
     key: 'ViewExample',
     module: require('./ViewExample'),
-    tvosSupported: true
+    supportsTVOS: true,
   },
   {
     key: 'WebViewExample',
     module: require('./WebViewExample'),
-    tvosSupported: false
+    supportsTVOS: false,
   },
 ];
 
@@ -187,175 +192,177 @@ const APIExamples: Array<UIExplorerExample> = [
   {
     key: 'AccessibilityIOSExample',
     module: require('./AccessibilityIOSExample'),
-    tvosSupported: true
+    supportsTVOS: false,
   },
   {
     key: 'ActionSheetIOSExample',
     module: require('./ActionSheetIOSExample'),
-    tvosSupported: false
+    supportsTVOS: true,
   },
   {
     key: 'AdSupportIOSExample',
     module: require('./AdSupportIOSExample'),
-    tvosSupported: false
+    supportsTVOS: false,
   },
   {
     key: 'AlertExample',
     module: require('./AlertExample').AlertExample,
-    tvosSupported: true
+    supportsTVOS: true,
   },
   {
     key: 'AlertIOSExample',
     module: require('./AlertIOSExample'),
-    tvosSupported: true
+    supportsTVOS: true,
   },
   {
     key: 'AnimatedExample',
     module: require('./AnimatedExample'),
-    tvosSupported: true
+    supportsTVOS: true,
   },
   {
     key: 'AnExApp',
     module: require('./AnimatedGratuitousApp/AnExApp'),
-    tvosSupported: true
+    supportsTVOS: true,
   },
   {
     key: 'AppStateExample',
     module: require('./AppStateExample'),
-    tvosSupported: true
+    supportsTVOS: true,
   },
   {
     key: 'AsyncStorageExample',
     module: require('./AsyncStorageExample'),
-    tvosSupported: false
+    supportsTVOS: true,
   },
   {
     key: 'BorderExample',
     module: require('./BorderExample'),
-    tvosSupported: true
+    supportsTVOS: true,
   },
   {
     key: 'BoxShadowExample',
     module: require('./BoxShadowExample'),
-    tvosSupported: true
+    supportsTVOS: true,
   },
   {
     key: 'CameraRollExample',
     module: require('./CameraRollExample'),
-    tvosSupported: false
+    supportsTVOS: false,
   },
   {
     key: 'ClipboardExample',
     module: require('./ClipboardExample'),
-    tvosSupported: false
+    supportsTVOS: false,
   },
   {
     key: 'GeolocationExample',
     module: require('./GeolocationExample'),
-    tvosSupported: true
+    supportsTVOS: false,
   },
   {
     key: 'ImageEditingExample',
     module: require('./ImageEditingExample'),
-    tvosSupported: false
+    supportsTVOS: false,
   },
   {
     key: 'LayoutAnimationExample',
     module: require('./LayoutAnimationExample'),
-    tvosSupported: true
+    supportsTVOS: true,
   },
   {
     key: 'LayoutExample',
     module: require('./LayoutExample'),
-    tvosSupported: true
+    supportsTVOS: true,
   },
   {
     key: 'LinkingExample',
     module: require('./LinkingExample'),
-    tvosSupported: true
+    supportsTVOS: true,
   },
   {
     key: 'NativeAnimationsExample',
     module: require('./NativeAnimationsExample'),
-    tvosSupported: false
+    supportsTVOS: true,
   },
   {
     key: 'NavigationExperimentalExample',
     module: require('./NavigationExperimental/NavigationExperimentalExample'),
-    tvosSupported: true
+    supportsTVOS: true,
   },
   {
     key: 'NetInfoExample',
     module: require('./NetInfoExample'),
-    tvosSupported: true
+    supportsTVOS: true
   },
   {
     key: 'OrientationChangeExample',
     module: require('./OrientationChangeExample'),
+    supportsTVOS: true,
   },
   {
     key: 'OrientationChangeExample',
     module: require('./OrientationChangeExample'),
+    supportsTVOS: false,
   },
   {
     key: 'PanResponderExample',
     module: require('./PanResponderExample'),
-    tvosSupported: false
+    supportsTVOS: false,
   },
   {
     key: 'PointerEventsExample',
     module: require('./PointerEventsExample'),
-    tvosSupported: false
+    supportsTVOS: false,
   },
   {
     key: 'PushNotificationIOSExample',
     module: require('./PushNotificationIOSExample'),
-    tvosSupported: false
+    supportsTVOS: false,
   },
   {
     key: 'RCTRootViewIOSExample',
     module: require('./RCTRootViewIOSExample'),
-    tvosSupported: true
+    supportsTVOS: true,
   },
   {
     key: 'RTLExample',
     module: require('./RTLExample'),
-    tvosSupported: false
+    supportsTVOS: true,
   },
   {
     key: 'ShareExample',
     module: require('./ShareExample'),
-    tvosSupported: false
+    supportsTVOS: true,
   },
   {
     key: 'SnapshotExample',
     module: require('./SnapshotExample'),
-    tvosSupported: false
+    supportsTVOS: true,
   },
   {
     key: 'TimerExample',
     module: require('./TimerExample'),
-    tvosSupported: true
+    supportsTVOS: true,
   },
   {
     key: 'TransformExample',
     module: require('./TransformExample'),
-    tvosSupported: true
+    supportsTVOS: true,
   },
   {
     key: 'VibrationExample',
     module: require('./VibrationExample'),
-    tvosSupported: false
+    supportsTVOS: false,
+  },
+  {
+    key: 'XHRExample',
+    module: require('./XHRExample'),
+    supportsTVOS: true,
   },
   {
     key: 'WebSocketExample',
     module: require('./WebSocketExample'),
-    tvosSupported: true
-  },
-  {
-    key: 'XHRExample',
-    module: require('./XHRExample.ios'),
-    tvosSupported: false
+    supportsTVOS: true,
   },
 ];
 

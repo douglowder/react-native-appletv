@@ -1,4 +1,11 @@
 /**
+ * Copyright (c) 2013-present, Facebook, Inc.
+ * All rights reserved.
+ *
+ * This source code is licensed under the BSD-style license found in the
+ * LICENSE file in the root directory of this source tree. An additional grant
+ * of patent rights can be found in the PATENTS file in the same directory.
+ *
  * The examples provided by Facebook are for non-commercial testing and
  * evaluation purposes only.
  *
@@ -95,7 +102,7 @@ class Board {
 }
 
 class Cell extends React.Component {
-  cellStyle = () => {
+  cellStyle() {
     switch (this.props.player) {
       case 1:
         return styles.cellX;
@@ -104,9 +111,9 @@ class Cell extends React.Component {
       default:
         return null;
     }
-  };
+  }
 
-  textStyle = () => {
+  textStyle() {
     switch (this.props.player) {
       case 1:
         return styles.cellTextX;
@@ -115,9 +122,9 @@ class Cell extends React.Component {
       default:
         return {};
     }
-  };
+  }
 
-  textContents = () => {
+  textContents() {
     switch (this.props.player) {
       case 1:
         return 'X';
@@ -126,7 +133,7 @@ class Cell extends React.Component {
       default:
         return '';
     }
-  };
+  }
 
   render() {
     return (
@@ -151,7 +158,7 @@ class GameEndOverlay extends React.Component {
     var tie = board.tie();
     var winner = board.winner();
     if (!winner && !tie) {
-      return <View />;
+      return null;
     }
 
     var message;
@@ -237,14 +244,14 @@ var styles = StyleSheet.create({
     backgroundColor: 'white'
   },
   title: {
-    fontFamily: __APPLETV__ ? 'Helvetica' : 'Chalkduster',
-    fontSize: __APPLETV__ ? 78 : 39,
+    fontFamily: 'Chalkduster',
+    fontSize: 39,
     marginBottom: 20,
   },
   board: {
-    padding: __APPLETV__ ? 10 : 5,
+    padding: 5,
     backgroundColor: '#47525d',
-    borderRadius: __APPLETV__ ? 20 :10,
+    borderRadius: 10,
   },
   row: {
     flexDirection: 'row',
@@ -253,12 +260,11 @@ var styles = StyleSheet.create({
   // CELL
 
   cell: {
-    width: __APPLETV__ ? 160 : 80,
-    height: __APPLETV__ ? 160 : 80,
-    borderRadius: __APPLETV__ ? 10 : 5,
+    width: 80,
+    height: 80,
+    borderRadius: 5,
     backgroundColor: '#7b8994',
-    margin: __APPLETV__ ? 10 : 5,
-    flex: 1,
+    margin: 5,
     justifyContent: 'center',
     alignItems: 'center',
   },
@@ -272,7 +278,7 @@ var styles = StyleSheet.create({
   // CELL TEXT
 
   cellText: {
-    fontSize: __APPLETV__ ? 100 : 50,
+    fontSize: 50,
     fontFamily: 'AvenirNext-Bold',
   },
   cellTextX: {

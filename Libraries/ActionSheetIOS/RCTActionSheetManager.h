@@ -9,8 +9,7 @@
 
 #import <UIKit/UIKit.h>
 
-#import "RCTBridge.h"
-#if !TARGET_OS_TV
+#import <React/RCTBridge.h>
 
 @interface RCTActionSheetManager : NSObject <RCTBridgeModule>
 

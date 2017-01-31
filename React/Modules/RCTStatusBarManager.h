@@ -9,15 +9,17 @@
 
 #import <UIKit/UIKit.h>
 
-#import "RCTEventEmitter.h"
-#import "RCTConvert.h"
+#import <React/RCTConvert.h>
+#import <React/RCTEventEmitter.h>
 
 #if !TARGET_OS_TV
 
 @interface RCTConvert (UIStatusBar)
 
+#if !TARGET_OS_TV
 + (UIStatusBarStyle)UIStatusBarStyle:(id)json;
 + (UIStatusBarAnimation)UIStatusBarAnimation:(id)json;
+#endif
 
 @end
 

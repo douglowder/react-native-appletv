@@ -25,6 +25,7 @@ import com.facebook.react.bridge.SoftAssertions;
 import com.facebook.react.bridge.ReactContext;
 import com.facebook.react.bridge.ReadableArray;
 import com.facebook.react.bridge.ReadableMap;
+import com.facebook.react.bridge.SoftAssertions;
 import com.facebook.react.bridge.UiThreadUtil;
 import com.facebook.react.uimanager.debug.NotThreadSafeViewHierarchyUpdateDebugListener;
 import com.facebook.systrace.Systrace;
@@ -95,7 +96,7 @@ public class UIViewOperationQueue {
   /**
    * Operation for updating native view's position and size. The operation is not created directly
    * by a {@link UIManagerModule} call from JS. Instead it gets inflated using computed position
-   * and size values by CSSNode hierarchy.
+   * and size values by CSSNodeDEPRECATED hierarchy.
    */
   private final class UpdateLayoutOperation extends ViewOperation {
 
@@ -589,6 +590,7 @@ public class UIViewOperationQueue {
    * subclass to support UIOperations not provided by UIViewOperationQueue.
    */
   protected void enqueueUIOperation(UIOperation operation) {
+    SoftAssertions.assertNotNull(operation);
     mOperations.add(operation);
   }
 

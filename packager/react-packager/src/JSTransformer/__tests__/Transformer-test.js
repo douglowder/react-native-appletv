@@ -9,6 +9,7 @@
 'use strict';
 
 jest
+  .unmock('imurmurhash')
   .unmock('../../lib/ModuleTransport')
   .unmock('../');
 
@@ -24,7 +25,7 @@ var Transformer = require('../');
 const {any} = jasmine;
 
 describe('Transformer', function() {
-  let options, workers, Cache;
+  let workers, Cache;
   const fileName = '/an/arbitrary/file.js';
   const transformModulePath = __filename;
 
@@ -33,19 +34,19 @@ describe('Transformer', function() {
     Cache.prototype.get = jest.fn((a, b, c) => c());
 
     fs.writeFileSync.mockClear();
-    options = {transformModulePath};
     workerFarm.mockClear();
-    workerFarm.mockImpl((opts, path, methods) => {
+    workerFarm.mockImplementation((opts, path, methods) => {
       const api = workers = {};
-      methods.forEach(method => api[method] = jest.fn());
+      methods.forEach(method => {api[method] = jest.fn();});
       return api;
     });
   });
 
-  it('passes transform module path, file path, source code, and options to the worker farm when transforming', () => {
+  it('passes transform module path, file path, source code' +
+    ' to the worker farm when transforming', () => {
     const transformOptions = {arbitrary: 'options'};
     const code = 'arbitrary(code)';
-    new Transformer(options).transformFile(fileName, code, transformOptions);
+    new Transformer(transformModulePath).transformFile(fileName, code, transformOptions);
     expect(workers.transformAndExtractDependencies).toBeCalledWith(
       transformModulePath,
       fileName,
@@ -55,33 +56,24 @@ describe('Transformer', function() {
     );
   });
 
-  pit('passes the data produced by the worker back', () => {
-    const transformer = new Transformer(options);
-    const result = { code: 'transformed', map: 'sourceMap' };
-    workers.transformAndExtractDependencies.mockImpl(function(transformPath, filename, code, options, callback) {
-      callback(null, result);
-    });
-
-    return transformer.transformFile(fileName, '', {})
-      .then(data => expect(data).toBe(result));
-  });
-
-  pit('should add file info to parse errors', function() {
-    const transformer = new Transformer(options);
+  it('should add file info to parse errors', function() {
+    const transformer = new Transformer(transformModulePath);
     var message = 'message';
     var snippet = 'snippet';
 
-    workers.transformAndExtractDependencies.mockImpl(function(transformPath, filename, code, options, callback) {
-      var babelError = new SyntaxError(message);
-      babelError.type = 'SyntaxError';
-      babelError.description = message;
-      babelError.loc = {
-        line: 2,
-        column: 15,
-      };
-      babelError.codeFrame = snippet;
-      callback(babelError);
-    });
+    workers.transformAndExtractDependencies.mockImplementation(
+      function(transformPath, filename, code, opts, callback) {
+        var babelError = new SyntaxError(message);
+        babelError.type = 'SyntaxError';
+        babelError.description = message;
+        babelError.loc = {
+          line: 2,
+          column: 15,
+        };
+        babelError.codeFrame = snippet;
+        callback(babelError);
+      },
+    );
 
     return transformer.transformFile(fileName, '', {})
       .catch(function(error) {

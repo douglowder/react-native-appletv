@@ -34,6 +34,9 @@ class Instance {
     std::shared_ptr<MessageQueueThread> jsQueue,
     std::unique_ptr<MessageQueueThread> nativeQueue,
     std::shared_ptr<ModuleRegistry> moduleRegistry);
+
+  void setSourceURL(std::string sourceURL);
+
   void loadScriptFromString(std::unique_ptr<const JSBigString> string, std::string sourceURL);
   void loadScriptFromStringSync(std::unique_ptr<const JSBigString> string, std::string sourceURL);
   void loadScriptFromFile(const std::string& filename, const std::string& sourceURL);
@@ -50,6 +53,7 @@ class Instance {
   void startProfiler(const std::string& title);
   void stopProfiler(const std::string& title, const std::string& filename);
   void setGlobalVariable(std::string propName, std::unique_ptr<const JSBigString> jsonValue);
+  void *getJavaScriptContext();
   void callJSFunction(ExecutorToken token, std::string&& module, std::string&& method,
                       folly::dynamic&& params);
   void callJSCallback(ExecutorToken token, uint64_t callbackId, folly::dynamic&& params);
@@ -58,6 +62,7 @@ class Instance {
   // This method is experimental, and may be modified or removed.
   template <typename T>
   Value callFunctionSync(const std::string& module, const std::string& method, T&& args) {
+    CHECK(nativeToJsBridge_);
     return nativeToJsBridge_->callFunctionSync(module, method, std::forward<T>(args));
   }
 

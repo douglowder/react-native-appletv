@@ -13,35 +13,7 @@
 #import "RCTLog.h"
 #import "RCTUtils.h"
 
-#if TARGET_OS_TV
-typedef enum {
-  RCTStatusBarStyleDefault = 0,
-  RCTStatusBarStyleLightContent
-} RCTStatusBarStyle;
-
-typedef enum {
-  RCTStatusBarAnimationNone = 0,
-  RCTStatusBarAnimationFade,
-  RCTStatusBarAnimationSlide
-} RCTStatusBarAnimation;
-
-@implementation RCTConvert (UIStatusBar)
-
-RCT_ENUM_CONVERTER(RCTStatusBarStyle, (@{
-                                        @"default": @(RCTStatusBarStyleDefault),
-                                        @"light-content": @(RCTStatusBarStyleLightContent),
-                                        }), RCTStatusBarStyleDefault, integerValue);
-
-RCT_ENUM_CONVERTER(RCTStatusBarAnimation, (@{
-                                            @"none": @(RCTStatusBarAnimationNone),
-                                            @"fade": @(RCTStatusBarAnimationFade),
-                                            @"slide": @(RCTStatusBarAnimationSlide),
-                                            }), RCTStatusBarAnimationNone, integerValue);
-
-@end
-
-#else
-
+#if !TARGET_OS_TV
 @implementation RCTConvert (UIStatusBar)
 
 RCT_ENUM_CONVERTER(UIStatusBarStyle, (@{
@@ -57,7 +29,6 @@ RCT_ENUM_CONVERTER(UIStatusBarAnimation, (@{
 }), UIStatusBarAnimationNone, integerValue);
 
 @end
-
 #endif //TARGET_OS_TV
 
 @implementation RCTStatusBarManager
@@ -175,6 +146,5 @@ RCT_EXPORT_METHOD(setNetworkActivityIndicatorVisible:(BOOL)visible)
   RCTSharedApplication().networkActivityIndicatorVisible = visible;
 #endif
 }
-
 
 @end
