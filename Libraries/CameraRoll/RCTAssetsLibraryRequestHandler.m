@@ -9,53 +9,38 @@
 
 #import "RCTAssetsLibraryRequestHandler.h"
 
-#if !TARGET_OS_TV
-#import <AssetsLibrary/AssetsLibrary.h>
-#endif
-
 #import <libkern/OSAtomic.h>
 
+#import <AssetsLibrary/AssetsLibrary.h>
 #import <MobileCoreServices/MobileCoreServices.h>
 
 #import <React/RCTBridge.h>
 #import <React/RCTUtils.h>
 
 @implementation RCTAssetsLibraryRequestHandler
-
-#if !TARGET_OS_TV
 {
   ALAssetsLibrary *_assetsLibrary;
 }
-#endif //TARGET_OS_TV
 
 RCT_EXPORT_MODULE()
 
 @synthesize bridge = _bridge;
 
-#if !TARGET_OS_TV
 - (ALAssetsLibrary *)assetsLibrary
 {
   return _assetsLibrary ?: (_assetsLibrary = [ALAssetsLibrary new]);
 }
-#endif //TARGET_OS_TV
 
 #pragma mark - RCTURLRequestHandler
 
 - (BOOL)canHandleRequest:(NSURLRequest *)request
 {
-#if TARGET_OS_TV
-  return NO;
-#else
   return [request.URL.scheme caseInsensitiveCompare:@"assets-library"] == NSOrderedSame;
-#endif
 }
 
 - (id)sendRequest:(NSURLRequest *)request
      withDelegate:(id<RCTURLRequestDelegate>)delegate
 {
-#if TARGET_OS_TV
-  return nil;
-#else
   __block volatile uint32_t cancelled = 0;
   void (^cancellationBlock)(void) = ^{
     OSAtomicOr32Barrier(1, &cancelled);
@@ -113,7 +98,6 @@ RCT_EXPORT_MODULE()
   }];
 
   return cancellationBlock;
-#endif //TARGET_OS_TV
 }
 
 - (void)cancelRequest:(id)requestToken

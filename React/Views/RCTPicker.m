@@ -12,8 +12,6 @@
 #import "RCTConvert.h"
 #import "RCTUtils.h"
 
-#if !TARGET_OS_TV
-
 @interface RCTPicker() <UIPickerViewDataSource, UIPickerViewDelegate>
 @end
 
@@ -109,6 +107,3 @@ numberOfRowsInComponent:(__unused NSInteger)component
 }
 
 @end
-
-#endif //TARGET_OS_TV
-

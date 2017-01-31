@@ -87,10 +87,6 @@ const bundleOpts = declareOpts({
     type: 'boolean',
     default: true,
   },
-  appletv: {
-    type: 'boolean',
-    default: false,
-  },
   minify: {
     type: 'boolean',
     default: false,
@@ -739,7 +735,6 @@ class Server {
             inlineSourceMap: options.inlineSourceMap,
             minify: options.minify,
             dev: options.dev,
-            appletv: options.appletv,
           });
           debug('Writing response headers');
           const etag = p.getEtag();
@@ -759,7 +754,6 @@ class Server {
           const sourceMap = p.getSourceMapString({
             minify: options.minify,
             dev: options.dev,
-            appletv: options.appletv,
           });
 
           mres.setHeader('Content-Type', 'application/json');

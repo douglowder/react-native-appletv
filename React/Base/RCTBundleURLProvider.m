@@ -14,24 +14,14 @@
 
 NSString *const RCTBundleURLProviderUpdatedNotification = @"RCTBundleURLProviderUpdatedNotification";
 
+const NSUInteger kRCTBundleURLProviderDefaultPort = 8081;
+
 static NSString *const kRCTJsLocationKey = @"RCT_jsLocation";
 static NSString *const kRCTEnableLiveReloadKey = @"RCT_enableLiveReload";
 static NSString *const kRCTEnableDevKey = @"RCT_enableDev";
 static NSString *const kRCTEnableMinificationKey = @"RCT_enableMinification";
 
-static NSString *const kDefaultPort = @"8081";
-static NSString *ipGuess;
-
 @implementation RCTBundleURLProvider
-
-#if RCT_DEV
-+ (void)initialize
-{
-  NSString *ipPath = [[NSBundle mainBundle] pathForResource:@"ip" ofType:@"txt"];
-  NSString *ip = [NSString stringWithContentsOfFile:ipPath encoding:NSUTF8StringEncoding error:nil];
-  ipGuess = [ip stringByTrimmingCharactersInSet:[NSCharacterSet newlineCharacterSet]];
-}
-#endif
 
 - (instancetype)init
 {
@@ -70,60 +60,68 @@ static NSString *ipGuess;
   [self settingsUpdated];
 }
 
-- (BOOL)isPackagerRunning:(NSString *)host
+static NSURL *serverRootWithHost(NSString *host)
 {
-  if (RCT_DEV) {
-    NSURL *url = [[NSURL URLWithString:serverRootWithHost(host)] URLByAppendingPathComponent:@"status"];
-    NSURLRequest *request = [NSURLRequest requestWithURL:url];
-    NSURLResponse *response;
-    NSError *error = nil;
-    NSData *data = [NSURLConnection sendSynchronousRequest:request returningResponse:&response error:&error];
-    NSString *status = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
-    return [status isEqualToString:@"packager-status:running"];
-  }
-  return NO;
+  return [NSURL URLWithString:
+          [NSString stringWithFormat:@"http://%@:%lu/",
+           host, (unsigned long)kRCTBundleURLProviderDefaultPort]];
 }
 
-static NSString *serverRootWithHost(NSString *host)
+#if RCT_DEV
+- (BOOL)isPackagerRunning:(NSString *)host
 {
-  return [NSString stringWithFormat:@"http://%@:%@/", host, kDefaultPort];
+  NSURL *url = [serverRootWithHost(host) URLByAppendingPathComponent:@"status"];
+  NSURLRequest *request = [NSURLRequest requestWithURL:url];
+  NSURLResponse *response;
+  NSData *data = [NSURLConnection sendSynchronousRequest:request returningResponse:&response error:NULL];
+  NSString *status = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
+  return [status isEqualToString:@"packager-status:running"];
 }
 
 - (NSString *)guessPackagerHost
 {
+  static NSString *ipGuess;
+  static dispatch_once_t onceToken;
+  dispatch_once(&onceToken, ^{
+    NSString *ipPath = [[NSBundle mainBundle] pathForResource:@"ip" ofType:@"txt"];
+    ipGuess = [[NSString stringWithContentsOfFile:ipPath encoding:NSUTF8StringEncoding error:nil]
+               stringByTrimmingCharactersInSet:[NSCharacterSet newlineCharacterSet]];
+  });
+
   NSString *host = ipGuess ?: @"localhost";
   if ([self isPackagerRunning:host]) {
     return host;
   }
   return nil;
 }
+#endif
 
-- (NSString *)packagerServerRoot
+- (NSString *)packagerServerHost
 {
   NSString *location = [self jsLocation];
   if (location != nil) {
-    return serverRootWithHost(location);
-  } else {
-    NSString *host = [self guessPackagerHost];
-    if (!host) {
-      return nil;
-    } else {
-      return serverRootWithHost(host);
-    }
+    return location;
   }
+#if RCT_DEV
+  NSString *host = [self guessPackagerHost];
+  if (host) {
+    return host;
+  }
+#endif
+  return nil;
 }
 
 - (NSURL *)packagerServerURL
 {
-  NSString *root = [self packagerServerRoot];
-  return root ? [NSURL URLWithString:root] : nil;
+  NSString *const host = [self packagerServerHost];
+  return host ? serverRootWithHost(host) : nil;
 }
 
 - (NSURL *)jsBundleURLForBundleRoot:(NSString *)bundleRoot fallbackResource:(NSString *)resourceName
 {
   resourceName = resourceName ?: @"main";
-  NSString *serverRoot = [self packagerServerRoot];
-  if (!serverRoot) {
+  NSString *packagerServerHost = [self packagerServerHost];
+  if (!packagerServerHost) {
     return [[NSBundle mainBundle] URLForResource:resourceName withExtension:@"jsbundle"];
   } else {
     NSString *path = [NSString stringWithFormat:@"/%@.bundle", bundleRoot];
@@ -231,4 +229,5 @@ static NSString *serverRootWithHost(NSString *host)
   });
   return sharedInstance;
 }
+
 @end

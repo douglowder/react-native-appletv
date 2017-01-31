@@ -10,7 +10,6 @@
 #import <React/RCTEventEmitter.h>
 
 @interface RCTPushNotificationManager : RCTEventEmitter
-#if !TARGET_OS_TV
 
 typedef void (^RCTRemoteNotificationCallback)(UIBackgroundFetchResult result);
 
@@ -21,8 +20,6 @@ typedef void (^RCTRemoteNotificationCallback)(UIBackgroundFetchResult result);
 + (void)didReceiveRemoteNotification:(NSDictionary *)notification fetchCompletionHandler:(RCTRemoteNotificationCallback)completionHandler;
 + (void)didReceiveLocalNotification:(UILocalNotification *)notification;
 + (void)didFailToRegisterForRemoteNotificationsWithError:(NSError *)error;
-#endif
-
 #endif
 
 @end

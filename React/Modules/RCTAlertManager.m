@@ -83,8 +83,7 @@ RCT_EXPORT_METHOD(alertWithArgs:(NSDictionary *)args
     if (type == RCTAlertViewStyleDefault) {
       buttons = @[@{@"0": RCTUIKitLocalizedString(@"OK")}];
       cancelButtonKey = @"0";
-    } else
-    {
+    } else {
       buttons = @[
         @{@"0": RCTUIKitLocalizedString(@"OK")},
         @{@"1": RCTUIKitLocalizedString(@"Cancel")},
@@ -174,6 +173,7 @@ RCT_EXPORT_METHOD(alertWithArgs:(NSDictionary *)args
       }
     }]];
   }
+
   if (!_alertControllers) {
     _alertControllers = [NSHashTable weakObjectsHashTable];
   }
@@ -183,4 +183,3 @@ RCT_EXPORT_METHOD(alertWithArgs:(NSDictionary *)args
 }
 
 @end
-

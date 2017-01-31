@@ -45,8 +45,6 @@ RCT_ENUM_CONVERTER(NSCalendarUnit,
 
 @implementation RCTConvert (UILocalNotification)
 
-#if !TARGET_OS_TV
-
 + (UILocalNotification *)UILocalNotification:(id)json
 {
   NSDictionary<NSString *, id> *details = [self NSDictionary:json];
@@ -63,7 +61,6 @@ RCT_ENUM_CONVERTER(NSCalendarUnit,
   }
   return notification;
 }
-#endif //TARGET_OS_TV
 
 RCT_ENUM_CONVERTER(UIBackgroundFetchResult, (@{
   @"UIBackgroundFetchResultNewData": @(UIBackgroundFetchResultNewData),
@@ -138,19 +135,12 @@ RCT_EXPORT_MODULE()
   [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 
-#endif //TARGET_OS_TV
-
-
 - (NSArray<NSString *> *)supportedEvents
 {
-#if TARGET_OS_TV
-  return @[];
-#else
   return @[@"localNotificationReceived",
            @"remoteNotificationReceived",
            @"remoteNotificationsRegistered",
            @"remoteNotificationRegistrationError"];
-#endif
 }
 
 #if !TARGET_OS_TV

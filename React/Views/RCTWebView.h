@@ -9,8 +9,6 @@
 
 #import <React/RCTView.h>
 
-#if !TARGET_OS_TV
-
 @class RCTWebView;
 
 /**
@@ -48,5 +46,3 @@ shouldStartLoadForRequest:(NSMutableDictionary<NSString *, id> *)request
 - (void)injectJavaScript:(NSString *)script;
 
 @end
-
-#endif //TARGET_OS_TV

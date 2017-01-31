@@ -582,6 +582,7 @@ RCT_EXPORT_METHOD(show)
                                                      style:UIAlertActionStyleDefault
                                                    handler:[self alertActionHandlerForDevItem:item]]];
   }
+
   [_actionSheet addAction:[UIAlertAction actionWithTitle:@"Cancel"
                                                    style:UIAlertActionStyleCancel
                                                  handler:[self alertActionHandlerForDevItem:nil]]];

@@ -434,7 +434,6 @@ static YGSize RCTMeasure(YGNodeRef node, float width, YGMeasureMode widthMode, f
     }
     paragraphStyle.minimumLineHeight = lineHeight;
     paragraphStyle.maximumLineHeight = lineHeight;
-
     [attributedString addAttribute:NSParagraphStyleAttributeName
                              value:paragraphStyle
                              range:(NSRange){0, attributedString.length}];

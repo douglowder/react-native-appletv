@@ -14,5 +14,3 @@
 @interface RCTActionSheetManager : NSObject <RCTBridgeModule>
 
 @end
-
-#endif

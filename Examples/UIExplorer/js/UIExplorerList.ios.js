@@ -22,8 +22,6 @@
  */
 'use strict';
 
-const ReactNative = require('react-native');
-
 export type UIExplorerExample = {
   key: string,
   module: Object,
@@ -292,11 +290,6 @@ const APIExamples: Array<UIExplorerExample> = [
   {
     key: 'NetInfoExample',
     module: require('./NetInfoExample'),
-    supportsTVOS: true
-  },
-  {
-    key: 'OrientationChangeExample',
-    module: require('./OrientationChangeExample'),
     supportsTVOS: true,
   },
   {
@@ -355,13 +348,13 @@ const APIExamples: Array<UIExplorerExample> = [
     supportsTVOS: false,
   },
   {
-    key: 'XHRExample',
-    module: require('./XHRExample'),
+    key: 'WebSocketExample',
+    module: require('./WebSocketExample'),
     supportsTVOS: true,
   },
   {
-    key: 'WebSocketExample',
-    module: require('./WebSocketExample'),
+    key: 'XHRExample',
+    module: require('./XHRExample'),
     supportsTVOS: true,
   },
 ];

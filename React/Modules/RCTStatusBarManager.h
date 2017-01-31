@@ -12,8 +12,6 @@
 #import <React/RCTConvert.h>
 #import <React/RCTEventEmitter.h>
 
-#if !TARGET_OS_TV
-
 @interface RCTConvert (UIStatusBar)
 
 #if !TARGET_OS_TV
@@ -22,8 +20,6 @@
 #endif
 
 @end
-
-#endif //TARGET_OS_TV
 
 @interface RCTStatusBarManager : RCTEventEmitter
 

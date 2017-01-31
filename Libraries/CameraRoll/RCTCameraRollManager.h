@@ -12,16 +12,12 @@
 #import <React/RCTBridgeModule.h>
 #import <React/RCTConvert.h>
 
-#if !TARGET_OS_TV
-#import <AssetsLibrary/AssetsLibrary.h>
-
 @interface RCTConvert (ALAssetGroup)
 
 + (ALAssetsGroupType)ALAssetsGroupType:(id)json;
 + (ALAssetsFilter *)ALAssetsFilter:(id)json;
 
 @end
-#endif //TARGET_OS_TV
 
 @interface RCTCameraRollManager : NSObject <RCTBridgeModule>
 

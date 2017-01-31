@@ -186,7 +186,7 @@ class StatusBar extends React.Component {
   static setHidden(hidden: boolean, animation?: StatusBarAnimation) {
     animation = animation || 'none';
     StatusBar._defaultProps.hidden.value = hidden;
-    if (Platform.OS === 'ios' && !__APPLETV__) {
+    if (Platform.OS === 'ios') {
       StatusBarManager.setHidden(hidden, animation);
     } else if (Platform.OS === 'android') {
       StatusBarManager.setHidden(hidden);
@@ -199,10 +199,6 @@ class StatusBar extends React.Component {
    * @param animated Animate the style change.
    */
   static setBarStyle(style: StatusBarStyle, animated?: boolean) {
-    if (Platform.OS !== 'ios' || __APPLETV__) {
-      console.warn('`setBarStyle` is only available on iOS');
-      return;
-    }
     animated = animated || false;
     StatusBar._defaultProps.barStyle.value = style;
     if (Platform.OS === 'ios') {
@@ -351,7 +347,7 @@ class StatusBar extends React.Component {
       const mergedProps = mergePropsStack(StatusBar._propsStack, StatusBar._defaultProps);
 
       // Update the props that have changed using the merged values from the props stack.
-      if (Platform.OS === 'ios' && !__APPLETV__) {
+      if (Platform.OS === 'ios') {
         if (!oldProps || oldProps.barStyle.value !== mergedProps.barStyle.value) {
           StatusBarManager.setStyle(
             mergedProps.barStyle.value,

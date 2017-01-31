@@ -7,7 +7,6 @@
  * of patent rights can be found in the PATENTS file in the same directory.
  */
 
-
 #import "RCTActionSheetManager.h"
 
 #import <React/RCTBridge.h>
@@ -15,8 +14,6 @@
 #import <React/RCTLog.h>
 #import <React/RCTUIManager.h>
 #import <React/RCTUtils.h>
-
-#if !TARGET_OS_TV
 
 @interface RCTActionSheetManager () <UIActionSheetDelegate>
 @end
@@ -205,5 +202,3 @@ RCT_EXPORT_METHOD(showShareActionSheetWithOptions:(NSDictionary *)options
 }
 
 @end
-
-#endif //TARGET_OS_TV

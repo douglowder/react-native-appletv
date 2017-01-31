@@ -49,9 +49,7 @@ const ds = new ListView.DataSource({
 });
 
 type Props = {
-  disableTitleRow: ?boolean,
   onNavigate: Function,
-  filter: ?string,
   list: {
     ComponentExamples: Array<UIExplorerExample>,
     APIExamples: Array<UIExplorerExample>,
@@ -62,25 +60,7 @@ type Props = {
 };
 
 class UIExplorerExampleList extends React.Component {
-
-  // Uncomment focusedKey, and Apple TV initially will focus on the ListView example row
-  state = {
-    filter: '',
-    //focusedKey: 'ListViewExample'
-  };
-
-  constructor(props: Props) {
-    super(props);
-    var c = this;
-    // Uncomment this, and Apple TV focus will move to Navigator example after 2 seconds
-    //this.componentDidMount = function() {
-      //setTimeout(function() {
-      //  c.rows['ListViewExample'].setState({'hasTVPreferredFocus':false});
-      //  c.rows['NavigatorExample'].setState({'hasTVPreferredFocus' : true});
-      //},2000);
-    //};
-    //this.rows = {};
-  }
+  props: Props
 
   render(): ?React.Element<any> {
     const filterText = this.props.persister.state.filter;
@@ -168,13 +148,7 @@ class UIExplorerExampleList extends React.Component {
   _renderRow(title: string, description: string, key: ?string, handler: ?Function): ?React.Element<any> {
     return (
       <View key={key || title}>
-        <TouchableHighlight 
-            //ref={(row) => this.rows[key] = row} 
-            onPress={handler} 
-            //hasTVPreferredFocus={key === this.state.focusedKey}
-            tvParallaxShiftDistanceX={0.0}
-            tvParallaxShiftDistanceY={5.0}
-            tvParallaxTiltAngle={0.0}>
+        <TouchableHighlight onPress={handler}>
           <View style={styles.row}>
             <Text style={styles.rowTitleText}>
               {title}

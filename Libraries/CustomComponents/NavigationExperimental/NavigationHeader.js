@@ -166,7 +166,6 @@ class NavigationHeader extends React.Component<DefaultProps, Props, any> {
           { height: barHeight },
           style
         ]}
-        onTVNavEvent={(evt) => this._handleTVEvent(this.props,evt)}
         {...viewProps}
       >
         {scenesProps.map(this._renderLeft, this)}

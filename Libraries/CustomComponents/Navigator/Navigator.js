@@ -1340,7 +1340,7 @@ var Navigator = React.createClass({
     });
     this._renderedSceneMap = newRenderedSceneMap;
     return (
-      <View style={[styles.container, this.props.style]} onTVNavEvent={(evt) => this._handleTVEvent(evt)}>
+      <View style={[styles.container, this.props.style]}>
         <View
           style={styles.transitioner}
           {...this.panGesture.panHandlers}

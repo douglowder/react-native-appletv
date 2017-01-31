@@ -26,14 +26,12 @@ RCT_EXPORT_MODULE()
 #define ADD_KEYBOARD_HANDLER(NAME, SELECTOR) \
   [nc addObserver:self selector:@selector(SELECTOR:) name:NAME object:nil]
 
-#if !TARGET_OS_TV
   ADD_KEYBOARD_HANDLER(UIKeyboardWillShowNotification, keyboardWillShow);
   ADD_KEYBOARD_HANDLER(UIKeyboardDidShowNotification, keyboardDidShow);
   ADD_KEYBOARD_HANDLER(UIKeyboardWillHideNotification, keyboardWillHide);
   ADD_KEYBOARD_HANDLER(UIKeyboardDidHideNotification, keyboardDidHide);
   ADD_KEYBOARD_HANDLER(UIKeyboardWillChangeFrameNotification, keyboardWillChangeFrame);
   ADD_KEYBOARD_HANDLER(UIKeyboardDidChangeFrameNotification, keyboardDidChangeFrame);
-#endif
 
 #undef ADD_KEYBOARD_HANDLER
 

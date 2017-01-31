@@ -74,30 +74,30 @@ var styles = StyleSheet.create({
   },
   movieTitle: {
     flex: 1,
-    fontSize: __APPLETV__ ? 32 : 16,
+    fontSize: 16,
     fontWeight: '500',
     marginBottom: 2,
   },
   movieYear: {
     color: '#999999',
-    fontSize: __APPLETV__ ? 24 : 12,
+    fontSize: 12,
   },
   row: {
     alignItems: 'center',
     backgroundColor: 'white',
     flexDirection: 'row',
-    padding: __APPLETV__ ? 10 : 5,
+    padding: 5,
   },
   cellImage: {
     backgroundColor: '#dddddd',
-    height: __APPLETV__ ? 200 : 93,
-    marginRight: __APPLETV__ ? 20 : 10,
-    width: __APPLETV__ ? 120 : 60,
+    height: 93,
+    marginRight: 10,
+    width: 60,
   },
   cellBorder: {
     backgroundColor: 'rgba(0, 0, 0, 0.1)',
     height: StyleSheet.hairlineWidth,
-    marginLeft: __APPLETV__ ? 8 : 4,
+    marginLeft: 4,
   },
 });
 

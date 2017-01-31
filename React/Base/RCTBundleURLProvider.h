@@ -9,9 +9,11 @@
 
 #import <Foundation/Foundation.h>
 
-@interface RCTBundleURLProvider : NSObject
-
 extern NSString *const RCTBundleURLProviderUpdatedNotification;
+
+extern const NSUInteger kRCTBundleURLProviderDefaultPort;
+
+@interface RCTBundleURLProvider : NSObject
 
 /**
  * Set default settings on NSUserDefaults.

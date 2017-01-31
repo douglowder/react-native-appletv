@@ -18,21 +18,6 @@
 #import <React/RCTTextDecorationLineType.h>
 #import <yoga/Yoga.h>
 
-typedef NS_ENUM(NSInteger, RCTBarStyle) {
-  RCTBarStyleDefault          = 0,
-  RCTBarStyleBlack            = 1,
-};
-
-typedef NS_OPTIONS(NSUInteger, RCTDataDetectorTypes) {
-  RCTDataDetectorTypePhoneNumber                              = 1 << 0,          // Phone number detection
-  RCTDataDetectorTypeLink                                     = 1 << 1,          // URL detection
-  RCTDataDetectorTypeAddress                                  = 1 << 2,          // Street address detection
-  RCTDataDetectorTypeCalendarEvent                            = 1 << 3,          // Event detection
-  
-  RCTDataDetectorTypeNone          = 0,               // No detection at all
-  RCTDataDetectorTypeAll           = NSUIntegerMax    // All types
-};
-
 /**
  * This class provides a collection of conversion functions for mapping
  * JSON objects to native types and classes. These are useful when writing

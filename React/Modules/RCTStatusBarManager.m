@@ -29,7 +29,7 @@ RCT_ENUM_CONVERTER(UIStatusBarAnimation, (@{
 }), UIStatusBarAnimationNone, integerValue);
 
 @end
-#endif //TARGET_OS_TV
+#endif
 
 @implementation RCTStatusBarManager
 
@@ -53,14 +53,13 @@ RCT_EXPORT_MODULE()
            @"statusBarFrameWillChange"];
 }
 
+#if !TARGET_OS_TV
+
 - (void)startObserving
 {
-#if !TARGET_OS_TV
   NSNotificationCenter *nc = [NSNotificationCenter defaultCenter];
   [nc addObserver:self selector:@selector(applicationDidChangeStatusBarFrame:) name:UIApplicationDidChangeStatusBarFrameNotification object:nil];
   [nc addObserver:self selector:@selector(applicationWillChangeStatusBarFrame:) name:UIApplicationWillChangeStatusBarFrameNotification object:nil];
-#endif
-  
 }
 
 - (void)stopObserving
@@ -75,9 +74,6 @@ RCT_EXPORT_MODULE()
 
 - (void)emitEvent:(NSString *)eventName forNotification:(NSNotification *)notification
 {
-#if TARGET_OS_TV
-  NSDictionary *event = @{};
-#else
   CGRect frame = [notification.userInfo[UIApplicationStatusBarFrameUserInfoKey] CGRectValue];
   NSDictionary *event = @{
     @"frame": @{
@@ -87,7 +83,6 @@ RCT_EXPORT_MODULE()
       @"height": @(frame.size.height),
     },
   };
-#endif
   [self sendEventWithName:eventName body:event];
 }
 
@@ -103,18 +98,11 @@ RCT_EXPORT_MODULE()
 
 RCT_EXPORT_METHOD(getHeight:(RCTResponseSenderBlock)callback)
 {
-#if TARGET_OS_TV
-  callback(@[@{
-    @"height":@0
-               }]);
-#else
   callback(@[@{
     @"height": @([UIApplication sharedApplication].statusBarFrame.size.height),
   }]);
-#endif
 }
 
-#if !TARGET_OS_TV
 RCT_EXPORT_METHOD(setStyle:(UIStatusBarStyle)statusBarStyle
                   animated:(BOOL)animated)
 {
@@ -138,13 +126,12 @@ RCT_EXPORT_METHOD(setHidden:(BOOL)hidden
                                  withAnimation:animation];
   }
 }
-#endif
 
 RCT_EXPORT_METHOD(setNetworkActivityIndicatorVisible:(BOOL)visible)
 {
-#if !TARGET_OS_TV
   RCTSharedApplication().networkActivityIndicatorVisible = visible;
-#endif
 }
+
+#endif //TARGET_OS_TV
 
 @end

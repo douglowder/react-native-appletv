@@ -86,7 +86,6 @@ class TabBarItemIOS extends React.Component {
      * is defined.
      */
     title: React.PropTypes.string,
-
     /**
      *(Apple TV only)* When set to true, this view will be focusable
      * and navigable using the Apple TV remote.
