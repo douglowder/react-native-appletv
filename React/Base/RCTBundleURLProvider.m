@@ -129,9 +129,6 @@ static NSURL *serverRootWithHost(NSString *host)
     NSString *query = [NSString stringWithFormat:@"platform=ios&dev=%@&minify=%@",
                        [self enableDev] ? @"true" : @"false",
                        [self enableMinification] ? @"true": @"false"];
-#if TARGET_OS_TV
-    query = [NSString stringWithFormat:@"%@&appletv=true",query];
-#endif
     return [[self class] resourceURLForResourcePath:path packagerHost:packagerServerHost query:query];
   }
 }
